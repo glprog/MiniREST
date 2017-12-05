@@ -1,20 +1,20 @@
-unit MiniRest.Attribute;
+unit MiniREST.Attribute;
 
 interface
 
-uses MiniRest.Common, IdCustomHttpServer;
+uses MiniREST.Common, IdCustomHttpServer;
 
 type
   RequestMappingAttribute = class(TCustomAttribute)
   private
     FMapping : string;
-    FRequestMethod : TMiniRestRequestMethod;
+    FRequestMethod : TMiniRESTRequestMethod;
     FPermission : string;
   public
-    constructor Create(AMapping : string; APermission : string = ''; ARequestMethod : TMiniRestRequestMethod = rmGet); overload;
-    constructor Create(AMapping : string; ARequestMethod : TMiniRestRequestMethod); overload;
+    constructor Create(AMapping : string; APermission : string = ''; ARequestMethod : TMiniRESTRequestMethod = rmGet); overload;
+    constructor Create(AMapping : string; ARequestMethod : TMiniRESTRequestMethod); overload;
     property Mapping : string read FMapping;
-    property RequestMethod : TMiniRestRequestMethod read FRequestMethod;
+    property RequestMethod : TMiniRESTRequestMethod read FRequestMethod;
     property Permission : string read FPermission;
   end;
 
@@ -31,7 +31,7 @@ implementation
 { RequestMappingAttribute }
 
 constructor RequestMappingAttribute.Create(AMapping: string; APermission : string;
-  ARequestMethod: TMiniRestRequestMethod);
+  ARequestMethod: TMiniRESTRequestMethod);
 begin
   FMapping := AMapping;
   FRequestMethod := ARequestMethod;
@@ -39,7 +39,7 @@ begin
 end;
 
 constructor RequestMappingAttribute.Create(AMapping: string;
-  ARequestMethod: TMiniRestRequestMethod);
+  ARequestMethod: TMiniRESTRequestMethod);
 begin
   Create(AMapping, '', ARequestMethod);
 end;

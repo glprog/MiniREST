@@ -1,11 +1,11 @@
-unit MiniRest.Controller.Security.Intf;
+unit MiniREST.Controller.Security.Intf;
 
 interface
 
-uses MiniRest.Intf;
+uses MiniREST.Intf;
 
 type
-  IMiniRestSecurityResponse = interface
+  IMiniRESTSecurityResponse = interface
   ['{891AC301-28E4-4136-BDA3-9F05BE896857}']
     function GetHasPermission : Boolean;
     function GetPermissionErrorMessage : string;
@@ -13,14 +13,14 @@ type
     property PermissionErrorMessage : string read GetPermissionErrorMessage;
   end;
 
-  IMiniRestSecurityController = interface
+  IMiniRESTSecurityController = interface
   ['{1A6EDC33-F636-45DD-B492-C6611C2BE04A}']
-    //function HasPermission(AContext : IMiniRestActionContext) : Boolean;
-    function HasPermission(AContext : IMiniRestActionContext) : IMiniRestSecurityResponse;
-//    function GetClientToken(AContext : IMiniRestActionContext) : string;
+    //function HasPermission(AContext : IMiniRESTActionContext) : Boolean;
+    function HasPermission(AContext : IMiniRESTActionContext) : IMiniRESTSecurityResponse;
+//    function GetClientToken(AContext : IMiniRESTActionContext) : string;
 //    function Login(AuthInfo : string) : string;
 //    function IsValidToken(AToken : string) : Boolean; overload;
-//    function IsValidToken(AContext : IMiniRestActionContext) : Boolean; overload;
+//    function IsValidToken(AContext : IMiniRESTActionContext) : Boolean; overload;
 //    function GetLoginPath : string;
     procedure AddExcludedPath(APath : string);
     function IsExcludedPath(APath : string) : Boolean;

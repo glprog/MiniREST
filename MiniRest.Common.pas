@@ -1,20 +1,20 @@
-unit MiniRest.Common;
+unit MiniREST.Common;
 
 interface
 
 uses IdContext, IdCustomHttpServer;
 
 type
-  TMiniRestRequestMethod = (rmGet, rmPost, rmPut, rmDelete, rmOptions);
-  //TMiniRestAction = procedure(AContext: TIdContext;
+  TMiniRESTRequestMethod = (rmGet, rmPost, rmPut, rmDelete, rmOptions);
+  //TMiniRESTAction = procedure(AContext: TIdContext;
   //ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo) of object;
 
-  //TMiniRestControllerBaseClass = class of TMiniRestControllerBase;
+  //TMiniRESTControllerBaseClass = class of TMiniRESTControllerBase;
 
-  TMiniRestResponseType = (rtTextHtml, rtApplicationJson);
+  TMiniRESTResponseType = (rtTextHtml, rtApplicationJson);
 
 const
-  MiniRestResponseTypes : array[rtTextHtml..rtApplicationJson] of string =
+  MiniRESTResponseTypes : array[rtTextHtml..rtApplicationJson] of string =
   ('text/html',
   'application/json');
 

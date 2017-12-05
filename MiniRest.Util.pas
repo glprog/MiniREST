@@ -1,13 +1,13 @@
-unit MiniRest.Util;
+unit MiniREST.Util;
 
 interface
 
-uses Classes, SysUtils, MiniRest.Intf, Generics.Collections, DateUtils,
+uses Classes, SysUtils, MiniREST.Intf, Generics.Collections, DateUtils,
   {$IF DEFINED(VER310) OR DEFINED(VER290)} JSON, REST.Json, REST.Json.Types,
   REST.JsonReflect {$ELSE} DBXJSON {$IFEND}, Rtti;
 
 type
-  TMiniRestUtil = class
+  TMiniRESTUtil = class
   private
     class var FRttiContext : TRttiContext;
   public
@@ -16,11 +16,11 @@ type
     class function GetRttiContext : TRttiContext;
     class function ParseMapping(AMapping : string) : string;
     class function ParseMappingtoPathParams(AMapping : string) : TArray<string>;
-    class function GetPathVariable(AVariable, APath : string; AActionContext : IMiniRestActionContext) : string;
+    class function GetPathVariable(AVariable, APath : string; AActionContext : IMiniRESTActionContext) : string;
   end;
 
   {$IF DEFINED(VER310) OR DEFINED(VER290)}
-  TMiniRestJsonUtil = class
+  TMiniRESTJsonUtil = class
     class function ObjectToJsonString(AObject: TObject; AOptions: TJsonOptions = [joDateIsUTC, joDateFormatISO8601]): string;
     class function JsonToObject<T: class, constructor>(AJsonObject: TJSOnObject; AOptions: TJsonOptions = [joDateIsUTC, joDateFormatISO8601]): T; overload;
     class function JsonToObject<T: class, constructor>(AJson: string; AOptions: TJsonOptions = [joDateIsUTC, joDateFormatISO8601]): T; overload;
@@ -33,16 +33,16 @@ type
 
 implementation
 
-uses MiniRest.JSON;
+uses MiniREST.JSON;
 
-{ TMiniRestUtil }
+{ TMiniRESTUtil }
 
-class function TMiniRestUtil.GetRttiContext : TRttiContext;
+class function TMiniRESTUtil.GetRttiContext : TRttiContext;
 begin
   Result := FRttiContext;
 end;
 
-class constructor TMiniRestUtil.Create;
+class constructor TMiniRESTUtil.Create;
 begin
   FRttiContext := TRttiContext.Create;
   {$IF DEFINED(VER310) OR DEFINED(VER290)}
@@ -50,21 +50,21 @@ begin
   {$IFEND}
 end;
 
-class destructor TMiniRestUtil.Destroy;
+class destructor TMiniRESTUtil.Destroy;
 begin
   {$IF DEFINED(VER310) OR DEFINED(VER290)}
   FRttiContext.DropContext;
   {$IFEND}
 end;
 
-class function TMiniRestUtil.GetPathVariable(AVariable, APath: string;
-  AActionContext: IMiniRestActionContext): string;
+class function TMiniRESTUtil.GetPathVariable(AVariable, APath: string;
+  AActionContext: IMiniRESTActionContext): string;
 var LPathParamsRequest, LPathParamsController : TArray<string>;
   I : Integer;
 begin
-  LPathParamsRequest := TMiniRestUtil.ParseMappingtoPathParams(APath);
-  //Refatorar para pegar do obj TMiniRestActionInfo
-  LPathParamsController := TMiniRestUtil.ParseMappingtoPathParams(AActionContext.ActionInfo.Mapping);
+  LPathParamsRequest := TMiniRESTUtil.ParseMappingtoPathParams(APath);
+  //Refatorar para pegar do obj TMiniRESTActionInfo
+  LPathParamsController := TMiniRESTUtil.ParseMappingtoPathParams(AActionContext.ActionInfo.Mapping);
   for I := 0 to Length(LPathParamsController) - 1 do
   begin
     if ('{' + AVariable + '}' = LPathParamsController[I]) then
@@ -72,7 +72,7 @@ begin
   end;
 end;
 
-class function TMiniRestUtil.ParseMapping(AMapping: string): string;
+class function TMiniRESTUtil.ParseMapping(AMapping: string): string;
 var LPath : TStringList;
     LPathVariableCount : Integer;
     S : string;
@@ -100,7 +100,7 @@ begin
   end;
 end;
 
-class function TMiniRestUtil.ParseMappingtoPathParams(
+class function TMiniRESTUtil.ParseMappingtoPathParams(
   AMapping: string): TArray<string>;
 var LPath : TStringList;
     I : Integer;
@@ -125,9 +125,9 @@ begin
   end;
 end;
 
-{ TMiniRestJsonUtil }
+{ TMiniRESTJsonUtil }
 {$IF DEFINED(VER310) OR DEFINED(VER290)}
-class function TMiniRestJsonUtil.TratarJsonObject(AClass : TClass; AJsonObject : TJSONObject): TJSONObject;
+class function TMiniRESTJsonUtil.TratarJsonObject(AClass : TClass; AJsonObject : TJSONObject): TJSONObject;
 var LType : TRttiType;
     LField : TRttiField;
     LCustomAttribute : TCustomAttribute;
@@ -142,7 +142,7 @@ var LType : TRttiType;
 begin
   { TODO : Revisar performance }
   LJsonObject := AJsonObject;
-  LType := TMiniRestUtil.GetRttiContext.GetType(AClass);
+  LType := TMiniRESTUtil.GetRttiContext.GetType(AClass);
   for LField in LType.GetFields do
   begin
     LJsonPair := nil;
@@ -156,7 +156,7 @@ begin
     {if (LJsonPair.JsonValue.ClassType = TJSONArray) and (LField.FieldType.IsInstance) then
     begin
       if LField.FieldType.QualifiedName.Contains('<') then
-        LClass := TMiniRestUtil.GetRttiContext.FindType(LField.FieldType.QualifiedName.Split(['<','>'])[1]).AsInstance.MetaclassType
+        LClass := TMiniRESTUtil.GetRttiContext.FindType(LField.FieldType.QualifiedName.Split(['<','>'])[1]).AsInstance.MetaclassType
       else
         LClass := LField.FieldType.AsInstance.MetaclassType;
       LJsonArray := TJSONArray(LJsonPair.JsonValue);
@@ -178,7 +178,7 @@ begin
     begin
       for LCustomAttribute in LField.GetAttributes do
       begin
-      if LCustomAttribute is MiniRestJsonDateAttribute then
+      if LCustomAttribute is MiniRESTJsonDateAttribute then
       begin
         if (LJsonPair.JsonValue.Value <> '0') or (LJsonPair.JsonValue.Value <> '') then
         begin
@@ -189,7 +189,7 @@ begin
         end;
       end
       else
-      if LCustomAttribute is MiniRestJsonNullAttribute then
+      if LCustomAttribute is MiniRESTJsonNullAttribute then
       begin
         LFieldName := ConvertFieldNameToJson(LField);
         LValue := LJsonObject.Get(LFieldName).JsonValue.Value;
@@ -202,7 +202,7 @@ begin
   Result := LJsonObject;
 end;
 
-class function TMiniRestJsonUtil.JsonToObject<T>(AJsonObject: TJSOnObject;
+class function TMiniRESTJsonUtil.JsonToObject<T>(AJsonObject: TJSOnObject;
   AOptions: TJsonOptions): T;
 var
   LUnMarshaler: TJSONUnMarshal;
@@ -210,7 +210,7 @@ var
   LType : TRttiType;
   LField : TRttiField;
   LAttribute : TCustomAttribute;
-  LMiniRestJsonAttribute : MiniRestJsonAttribute;
+  LMiniRESTJsonAttribute : MiniRESTJsonAttribute;
   LObjs : TObjectList<TJSONInterceptor>;
   LInterceptor : TJSONInterceptor;
   LReverter : TReverterEvent;
@@ -223,12 +223,12 @@ begin
   for LField in LType.GetFields do
   begin
     for LAttribute in LField.GetAttributes do
-      if LAttribute is MiniRestJsonAttribute then
+      if LAttribute is MiniRESTJsonAttribute then
       begin
-        LMiniRestJsonAttribute := MiniRestJsonAttribute(LAttribute);
+        LMiniRESTJsonAttribute := MiniRESTJsonAttribute(LAttribute);
         LFieldName := TJSONConverter.ConvertFieldNameToJson(LField);
-        LInterceptor := LMiniRestJsonAttribute.JSONInterceptor;
-        LReverter := TReverterEvent.Create(LMiniRestJsonAttribute.ObjClass, LFieldName);
+        LInterceptor := LMiniRESTJsonAttribute.JSONInterceptor;
+        LReverter := TReverterEvent.Create(LMiniRESTJsonAttribute.ObjClass, LFieldName);
         LReverter.ObjectsReverter := LInterceptor.ObjectsReverter;
         LObjs.Add(LInterceptor);
         LUnMarshaler.RegisterReverter(LType.AsInstance.MetaclassType, LFieldName, LReverter);
@@ -254,7 +254,7 @@ begin
   end;
 end;
 
-class function TMiniRestJsonUtil.JsonToObject<T>(AJson: string;
+class function TMiniRESTJsonUtil.JsonToObject<T>(AJson: string;
   AOptions: TJsonOptions): T;
 var
   LJSONValue: TJsonValue;
@@ -272,7 +272,7 @@ begin
   end;
 end;
 
-class function TMiniRestJsonUtil.ObjectToJsonString(AObject: TObject;
+class function TMiniRESTJsonUtil.ObjectToJsonString(AObject: TObject;
   AOptions: TJsonOptions): string;
 var LType : TRttiType;
     LField : TRttiField;
@@ -292,7 +292,7 @@ begin
   end;
 end;
 
-class procedure TMiniRestJsonUtil.ProcessOptions(AJsonObject: TJSOnObject; AOptions: TJsonOptions);
+class procedure TMiniRESTJsonUtil.ProcessOptions(AJsonObject: TJSOnObject; AOptions: TJsonOptions);
 var
   LPair: TJSONPair;
   LItem: TObject;
@@ -317,7 +317,7 @@ begin
     begin
       LPair := TJSONPair(AJsonObject.Pairs[i]);
       if LPair.JsonValue is TJSOnObject then
-        TMiniRestJsonUtil.ProcessOptions(TJSOnObject(LPair.JsonValue), AOptions)
+        TMiniRESTJsonUtil.ProcessOptions(TJSOnObject(LPair.JsonValue), AOptions)
       else if LPair.JsonValue is TJSONArray then
       begin
         if (joIgnoreEmptyArrays in AOptions) and (TJSONArray(LPair.JsonValue).Count = 0) then
@@ -327,7 +327,7 @@ begin
         for LItem in TJSONArray(LPair.JsonValue) do
         begin
           if LItem is TJSOnObject then
-            TMiniRestJsonUtil.ProcessOptions(TJSOnObject(LItem), AOptions)
+            TMiniRESTJsonUtil.ProcessOptions(TJSOnObject(LItem), AOptions)
         end;
       end
       else
@@ -340,7 +340,7 @@ begin
     end;
 end;
 
-class function TMiniRestJsonUtil.ConvertFieldNameFromJson(AObject: TObject; const AFieldName: string): string;
+class function TMiniRESTJsonUtil.ConvertFieldNameFromJson(AObject: TObject; const AFieldName: string): string;
 var
   LFieldName: string;
   LRTTICtx: TRttiContext;
@@ -376,7 +376,7 @@ begin
   end;
 end;
 
-class function TMiniRestJsonUtil.ConvertFieldNameToJson(const AField: TRttiField): string;
+class function TMiniRESTJsonUtil.ConvertFieldNameToJson(const AField: TRttiField): string;
 var
   LFieldName: string;
   LAttribute: TCustomAttribute;

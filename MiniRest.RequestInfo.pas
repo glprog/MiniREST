@@ -1,46 +1,46 @@
-unit MiniRest.RequestInfo;
+unit MiniREST.RequestInfo;
 
 interface
 
-uses Classes, SysUtils, MiniRest.Intf, MiniRest.Common, IdCustomHTTPServer;
+uses Classes, SysUtils, MiniREST.Intf, MiniREST.Common, IdCustomHTTPServer;
 
 type
-  TMiniRestRequestInfo = class(TInterfacedObject, IMiniRestRequestInfo)
+  TMiniRESTRequestInfo = class(TInterfacedObject, IMiniRESTRequestInfo)
   private
     FPathLength : Integer;
-    FRequestMethod : TMiniRestRequestMethod;
+    FRequestMethod : TMiniRESTRequestMethod;
     FPathParams : TArray<string>;
     function ParseMappingtoPathParams(AMapping : string) : TArray<string>;
   public
-    constructor Create(AMapping : string; ARequestMethod : TMiniRestRequestMethod);
+    constructor Create(AMapping : string; ARequestMethod : TMiniRESTRequestMethod);
     function GetPathLength: Integer;
-    function GetRequestMethod: TMiniRestRequestMethod;
-    function IsMatch(AMapping: string; ARequestMethod : TMiniRestRequestMethod): Boolean;
+    function GetRequestMethod: TMiniRESTRequestMethod;
+    function IsMatch(AMapping: string; ARequestMethod : TMiniRESTRequestMethod): Boolean;
   end;
 
 implementation
 
-{ TMiniRestRequestInfo }
+{ TMiniRESTRequestInfo }
 
-constructor TMiniRestRequestInfo.Create(AMapping: string;
-  ARequestMethod: TMiniRestRequestMethod);
+constructor TMiniRESTRequestInfo.Create(AMapping: string;
+  ARequestMethod: TMiniRESTRequestMethod);
 begin
   FRequestMethod := ARequestMethod;
   FPathParams := ParseMappingtoPathParams(AMapping);
   FPathLength := Length(FPathParams);
 end;
 
-function TMiniRestRequestInfo.GetPathLength: Integer;
+function TMiniRESTRequestInfo.GetPathLength: Integer;
 begin
   Result := FPathLength;
 end;
 
-function TMiniRestRequestInfo.GetRequestMethod: TMiniRestRequestMethod;
+function TMiniRESTRequestInfo.GetRequestMethod: TMiniRESTRequestMethod;
 begin
   Result := FRequestMethod;
 end;
 
-function TMiniRestRequestInfo.IsMatch(AMapping: string; ARequestMethod : TMiniRestRequestMethod): Boolean;
+function TMiniRESTRequestInfo.IsMatch(AMapping: string; ARequestMethod : TMiniRESTRequestMethod): Boolean;
 var LPath : TStringList;
     LPathParams : TArray<string>;
     I : Integer;
@@ -60,7 +60,7 @@ begin
   end;
 end;
 
-function TMiniRestRequestInfo.ParseMappingtoPathParams(
+function TMiniRESTRequestInfo.ParseMappingtoPathParams(
   AMapping: string): TArray<string>;
 var LPath : TStringList;
     I : Integer;

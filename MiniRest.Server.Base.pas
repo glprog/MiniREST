@@ -1,63 +1,63 @@
-unit MiniRest.Server.Base;
+unit MiniREST.Server.Base;
 
 interface
 
-uses SysUtils, Rtti, Generics.Defaults, MiniRest.Intf, MiniRest.Server.Intf,
-  MiniRest.Controller.Intf, MiniRest.Controller.Base, MiniRest.Common, MiniRest.Attribute,
-  Generics.Collections, SyncObjs, MiniRest.Controller.Security.Intf;
+uses SysUtils, Rtti, Generics.Defaults, MiniREST.Intf, MiniREST.Server.Intf,
+  MiniREST.Controller.Intf, MiniREST.Controller.Base, MiniREST.Common, MiniREST.Attribute,
+  Generics.Collections, SyncObjs, MiniREST.Controller.Security.Intf;
 
 type
-  TMiniRestServerBase = class(TInterfacedObject, IMiniRestServer) // Mover para outra unit
+  TMiniRESTServerBase = class(TInterfacedObject, IMiniRESTServer) // Mover para outra unit
   strict private
     type
-      TMiniRestActionInfo = class(TInterfacedObject, IMiniRestActionInfo)
+      TMiniRESTActionInfo = class(TInterfacedObject, IMiniRESTActionInfo)
       private
         FMapping : string;
         FMethod : TRttiMethod;
         FClass : TClass;
-        FRequestMethod : TMiniRestRequestMethod;
+        FRequestMethod : TMiniRESTRequestMethod;
         FPermission : string;
         FIsFactory : Boolean;
-        FFactory : IMiniRestControllerFactory;
+        FFactory : IMiniRESTControllerFactory;
       public
-        constructor Create(AMapping, APermission : string; AMethod : TRttiMethod; ARequestMethod : TMiniRestRequestMethod; AClass : TClass; AFactory: IMiniRestControllerFactory = nil);
+        constructor Create(AMapping, APermission : string; AMethod : TRttiMethod; ARequestMethod : TMiniRESTRequestMethod; AClass : TClass; AFactory: IMiniRESTControllerFactory = nil);
         function GetClass: TClass;
         function GetMapping: string;
         function GetMethod: TRttiMethod;
-        function GetRequestMethod: TMiniRestRequestMethod;
+        function GetRequestMethod: TMiniRESTRequestMethod;
         function GetPermission: string;
         function GetIsFactory: Boolean;
-        function GetFactory: IMiniRestControllerFactory;
+        function GetFactory: IMiniRESTControllerFactory;
       end;
   protected
     FControllerOtherwise : TClass;
-    FControllers : TObjectDictionary<string,  IMiniRestActionInfo>;
-    FMiddlewares : TList<IMiniRestMiddleware>;
+    FControllers : TObjectDictionary<string,  IMiniRESTActionInfo>;
+    FMiddlewares : TList<IMiniRESTMiddleware>;
     FRttiContext : TRttiContext;
     FLock : TObject;
-    FSecurityController : TFunc<IMiniRestSecurityController>;
-    FLogger : IMiniRestLogger;
+    FSecurityController : TFunc<IMiniRESTSecurityController>;
+    FLogger : IMiniRESTLogger;
     procedure Lock;
     procedure Unlock;
-    procedure FindController(AContext : IMiniRestActionContext);
-    procedure InternalAddController(AClass: TClass; AControllerFactory: IMiniRestControllerFactory);
+    procedure FindController(AContext : IMiniRESTActionContext);
+    procedure InternalAddController(AClass: TClass; AControllerFactory: IMiniRESTControllerFactory);
   public
     constructor Create;
     destructor Destroy; override;
     procedure AddController(AController: TClass); overload;
-    procedure AddController(AControllerFactory: IMiniRestControllerFactory); overload;
+    procedure AddController(AControllerFactory: IMiniRESTControllerFactory); overload;
     procedure SetControllerOtherwise(AController: TClass);
-    procedure SetSecurityController(AController: TFunc<MiniRest.Controller.Security.Intf.IMiniRestSecurityController>);
+    procedure SetSecurityController(AController: TFunc<MiniREST.Controller.Security.Intf.IMiniRESTSecurityController>);
     function GetPort: Integer; virtual; abstract;
     procedure SetPort(APort: Integer); virtual; abstract;
     function Start: Boolean; virtual; abstract;
     function Stop: Boolean; virtual; abstract;
-    procedure AddMiddleware(AMiddleware: IMiniRestMiddleware);
-    function GetLogger: IMiniRestLogger;
-    procedure SetLogger(ALogger: IMiniRestLogger);
+    procedure AddMiddleware(AMiddleware: IMiniRESTMiddleware);
+    function GetLogger: IMiniRESTLogger;
+    procedure SetLogger(ALogger: IMiniRESTLogger);
   end;
 
-  TMiniRestQueryParamBase = class(TInterfacedObject, IMiniRestQueryParam)
+  TMiniRESTQueryParamBase = class(TInterfacedObject, IMiniRESTQueryParam)
   private
     FName : string;
     FValue : string;
@@ -67,51 +67,41 @@ type
     function GetValue: string;
   end;
 
-  TMiniRestSecurityResponse = class(TInterfacedObject, IMiniRestSecurityResponse)
-  private
-    FHasPermission: Boolean;
-    FPermissionErrorMessage: string;
-  public
-    constructor Create(const AHasPermission: Boolean; const APermissionErrorMessage: string = '');
-    function GetHasPermission: Boolean;
-    function GetPermissionErrorMessage: string;
-  end;
-
 implementation
 
-uses MiniRest.Util, MiniRest.RequestInfo, MiniRest.ControllerOtherwise.Intf,
-  MiniRest.JSON;
+uses MiniREST.Util, MiniREST.RequestInfo, MiniREST.ControllerOtherwise.Intf,
+  MiniREST.JSON;
 
-{ TMiniRestServer }
+{ TMiniRESTServer }
 
-procedure TMiniRestServerBase.AddController(AController: TClass);
+procedure TMiniRESTServerBase.AddController(AController: TClass);
 begin
   InternalAddController(AController, nil);
 end;
 
-procedure TMiniRestServerBase.AddController(
-  AControllerFactory: IMiniRestControllerFactory);
+procedure TMiniRESTServerBase.AddController(
+  AControllerFactory: IMiniRESTControllerFactory);
 begin
   InternalAddController(AControllerFactory.GetClass, AControllerFactory);
 end;
 
-procedure TMiniRestServerBase.AddMiddleware(AMiddleware: IMiniRestMiddleware);
+procedure TMiniRESTServerBase.AddMiddleware(AMiddleware: IMiniRESTMiddleware);
 begin
   FMiddlewares.Add(AMiddleware);
 end;
 
-constructor TMiniRestServerBase.Create;
+constructor TMiniRESTServerBase.Create;
 begin
   FLock := TObject.Create;
   FRttiContext := TRttiContext.Create;
   {$IFDEF VER310}
   FRttiContext.KeepContext;
   {$ENDIF}
-  FControllers := TObjectDictionary<string, IMiniRestActionInfo>.Create;
-  FMiddlewares := TList<IMiniRestMiddleware>.Create;
+  FControllers := TObjectDictionary<string, IMiniRESTActionInfo>.Create;
+  FMiddlewares := TList<IMiniRESTMiddleware>.Create;
 end;
 
-destructor TMiniRestServerBase.Destroy;
+destructor TMiniRESTServerBase.Destroy;
 begin
   FControllers.Free;
   FMiddlewares.Free;
@@ -122,17 +112,17 @@ begin
   inherited;
 end;
 
-procedure TMiniRestServerBase.FindController(AContext: IMiniRestActionContext);
-var LRequestInfo : IMiniRestRequestInfo;
-    LMiniRestActionInfo : IMiniRestActionInfo;
+procedure TMiniRESTServerBase.FindController(AContext: IMiniRESTActionContext);
+var LRequestInfo : IMiniRESTRequestInfo;
+    LMiniRESTActionInfo : IMiniRESTActionInfo;
     LController : TObject;
-    LControllerIntf : IMiniRestController;
-    LControllerOtherwise : IMiniRestControllerOtherwise; //{ TODO : Refatorar - POG!!}
-    LActionContext : IMiniRestActionContext;
-    LMiddleware : IMiniRestMiddleware;
+    LControllerIntf : IMiniRESTController;
+    LControllerOtherwise : IMiniRESTControllerOtherwise; //{ TODO : Refatorar - POG!!}
+    LActionContext : IMiniRESTActionContext;
+    LMiddleware : IMiniRESTMiddleware;
     LObject : TObject;
     LIntfTemp : IInterface;
-    LSecurityResponse : IMiniRestSecurityResponse;
+    LSecurityResponse : IMiniRESTSecurityResponse;
 begin
   { TODO : Implementar / Remover Dependencia Indy/ ServerBase }
   Lock;
@@ -158,47 +148,47 @@ begin
         Exit;
       end;*)
     end;
-    LRequestInfo := TMiniRestRequestInfo.Create(AContext.GetURI, AContext.GetCommandType);
-    for LMiniRestActionInfo in FControllers.Values do
+    LRequestInfo := TMiniRESTRequestInfo.Create(AContext.GetURI, AContext.GetCommandType);
+    for LMiniRESTActionInfo in FControllers.Values do
     begin
       //LController := LControllerClass.Create;
       { TODO : Refatorar: Otimizar }
-      if LRequestInfo.IsMatch(LMiniRestActionInfo.Mapping, LMiniRestActionInfo.RequestMethod) then
+      if LRequestInfo.IsMatch(LMiniRESTActionInfo.Mapping, LMiniRESTActionInfo.RequestMethod) then
       begin
         //LController.Action(AContext, ARequestInfo, AResponseInfo);
-        AContext.ActionInfo := LMiniRestActionInfo;
+        AContext.ActionInfo := LMiniRESTActionInfo;
         if Assigned(FSecurityController) and (FSecurityController <> nil) {and (not FSecurityController.HasPermission(AContext))} then
         begin
           LSecurityResponse := FSecurityController.HasPermission(AContext);
           if not LSecurityResponse.HasPermission then
           begin
-            AContext.SetResponseContent('{"erro":"' + TMiniRestJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}', rtApplicationJson, 403); { TODO : Mudar msg / obter de outro lugar }
+            AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}', rtApplicationJson, 403); { TODO : Mudar msg / obter de outro lugar }
             Exit;
           end;
         end;
-        if LMiniRestActionInfo.IsFactory then
-          LController := LMiniRestActionInfo.Factory.GetController
+        if LMiniRESTActionInfo.IsFactory then
+          LController := LMiniRESTActionInfo.Factory.GetController
         else
-          LController := LMiniRestActionInfo.&Class.Create;
-        if Supports(LController, IMiniRestController, LControllerIntf) then
+          LController := LMiniRESTActionInfo.&Class.Create;
+        if Supports(LController, IMiniRESTController, LControllerIntf) then
         begin
           LControllerIntf.SetActionContext(AContext);
-          if (Length(LMiniRestActionInfo.Method.GetParameters) = 1) and (LMiniRestActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniRest.Intf.IMiniRestActionContext') then
-            LMiniRestActionInfo.Method.Invoke(TObject(LControllerIntf),[TValue.From<IMiniRestActionContext>(AContext)])
+          if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
+            LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[TValue.From<IMiniRESTActionContext>(AContext)])
           else
-            LMiniRestActionInfo.Method.Invoke(TObject(LControllerIntf),[]);
-          if LMiniRestActionInfo.IsFactory then
-            LMiniRestActionInfo.Factory.ClearFactory;
+            LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[]);
+          if LMiniRESTActionInfo.IsFactory then
+            LMiniRESTActionInfo.Factory.ClearFactory;
           { TODO : Implementar }
           Exit;
         end
         else
         begin
           try
-            if (Length(LMiniRestActionInfo.Method.GetParameters) = 1) and (LMiniRestActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniRest.Intf.IMiniRestActionContext') then
-              LMiniRestActionInfo.Method.Invoke(TObject(LController),[TValue.From<IMiniRestActionContext>(AContext)])
+            if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
+              LMiniRESTActionInfo.Method.Invoke(TObject(LController),[TValue.From<IMiniRESTActionContext>(AContext)])
             else
-              raise Exception.Create('Método ' + LMiniRestActionInfo.Method.Parent.Name + '.'+ LMiniRestActionInfo.Method.Name + ' sem parâmetro IMiniRestActionContext.'); { TODO : Add logger }
+              raise Exception.Create('Método ' + LMiniRESTActionInfo.Method.Parent.Name + '.'+ LMiniRESTActionInfo.Method.Name + ' sem parâmetro IMiniRESTActionContext.'); { TODO : Add logger }
             Exit;
           finally
             LController.Free;
@@ -209,12 +199,12 @@ begin
     if FControllerOtherwise <> nil then
     begin
       LObject := FControllerOtherwise.Create;
-      if Supports(LObject, IMiniRestControllerOtherwise, LControllerOtherwise) then
+      if Supports(LObject, IMiniRESTControllerOtherwise, LControllerOtherwise) then
         LControllerOtherwise.Action(AContext)
       else
       begin
         LObject.Free;
-        raise Exception.Create('Classe ' + FControllerOtherwise.ClassName + ' não suporta interface IMiniRestControllerOtherwise');
+        raise Exception.Create('Classe ' + FControllerOtherwise.ClassName + ' não suporta interface IMiniRESTControllerOtherwise');
       end;
     end;
   finally
@@ -222,13 +212,13 @@ begin
   end;
 end;
 
-function TMiniRestServerBase.GetLogger: IMiniRestLogger;
+function TMiniRESTServerBase.GetLogger: IMiniRESTLogger;
 begin
   Result := FLogger;
 end;
 
-procedure TMiniRestServerBase.InternalAddController(AClass: TClass;
-  AControllerFactory: IMiniRestControllerFactory);
+procedure TMiniRESTServerBase.InternalAddController(AClass: TClass;
+  AControllerFactory: IMiniRESTControllerFactory);
 var LType : TRttiType;
     LMethod : TRttiMethod;
     LAttribute : TCustomAttribute;
@@ -242,45 +232,45 @@ begin
       if LAttribute.ClassType = RequestMappingAttribute then
       begin
         LRequestAttribute := RequestMappingAttribute(LAttribute);
-        FControllers.Add(LRequestAttribute.Mapping + '|' + IntToStr(Integer(LRequestAttribute.RequestMethod)), TMiniRestActionInfo.Create(
+        FControllers.Add(LRequestAttribute.Mapping + '|' + IntToStr(Integer(LRequestAttribute.RequestMethod)), TMiniRESTActionInfo.Create(
         LRequestAttribute.Mapping, LRequestAttribute.Permission, LMethod, LRequestAttribute.RequestMethod, AClass, AControllerFactory));
       end;
     end;
   end;
 end;
 
-procedure TMiniRestServerBase.Lock;
+procedure TMiniRESTServerBase.Lock;
 begin
   TMonitor.Enter(FLock);
 end;
 
-procedure TMiniRestServerBase.SetControllerOtherwise(
+procedure TMiniRESTServerBase.SetControllerOtherwise(
   AController: TClass);
 begin
   FControllerOtherwise := AController;
 end;
 
-procedure TMiniRestServerBase.SetLogger(ALogger: IMiniRestLogger);
+procedure TMiniRESTServerBase.SetLogger(ALogger: IMiniRESTLogger);
 begin
   FLogger := ALogger;
 end;
 
-procedure TMiniRestServerBase.SetSecurityController(
-  AController: TFunc<MiniRest.Controller.Security.Intf.IMiniRestSecurityController>);
+procedure TMiniRESTServerBase.SetSecurityController(
+  AController: TFunc<MiniREST.Controller.Security.Intf.IMiniRESTSecurityController>);
 begin
   FSecurityController := AController;
 end;
 
-procedure TMiniRestServerBase.Unlock;
+procedure TMiniRESTServerBase.Unlock;
 begin
   TMonitor.Exit(FLock);
 end;
 
-{ TMiniRestServer.TMiniRestActionInfo }
+{ TMiniRESTServer.TMiniRESTActionInfo }
 
-constructor TMiniRestServerBase.TMiniRestActionInfo.Create(AMapping, APermission : string;
-  AMethod: TRttiMethod; ARequestMethod : TMiniRestRequestMethod; AClass: TClass;
-  AFactory: IMiniRestControllerFactory);
+constructor TMiniRESTServerBase.TMiniRESTActionInfo.Create(AMapping, APermission : string;
+  AMethod: TRttiMethod; ARequestMethod : TMiniRESTRequestMethod; AClass: TClass;
+  AFactory: IMiniRESTControllerFactory);
 begin
   FMapping := AMapping;
   FMethod := AMethod;
@@ -291,76 +281,57 @@ begin
   FIsFactory := AFactory <> nil;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetClass: TClass;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetClass: TClass;
 begin
   Result := FClass;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetFactory: IMiniRestControllerFactory;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetFactory: IMiniRESTControllerFactory;
 begin
   Result := FFactory;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetIsFactory: Boolean;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetIsFactory: Boolean;
 begin
   Result := FIsFactory;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetMapping: string;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetMapping: string;
 begin
   Result := FMapping;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetMethod: TRttiMethod;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetMethod: TRttiMethod;
 begin
   Result := FMethod;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetPermission: string;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetPermission: string;
 begin
   Result := FPermission;
 end;
 
-function TMiniRestServerBase.TMiniRestActionInfo.GetRequestMethod: TMiniRestRequestMethod;
+function TMiniRESTServerBase.TMiniRESTActionInfo.GetRequestMethod: TMiniRESTRequestMethod;
 begin
   Result := FRequestMethod;
 end;
 
-{ TMiniRestQueryParamBase }
+{ TMiniRESTQueryParamBase }
 
-constructor TMiniRestQueryParamBase.Create(AName, AValue: string);
+constructor TMiniRESTQueryParamBase.Create(AName, AValue: string);
 begin
   FName := AName;
   FValue := AValue;
 end;
 
-function TMiniRestQueryParamBase.GetName: string;
+function TMiniRESTQueryParamBase.GetName: string;
 begin
   Result := FName;
 end;
 
-function TMiniRestQueryParamBase.GetValue: string;
+function TMiniRESTQueryParamBase.GetValue: string;
 begin
   Result := FValue;
-end;
-
-{ TMiniRestSecurityResponse }
-
-constructor TMiniRestSecurityResponse.Create(const AHasPermission: Boolean;
-  const APermissionErrorMessage: string);
-begin
-  FHasPermission:= AHasPermission;
-  FPermissionErrorMessage:= APermissionErrorMessage;
-end;
-
-function TMiniRestSecurityResponse.GetHasPermission: Boolean;
-begin
-  Result:= FHasPermission;
-end;
-
-function TMiniRestSecurityResponse.GetPermissionErrorMessage: string;
-begin
-  Result:= FPermissionErrorMessage;
 end;
 
 end.

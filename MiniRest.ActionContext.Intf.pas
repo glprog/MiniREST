@@ -1,4 +1,4 @@
-unit MiniRest.ActionContext.Intf;
+unit MiniREST.ActionContext.Intf;
 
 interface
 

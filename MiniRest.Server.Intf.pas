@@ -1,20 +1,20 @@
-unit MiniRest.Server.Intf;
+unit MiniREST.Server.Intf;
 
 interface
 
-uses SysUtils, MiniRest.Controller.Intf, {MiniRest.Controller.Base,}
-  MiniRest.Controller.Security.Intf, MiniRest.Intf;
+uses SysUtils, MiniREST.Controller.Intf, {MiniREST.Controller.Base,}
+  MiniREST.Controller.Security.Intf, MiniREST.Intf;
 
 type
-  IMiniRestServer = interface
+  IMiniRESTServer = interface
   ['{91170691-E5BF-4C74-9B7F-052908DDA8E7}']
     procedure AddController(AController : TClass); overload;
-    procedure AddController(AControllerFactory : IMiniRestControllerFactory); overload;
+    procedure AddController(AControllerFactory : IMiniRESTControllerFactory); overload;
     procedure SetControllerOtherwise(AController : TClass);
-    procedure SetSecurityController(AController : TFunc<IMiniRestSecurityController>);
-    function GetLogger : IMiniRestLogger;
-    procedure SetLogger(ALogger : IMiniRestLogger);
-    procedure AddMiddleware(AMiddleware : IMiniRestMiddleware); { TODO : Mudar para class ou factory ?}
+    procedure SetSecurityController(AController : TFunc<IMiniRESTSecurityController>);
+    function GetLogger : IMiniRESTLogger;
+    procedure SetLogger(ALogger : IMiniRESTLogger);
+    procedure AddMiddleware(AMiddleware : IMiniRESTMiddleware); { TODO : Mudar para class ou factory ?}
     function GetPort : Integer;
     procedure SetPort(APort : Integer);
     function Start : Boolean;
