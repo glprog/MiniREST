@@ -22,8 +22,8 @@ type
 //    function IsValidToken(AToken : string) : Boolean; overload;
 //    function IsValidToken(AContext : IMiniRESTActionContext) : Boolean; overload;
 //    function GetLoginPath : string;
-    procedure AddExcludedPath(APath : string);
-    function IsExcludedPath(APath : string) : Boolean;
+//    procedure AddExcludedPath(APath : string);
+//    function IsExcludedPath(APath : string) : Boolean;
   end;
 
 implementation
