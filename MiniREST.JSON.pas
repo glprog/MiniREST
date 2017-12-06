@@ -1,4 +1,4 @@
-unit MiniRest.JSON;
+unit MiniREST.JSON;
 
 interface
 
@@ -8,14 +8,14 @@ uses SysUtils, Rtti, Generics.Collections, Contnrs,
 
 type
   {$IF DEFINED(VER310) OR DEFINED(VER290)}
-  TMiniRestJsonInterceptor = class(TJSONInterceptor)
+  TMiniRESTJsonInterceptor = class(TJSONInterceptor)
   public
     function ObjectsConverter(Data: TObject; Field: string): TListOfObjects; override;
     procedure ObjectsReverter(Data: TObject; Field: string; Args: TListOfObjects); override;
   end;
 
-  TMiniRestJsonInterceptorClass = class of TMiniRestJsonInterceptor;
-  MiniRestJsonAttribute = class(JsonReflectAttribute)
+  TMiniRESTJsonInterceptorClass = class of TMiniRESTJsonInterceptor;
+  MiniRESTJsonAttribute = class(JsonReflectAttribute)
   private
     FObjClass : TClass;
   public
@@ -24,28 +24,28 @@ type
   end;
   {$IFEND}
 
-  TMiniRestJSON = class
+  TMiniRESTJSON = class
     class function TratarJsonString(AJson : string) : string;
     class function DatasetToJson(ADataset : TDataset) : string;
     class function TratarJSONArray(AJSON : string) : string;
   end;
 
-  MiniRestJsonNullAttribute = class(TCustomAttribute)
+  MiniRESTJsonNullAttribute = class(TCustomAttribute)
   end;
 
-  MiniRestJsonDateAttribute = class(TCustomAttribute)
+  MiniRESTJsonDateAttribute = class(TCustomAttribute)
   end;
 
-  MiniRestJsonTimeAttribute = class(TCustomAttribute)
+  MiniRESTJsonTimeAttribute = class(TCustomAttribute)
   end;
 
 implementation
 
-uses MiniRest.Util;
+uses MiniREST.Util;
 
-{ TMiniRestJsonInterceptor }
+{ TMiniRESTJsonInterceptor }
 {$IF DEFINED(VER310) OR DEFINED(VER290)}
-function TMiniRestJsonInterceptor.ObjectsConverter(Data: TObject;
+function TMiniRESTJsonInterceptor.ObjectsConverter(Data: TObject;
   Field: string): TListOfObjects;
 var LContext : TRttiContext;
     LType : TRttiType;
@@ -69,7 +69,7 @@ begin
     raise Exception.Create('Tipo não suportado'); { TODO : Melhorar msg }
 end;
 
-procedure TMiniRestJsonInterceptor.ObjectsReverter(Data: TObject; Field: string;
+procedure TMiniRESTJsonInterceptor.ObjectsReverter(Data: TObject; Field: string;
   Args: TListOfObjects);
 var LContext : TRttiContext;
     LType : TRttiType;
@@ -79,7 +79,7 @@ var LContext : TRttiContext;
 begin
   LContext := TRttiContext.Create;
   LType := LContext.GetType(Data.ClassType);
-  LField := LType.GetField(TMiniRestJsonUtil.ConvertFieldNameFromJson(Data,Field));
+  LField := LType.GetField(TMiniRESTJsonUtil.ConvertFieldNameFromJson(Data,Field));
   if LField.FieldType.Name.StartsWith('TObjectList<') then
   begin
     LMethod := LField.FieldType.GetMethod('Add');
@@ -91,18 +91,18 @@ begin
 end;
 
 
-{ MiniRestJsonAttribute }
+{ MiniRESTJsonAttribute }
 
-constructor MiniRestJsonAttribute.Create(AObjClass: TClass;
+constructor MiniRESTJsonAttribute.Create(AObjClass: TClass;
   ConverterType: TConverterType; ReverterType: TReverterType);
 begin
-  inherited Create(ConverterType, ReverterType, TMiniRestJsonInterceptor);
+  inherited Create(ConverterType, ReverterType, TMiniRESTJsonInterceptor);
   FObjClass := AObjClass;
 end;
 {$IFEND}
-{ TMiniRestJSON }
+{ TMiniRESTJSON }
 
-class function TMiniRestJSON.DatasetToJson(ADataset: TDataset): string;
+class function TMiniRESTJSON.DatasetToJson(ADataset: TDataset): string;
 var LField : TField;
     LJSONValue : TJSONValue;
     LJSONObject : TJSONObject;
@@ -144,7 +144,7 @@ begin
   end;
 end;
 
-class function TMiniRestJSON.TratarJSONArray(AJSON: string): string;
+class function TMiniRESTJSON.TratarJSONArray(AJSON: string): string;
 begin
   if Pos('[', AJSON) <> 1 then
     Result := '[' + AJSON + ']'
@@ -152,7 +152,7 @@ begin
     Result := AJSON;
 end;
 
-class function TMiniRestJSON.TratarJsonString(AJson: string): string;
+class function TMiniRESTJSON.TratarJsonString(AJson: string): string;
 begin
   { TODO : Rever tratamento }
   Result := StringReplace(Trim(AJson), '"', '\"', [rfReplaceAll]);

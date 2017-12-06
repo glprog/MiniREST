@@ -1,19 +1,19 @@
-unit MiniRest.Indy;
+unit MiniREST.Indy;
 
 interface
 
-uses Classes, SysUtils, {$IF DEFINED(VER310) OR DEFINED(VER290)} JSON {$ELSE} DBXJSON {$IFEND}, MiniRest.Intf, MiniRest.Common,
-  MiniRest.Server.Base, IdContext, IdCustomHTTPServer, IdHTTPServer, IdGlobal,
+uses Classes, SysUtils, {$IF DEFINED(VER310) OR DEFINED(VER290)} JSON {$ELSE} DBXJSON {$IFEND}, MiniREST.Intf, MiniREST.Common,
+  MiniREST.Server.Base, IdContext, IdCustomHTTPServer, IdHTTPServer, IdGlobal,
   IdGlobalProtocols, IdSchedulerOfThreadPool;
 
 type
-  TMiniRestServerIndy = class(TMiniRestServerBase)
+  TMiniRESTServerIndy = class(TMiniRESTServerBase)
   private
     FHttpServer : TIdHTTPServer;
     FThreadPool : TIdSchedulerOfThreadPool;
     procedure FindController(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo;
       AResponseInfo: TIdHTTPResponseInfo); overload;
-    function IndyToMiniRestRequestType(ACommandType : THTTPCommandType) : TMiniRestRequestMethod;
+    function IndyToMiniRESTRequestType(ACommandType : THTTPCommandType) : TMiniRESTRequestMethod;
     procedure OnCommandError(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
   AException: Exception);
@@ -26,49 +26,49 @@ type
     procedure SetPort(APort: Integer); override;
   end;
 
-  TMiniRestActionContextIndy = class(TInterfacedObject, IMiniRestActionContext)
+  TMiniRESTActionContextIndy = class(TInterfacedObject, IMiniRESTActionContext)
   private
-    FActionInfo : IMiniRestActionInfo;
+    FActionInfo : IMiniRESTActionInfo;
     FIndyContext : TIdContext;
     FRequestInfo : TIdHTTPRequestInfo;
     FResponseInfo : TIdHTTPResponseInfo;
     FRequestContentString : string;
   public
-    class function New(AActionInfo : IMiniRestActionInfo; AIndyContext : TIdContext;
-    ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo) : IMiniRestActionContext;
-    constructor Create(AActionInfo : IMiniRestActionInfo; AIndyContext : TIdContext;
+    class function New(AActionInfo : IMiniRESTActionInfo; AIndyContext : TIdContext;
+    ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo) : IMiniRESTActionContext;
+    constructor Create(AActionInfo : IMiniRESTActionInfo; AIndyContext : TIdContext;
     ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo);
-    function GetActionInfo: IMiniRestActionInfo;
-    procedure SetActionInfo(AActionInfo: IMiniRestActionInfo);
+    function GetActionInfo: IMiniRESTActionInfo;
+    procedure SetActionInfo(AActionInfo: IMiniRESTActionInfo);
     function GetIndyContext: TIdContext;
     function GetRequestInfo: TIdHTTPRequestInfo;
     function GetResponseInfo: TIdHTTPResponseInfo;
     function GetRequestContentAsString: string;
     function GetPathVariable(AVariable: string): string;
     function GetAuthToken: string;
-    procedure SetResponseContent(AContent: string; AContentType : TMiniRestResponseType = rtTextHtml; AStatusCode: Integer = 200);
+    procedure SetResponseContent(AContent: string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode: Integer = 200);
     function GetURI: string;
-    function GetCommandType: TMiniRestRequestMethod;
+    function GetCommandType: TMiniRESTRequestMethod;
     function GetHeader(AName: string): string;
     procedure SetHeader(AName: string; AValue: string);
     procedure AppendHeader(AName: string; AValue: string);
     procedure ServeFile(AFilePath: string);
     procedure SendRedirect(ALocation: string);
     procedure SetResponseStream(AStream: TStream);
-    function GetQueryParam(AQueryParam: string): IMiniRestQueryParam;
-    function GetQueryParams: System.TArray<MiniRest.Intf.IMiniRestQueryParam>;
+    function GetQueryParam(AQueryParam: string): IMiniRESTQueryParam;
+    function GetQueryParams: System.TArray<MiniREST.Intf.IMiniRESTQueryParam>;
   end;
 
-  TMiniRestQueryParamIndy = class(TMiniRestQueryParamBase)
+  TMiniRESTQueryParamIndy = class(TMiniRESTQueryParamBase)
   end;
 
 implementation
 
-uses MiniRest.Util;
+uses MiniREST.Util;
 
-{ TMiniRestServerIndy }
+{ TMiniRESTServerIndy }
 
-constructor TMiniRestServerIndy.Create;
+constructor TMiniRESTServerIndy.Create;
 begin
   inherited;
   FHttpServer := TIdHTTPServer.Create(nil);
@@ -77,21 +77,21 @@ begin
   FThreadPool.MaxThreads := 100;
   FHttpServer.Scheduler := FThreadPool;
   FHttpServer.DefaultPort := 8080;
-  FHttpServer.ServerSoftware := 'MiniRest 0.1';
+  FHttpServer.ServerSoftware := 'MiniREST 0.1';
   FHttpServer.ListenQueue := 50;
   FHttpServer.OnCommandError := OnCommandError;
   FHttpServer.OnCommandGet := FindController;
   FHttpServer.OnCommandOther := FindController;
 end;
 
-destructor TMiniRestServerIndy.Destroy;
+destructor TMiniRESTServerIndy.Destroy;
 begin
   FHttpServer.Free;
   FThreadPool.Free;
   inherited;
 end;
 
-procedure TMiniRestServerIndy.FindController(AContext: TIdContext;
+procedure TMiniRESTServerIndy.FindController(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 begin
   {$IF DEFINED(VER310) OR DEFINED(VER290)}
@@ -101,16 +101,16 @@ begin
   {$IFEND}
   AResponseInfo.ContentType := 'text/html; charset=utf-8';
   ARequestInfo.ContentEncoding := 'utf-8';
-  FindController(TMiniRestActionContextIndy.New(nil, AContext, ARequestInfo, AResponseInfo));
+  FindController(TMiniRESTActionContextIndy.New(nil, AContext, ARequestInfo, AResponseInfo));
 end;
 
-function TMiniRestServerIndy.GetPort: Integer;
+function TMiniRESTServerIndy.GetPort: Integer;
 begin
   Result := FHttpServer.DefaultPort;
 end;
 
-function TMiniRestServerIndy.IndyToMiniRestRequestType(
-  ACommandType: THTTPCommandType): TMiniRestRequestMethod;
+function TMiniRESTServerIndy.IndyToMiniRESTRequestType(
+  ACommandType: THTTPCommandType): TMiniRESTRequestMethod;
 begin
   case ACommandType of
     hcGET: Result := rmGet;
@@ -123,7 +123,7 @@ begin
   end;
 end;
 
-procedure TMiniRestServerIndy.OnCommandError(AContext: TIdContext;
+procedure TMiniRESTServerIndy.OnCommandError(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
   AException: Exception);
 var LJson : TJSONObject;
@@ -149,31 +149,31 @@ begin
   end;
 end;
 
-procedure TMiniRestServerIndy.SetPort(APort: Integer);
+procedure TMiniRESTServerIndy.SetPort(APort: Integer);
 begin
   FHttpServer.DefaultPort := APort;
 end;
 
-function TMiniRestServerIndy.Start: Boolean;
+function TMiniRESTServerIndy.Start: Boolean;
 begin
   FHttpServer.Active := True;
   Result := True; { TODO : Refat }
 end;
 
-function TMiniRestServerIndy.Stop: Boolean;
+function TMiniRESTServerIndy.Stop: Boolean;
 begin
   FHttpServer.Active := False;
   Result := True; { TODO : Refat }
 end;
 
-{ TMiniRestActionContext }
+{ TMiniRESTActionContext }
 
-procedure TMiniRestActionContextIndy.AppendHeader(AName, AValue: string);
+procedure TMiniRESTActionContextIndy.AppendHeader(AName, AValue: string);
 begin
   FResponseInfo.CustomHeaders.AddValue(AName, AValue);
 end;
 
-constructor TMiniRestActionContextIndy.Create(AActionInfo : IMiniRestActionInfo; AIndyContext : TIdContext;
+constructor TMiniRESTActionContextIndy.Create(AActionInfo : IMiniRESTActionInfo; AIndyContext : TIdContext;
     ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo);
 begin
   FActionInfo := AActionInfo;
@@ -182,18 +182,18 @@ begin
   FResponseInfo := AResponseInfo;
 end;
 
-function TMiniRestActionContextIndy.GetActionInfo: IMiniRestActionInfo;
+function TMiniRESTActionContextIndy.GetActionInfo: IMiniRESTActionInfo;
 begin
   Result := FActionInfo;
 end;
 
-function TMiniRestActionContextIndy.GetAuthToken: string;
+function TMiniRESTActionContextIndy.GetAuthToken: string;
 begin
   if FRequestInfo.RawHeaders.IndexOfName('MRestToken') > -1 then
     Result := FRequestInfo.RawHeaders.Values['MRestToken'];
 end;
 
-function TMiniRestActionContextIndy.GetCommandType: TMiniRestRequestMethod;
+function TMiniRESTActionContextIndy.GetCommandType: TMiniRESTRequestMethod;
 begin
   case FRequestInfo.CommandType of
     hcGET: Result := rmGet;
@@ -206,41 +206,41 @@ begin
   end;
 end;
 
-function TMiniRestActionContextIndy.GetHeader(AName: string): string;
+function TMiniRESTActionContextIndy.GetHeader(AName: string): string;
 begin
   Result := FRequestInfo.RawHeaders.Values[AName];
 end;
 
-function TMiniRestActionContextIndy.GetIndyContext: TIdContext;
+function TMiniRESTActionContextIndy.GetIndyContext: TIdContext;
 begin
   Result := FIndyContext;
 end;
 
-function TMiniRestActionContextIndy.GetPathVariable(AVariable: string): string;
+function TMiniRESTActionContextIndy.GetPathVariable(AVariable: string): string;
 begin
-  Result := TMiniRestUtil.GetPathVariable(AVariable,FRequestInfo.Document, Self);
+  Result := TMiniRESTUtil.GetPathVariable(AVariable,FRequestInfo.Document, Self);
 end;
 
-function TMiniRestActionContextIndy.GetQueryParam(
-  AQueryParam: string): IMiniRestQueryParam;
+function TMiniRESTActionContextIndy.GetQueryParam(
+  AQueryParam: string): IMiniRESTQueryParam;
 begin
   Result := nil;
   if FRequestInfo.Params.IndexOfName(AQueryParam) > -1 then
-    Result := TMiniRestQueryParamIndy.Create(AQueryParam, FRequestInfo.Params.Values[AQueryParam]);
+    Result := TMiniRESTQueryParamIndy.Create(AQueryParam, FRequestInfo.Params.Values[AQueryParam]);
 end;
 
-function TMiniRestActionContextIndy.GetQueryParams: System.TArray<MiniRest.Intf.IMiniRestQueryParam>;
+function TMiniRESTActionContextIndy.GetQueryParams: System.TArray<MiniREST.Intf.IMiniRESTQueryParam>;
 var I : Integer;
 begin
   SetLength(Result, 0);
   for I := 0 to FRequestInfo.Params.Count - 1 do
   begin
     SetLength(Result, Length(Result) + 1);
-    Result[Length(Result) - 1] := TMiniRestQueryParamIndy.Create(FRequestInfo.Params.Names[I], FRequestInfo.Params.ValueFromIndex[I]);
+    Result[Length(Result) - 1] := TMiniRESTQueryParamIndy.Create(FRequestInfo.Params.Names[I], FRequestInfo.Params.ValueFromIndex[I]);
   end;
 end;
 
-function TMiniRestActionContextIndy.GetRequestContentAsString: string;
+function TMiniRESTActionContextIndy.GetRequestContentAsString: string;
 begin
   if FRequestContentString = '' then
   {$IF DEFINED(VER310) OR DEFINED(VER290)}
@@ -251,34 +251,34 @@ begin
   Result := FRequestContentString;
 end;
 
-function TMiniRestActionContextIndy.GetRequestInfo: TIdHTTPRequestInfo;
+function TMiniRESTActionContextIndy.GetRequestInfo: TIdHTTPRequestInfo;
 begin
   Result := FRequestInfo;
 end;
 
-function TMiniRestActionContextIndy.GetResponseInfo: TIdHTTPResponseInfo;
+function TMiniRESTActionContextIndy.GetResponseInfo: TIdHTTPResponseInfo;
 begin
   Result := FResponseInfo;
 end;
 
-function TMiniRestActionContextIndy.GetURI: string;
+function TMiniRESTActionContextIndy.GetURI: string;
 begin
   Result := FRequestInfo.URI;
 end;
 
-class function TMiniRestActionContextIndy.New(
-  AActionInfo : IMiniRestActionInfo; AIndyContext : TIdContext;
-    ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo): IMiniRestActionContext;
+class function TMiniRESTActionContextIndy.New(
+  AActionInfo : IMiniRESTActionInfo; AIndyContext : TIdContext;
+    ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo): IMiniRESTActionContext;
 begin
   Result := Create(AActionInfo, AIndyContext, ARequestInfo, AResponseInfo);
 end;
 
-procedure TMiniRestActionContextIndy.SendRedirect(ALocation: string);
+procedure TMiniRESTActionContextIndy.SendRedirect(ALocation: string);
 begin
   FResponseInfo.Redirect(ALocation);
 end;
 
-procedure TMiniRestActionContextIndy.ServeFile(AFilePath: string);
+procedure TMiniRESTActionContextIndy.ServeFile(AFilePath: string);
 var LFileStream : TFileStream;
   LFileName : string;
 begin
@@ -296,29 +296,29 @@ begin
   end;
 end;
 
-procedure TMiniRestActionContextIndy.SetActionInfo(
-  AActionInfo: IMiniRestActionInfo);
+procedure TMiniRESTActionContextIndy.SetActionInfo(
+  AActionInfo: IMiniRESTActionInfo);
 begin
   FActionInfo := AActionInfo;
 end;
 
-procedure TMiniRestActionContextIndy.SetHeader(AName, AValue: string);
+procedure TMiniRESTActionContextIndy.SetHeader(AName, AValue: string);
 begin
   FResponseInfo.CustomHeaders.Values[AName] := AValue;
 end;
 
-procedure TMiniRestActionContextIndy.SetResponseContent(AContent: string; AContentType : TMiniRestResponseType; AStatusCode: Integer);
+procedure TMiniRESTActionContextIndy.SetResponseContent(AContent: string; AContentType : TMiniRESTResponseType; AStatusCode: Integer);
 begin
   FResponseInfo.ContentText := AContent;
   case AContentType of
     rtTextHtml: FResponseInfo.ContentType := 'text/html; charset=utf-8';
     else
-      FResponseInfo.ContentType := MiniRestResponseTypes[AContentType]; //'text/html; charset=utf-8';
+      FResponseInfo.ContentType := MiniRESTResponseTypes[AContentType]; //'text/html; charset=utf-8';
   end;
   FResponseInfo.ResponseNo := AStatusCode;
 end;
 
-procedure TMiniRestActionContextIndy.SetResponseStream(AStream: TStream);
+procedure TMiniRESTActionContextIndy.SetResponseStream(AStream: TStream);
 begin
   FResponseInfo.ContentStream := AStream;
 end;
