@@ -143,7 +143,6 @@ begin
     {$IFEND}
     AResponseInfo.CharSet := 'utf-8';
     AResponseInfo.ContentType := 'application/json;';
-    AResponseInfo.CustomHeaders.AddValue('Access-Control-Allow-Origin', '*');
   finally
     LJson.Free;
   end;

@@ -2,7 +2,7 @@ unit MiniREST.JSON;
 
 interface
 
-uses SysUtils, Rtti, Generics.Collections, Contnrs,
+uses SysUtils, Rtti, Generics.Collections, Contnrs, JsonDataObjects,
   Variants, VarUtils{$IF DEFINED(VER310) OR DEFINED(VER290)} ,
   REST.JsonReflect, System.JSON {$ELSE} ,DBXJson{$IFEND}, DB, DateUtils;
 
@@ -25,8 +25,9 @@ type
   {$IFEND}
 
   TMiniRESTJSON = class
-    class function TratarJsonString(AJson : string) : string;
-    class function DatasetToJson(ADataset : TDataset) : string;
+    class function TratarJsonString(AJson : string) : string; deprecated;
+    class function DatasetToJson(ADataset : TDataset) : string; deprecated 'Use DatasetToJson2 instead';
+    class function DatasetToJson2(ADataset : TDataset) : string;
     class function TratarJSONArray(AJSON : string) : string;
   end;
 
@@ -144,6 +145,41 @@ begin
   end;
 end;
 
+class function TMiniRESTJSON.DatasetToJson2(ADataset: TDataset): string;
+var LField : TField;
+    LJSONObject : JsonDataObjects.TJSONObject;
+    LJSONArray : JsonDataObjects.TJSONArray;
+begin
+  ADataset.First;
+  LJSONArray := JsonDataObjects.TJSONArray.Create;
+  try
+    while not ADataset.Eof do
+    begin
+      LJSONObject := JsonDataObjects.TJSONObject.Create;
+      for LField in ADataset.Fields do
+      begin
+        case LField.DataType of
+          ftSmallint, ftSingle, ftInteger, ftWord, ftShortint : LJSONObject.Values[LField.FieldName].IntValue := LField.AsInteger;
+          ftLargeint : LJSONObject.Values[LField.FieldName].LongValue := LField.AsLargeInt;
+          ftFMTBcd, ftExtended, ftFloat, ftCurrency, ftBCD : LJSONObject.Values[LField.FieldName].FloatValue := LField.AsFloat;
+          ftDate, ftTime, ftDateTime, ftTimeStamp : LJSONObject.Values[LField.FieldName].DateTimeValue := LField.AsDateTime;
+          ftString, ftWideString, ftMemo : LJSONObject.Values[LField.FieldName].Value := LField.AsString;
+          else
+            raise Exception.Create('Tipo não suportado: Campo ' + LField.FieldName);
+        end;
+      end;
+      LJSONArray.Add(LJSONObject);
+      ADataset.Next;
+    end;
+    if LJSONArray.Count = 1 then
+      Result := LJSONArray.Values[0].ObjectValue.ToJSON
+    else
+      Result := LJSONArray.ToJSON()
+  finally
+    LJSONArray.Free;
+  end;
+end;
+
 class function TMiniRESTJSON.TratarJSONArray(AJSON: string): string;
 begin
   if Pos('[', AJSON) <> 1 then
@@ -154,7 +190,6 @@ end;
 
 class function TMiniRESTJSON.TratarJsonString(AJson: string): string;
 begin
-  { TODO : Rever tratamento }
   Result := StringReplace(Trim(AJson), '"', '\"', [rfReplaceAll]);
   Result := StringReplace(Result, #13#10, '\n', [rfReplaceAll]);
   Result := StringReplace(Result, #13, '\n', [rfReplaceAll]);
