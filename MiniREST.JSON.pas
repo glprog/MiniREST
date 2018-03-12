@@ -158,6 +158,9 @@ begin
       LJSONObject := JsonDataObjects.TJSONObject.Create;
       for LField in ADataset.Fields do
       begin
+        if LField.IsNull then
+          LJSONObject.Values[LField.FieldName].VariantValue := Null
+        else
         case LField.DataType of
           ftSmallint, ftSingle, ftInteger, ftWord, ftShortint : LJSONObject.Values[LField.FieldName].IntValue := LField.AsInteger;
           ftLargeint : LJSONObject.Values[LField.FieldName].LongValue := LField.AsLargeInt;
