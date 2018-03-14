@@ -172,6 +172,7 @@ begin
           LController := LMiniRESTActionInfo.&Class.Create;
         if Supports(LController, IMiniRESTController, LControllerIntf) then
         begin
+          LControllerIntf.SetLogger(GetLogger);
           LControllerIntf.SetActionContext(AContext);
           if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
             LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[TValue.From<IMiniRESTActionContext>(AContext)])
