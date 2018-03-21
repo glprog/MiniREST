@@ -2,7 +2,7 @@ unit MiniREST.Indy;
 
 interface
 
-uses Classes, SysUtils, {$IF DEFINED(VER310) OR DEFINED(VER290)} JSON {$ELSE} DBXJSON {$IFEND}, MiniREST.Intf, MiniREST.Common,
+uses Classes, SysUtils, JsonDataObjects, {$IF DEFINED(VER310) OR DEFINED(VER290)} JSON {$ELSE} DBXJSON {$IFEND}, MiniREST.Intf, MiniREST.Common,
   MiniREST.Server.Base, IdContext, IdCustomHTTPServer, IdHTTPServer, IdGlobal,
   IdGlobalProtocols, IdSchedulerOfThreadPool;
 
@@ -126,21 +126,17 @@ end;
 procedure TMiniRESTServerIndy.OnCommandError(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
   AException: Exception);
-var LJson : TJSONObject;
+var LJson : JsonDataObjects.TJSONObject;
 begin
-  LJson := TJSONObject.Create;
+  LJson := JsonDataObjects.TJSONObject.Create;
   try
     if GetLogger <> nil then
     try
-      GetLogger.Exception(AException);
+      GetLogger.Exception(ARequestInfo.URI, AException);
     except
     end;
-    LJson.AddPair('erro', TJSONString.Create(AException.ToString));
-    {$IF DEFINED(VER310) OR DEFINED(VER290)}
-    AResponseInfo.ContentText := LJson.ToJSON;
-    {$ELSE}
-    AResponseInfo.ContentText := LJson.ToString;
-    {$IFEND}
+    LJson.S['message'] := AException.ToString;
+    AResponseInfo.ContentText := LJson.ToJSON();
     AResponseInfo.CharSet := 'utf-8';
     AResponseInfo.ContentType := 'application/json;';
   finally
