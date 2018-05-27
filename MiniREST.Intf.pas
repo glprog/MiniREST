@@ -76,7 +76,7 @@ type
     procedure Info(AInfo : string);
     procedure Debug(ADebug : string);
     procedure Warn(AWarn : string);
-    procedure Exception(AException : Exception);
+    procedure Exception(AMsg : string; AException : Exception);
   end;
 
 implementation

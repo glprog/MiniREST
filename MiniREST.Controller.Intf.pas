@@ -12,6 +12,8 @@ type
     procedure Response(AContent : string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode : Integer = 200);
     procedure ResponseErro(AMsgErro : string; AStatusCode : Integer = 500);
     procedure ResponseJson(AJson : string; AStatusCode : Integer = 200);
+    function GetLogger : IMiniRESTLogger;
+    procedure SetLogger(ALogger: IMiniRESTLogger);
   end;
 
 implementation

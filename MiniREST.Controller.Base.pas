@@ -8,6 +8,7 @@ type
   TMiniRESTControllerBase = class(TInterfacedObject, IMiniRESTController)
   protected
     FActionContext : IMiniRESTActionContext;
+    FLogger : IMiniRESTLogger;
   public
     function GetActionContext: IMiniRESTActionContext;
     procedure SetActionContext(AContext: IMiniRESTActionContext);
@@ -18,6 +19,8 @@ type
     function PathVariable(AVariable : string) : string;
     function QueryParam(AQueryParam : string) : string;
     function QueryParams : TArray<IMiniRESTQueryParam>;
+    function GetLogger : IMiniRESTLogger;
+    procedure SetLogger(ALogger: IMiniRESTLogger);
   end;
 
   TMiniRESTControllerFactoryBase = class(TInterfacedObject, IMiniRESTControllerFactory)
@@ -39,6 +42,11 @@ implementation
 function TMiniRESTControllerBase.GetActionContext: IMiniRESTActionContext;
 begin
   Result := FActionContext;
+end;
+
+function TMiniRESTControllerBase.GetLogger: IMiniRESTLogger;
+begin
+  Result := FLogger;
 end;
 
 function TMiniRESTControllerBase.PathVariable(AVariable: string): string;
@@ -87,6 +95,11 @@ procedure TMiniRESTControllerBase.SetActionContext(
   AContext: IMiniRESTActionContext);
 begin
   FActionContext := AContext;
+end;
+
+procedure TMiniRESTControllerBase.SetLogger(ALogger: IMiniRESTLogger);
+begin
+  FLogger := ALogger;
 end;
 
 { TMiniRESTControllerFactoryBase }
