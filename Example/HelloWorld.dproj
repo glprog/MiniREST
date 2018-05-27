@@ -94,9 +94,22 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\MiniREST.ActionContext.Intf.pas"/>
+        <DCCReference Include="..\MiniREST.Attribute.pas"/>
+        <DCCReference Include="..\MiniREST.Common.pas"/>
         <DCCReference Include="..\MiniREST.Controller.Base.pas"/>
+        <DCCReference Include="..\MiniREST.Controller.Intf.pas"/>
+        <DCCReference Include="..\MiniREST.Controller.Security.Intf.pas"/>
+        <DCCReference Include="..\MiniREST.ControllerOtherwise.Intf.pas"/>
         <DCCReference Include="..\MiniREST.Indy.pas"/>
+        <DCCReference Include="..\MiniREST.Intf.pas"/>
+        <DCCReference Include="..\MiniREST.JSON.pas"/>
+        <DCCReference Include="..\MiniREST.RequestInfo.pas"/>
+        <DCCReference Include="..\MiniREST.Security.Base.pas"/>
+        <DCCReference Include="..\MiniREST.Server.Base.pas"/>
         <DCCReference Include="..\MiniREST.Server.Intf.pas"/>
+        <DCCReference Include="..\MiniREST.Util.pas"/>
+        <DCCReference Include="..\JsonDataObjects\Source\JsonDataObjects.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
