@@ -10,9 +10,10 @@ type
     FSemaphore: TLightweightSemaphore;
     FCriticalSection: TCriticalSection;
     FStack: TStack<IMiniRESTSQLConnection>;
+    FConnectionsCount: Integer;
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
-    constructor Create(AConnections : Integer);
+    procedure GenerateConnections; virtual;
   public
     destructor Destroy; override;
     function GetConnection: IMiniRESTSQLConnection;
@@ -22,32 +23,19 @@ type
   protected
     FOwner : IMiniRESTSQLConnectionFactory;
     function _Release: Integer; stdcall;
+    function GetObject: TObject; virtual; abstract;
     constructor Create(AOwner : IMiniRESTSQLConnectionFactory);
   public
     function GetQuery(ASQL: string): IMiniRESTSQLQuery; overload; virtual; abstract;
-    function GetQuery(ASQL: string; AParams : array of Variant): IMiniRESTSQLQuery; overload; virtual; abstract;
-    function Execute(ACommand: string) : IMiniRESTSQLQuery; overload; virtual; abstract;
-    function Execute(ACommand: string; AParams : array of Variant) : IMiniRESTSQLQuery; overload; virtual; abstract;
     procedure StartTransaction; virtual; abstract;
     procedure Commit; virtual; abstract;
     procedure Rollback; virtual; abstract;
+    procedure Connect; virtual; abstract;
   end;
 
 implementation
 
 { TMiniRESTSQLConnectionFactoryBase }
-
-constructor TMiniRESTSQLConnectionFactoryBase.Create(AConnections: Integer);
-var I : Integer;
-begin
-  FSemaphore := TLightweightSemaphore.Create(AConnections, AConnections);
-  FCriticalSection := TCriticalSection.Create;
-  FStack := TStack<IMiniRESTSQLConnection>.Create;
-  for I := 1 to AConnections do
-  begin
-    FStack.Push(InternalGetconnection);
-  end;
-end;
 
 destructor TMiniRESTSQLConnectionFactoryBase.Destroy;
 begin
@@ -55,6 +43,18 @@ begin
   FStack.Free;
   FCriticalSection.Free;
   inherited;
+end;
+
+procedure TMiniRESTSQLConnectionFactoryBase.GenerateConnections;
+var I : Integer;
+begin
+  FSemaphore := TLightweightSemaphore.Create(FConnectionsCount, FConnectionsCount);
+  FCriticalSection := TCriticalSection.Create;
+  FStack := TStack<IMiniRESTSQLConnection>.Create;
+  for I := 1 to FConnectionsCount do
+  begin
+    FStack.Push(InternalGetconnection);
+  end;
 end;
 
 function TMiniRESTSQLConnectionFactoryBase.GetConnection: IMiniRESTSQLConnection;
