@@ -3,7 +3,7 @@ unit MiniREST.JSON;
 interface
 
 uses SysUtils, Rtti, Generics.Collections, Contnrs, JsonDataObjects,
-  Variants, VarUtils{$IF DEFINED(VER310) OR DEFINED(VER290)} ,
+  Variants, VarUtils{$IF CompilerVersion > 22} ,
   REST.JsonReflect, System.JSON {$ELSE} ,DBXJson{$IFEND}, DB, DateUtils;
 
 type

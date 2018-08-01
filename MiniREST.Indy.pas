@@ -94,7 +94,7 @@ end;
 procedure TMiniRESTServerIndy.FindController(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 begin
-  {$IF DEFINED(VER310) OR DEFINED(VER290)}
+  {$IF CompilerVersion > 22}
   AContext.Connection.IOHandler.DefStringEncoding := IndyTextEncoding_UTF8;
   {$ELSE}
   AContext.Connection.IOHandler.DefStringEncoding := TEncoding.UTF8;
@@ -238,7 +238,7 @@ end;
 function TMiniRESTActionContextIndy.GetRequestContentAsString: string;
 begin
   if FRequestContentString = '' then
-  {$IF DEFINED(VER310) OR DEFINED(VER290)}
+  {$IF CompilerVersion > 22}
     FRequestContentString := ReadStringFromStream(FRequestInfo.PostStream, FRequestInfo.PostStream.Size, IndyTextEncoding_UTF8);
   {$ELSE}
     FRequestContentString := ReadStringFromStream(FRequestInfo.PostStream, FRequestInfo.PostStream.Size, TEncoding.UTF8);
