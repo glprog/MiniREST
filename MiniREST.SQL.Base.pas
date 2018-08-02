@@ -2,7 +2,8 @@ unit MiniREST.SQL.Base;
 
 interface
 
-uses MiniREST.SQL.Intf, SyncObjs, Generics.Collections;
+uses MiniREST.SQL.Intf, MiniREST.SQL.Common, SyncObjs, Generics.Collections,
+  SysUtils;
 
 type
   TMiniRESTSQLConnectionFactoryBase = class abstract(TInterfacedObject, IMiniRESTSQLConnectionFactory)
@@ -21,16 +22,21 @@ type
 
   TMiniRESTSQLConnectionBase = class abstract(TInterfacedObject, IMiniRESTSQLConnection)
   protected
-    FOwner : IMiniRESTSQLConnectionFactory;
+    FOwner : Pointer;
+    FName: string;
+    FEstaNoPool: Boolean;
     function _Release: Integer; stdcall;
     function GetObject: TObject; virtual; abstract;
     constructor Create(AOwner : IMiniRESTSQLConnectionFactory);
   public
-    function GetQuery(ASQL: string): IMiniRESTSQLQuery; overload; virtual; abstract;
     procedure StartTransaction; virtual; abstract;
     procedure Commit; virtual; abstract;
     procedure Rollback; virtual; abstract;
     procedure Connect; virtual; abstract;
+    function GetQuery(ASQL: string): IMiniRESTSQLQuery; overload; virtual; abstract;
+    function GetQuery(ASQL: string; AParams : array of IMiniRESTSQLParam): IMiniRESTSQLQuery; overload; virtual; abstract;
+    function GetName: string;
+    function SetName(const AName: string): IMiniRESTSQLConnection;
   end;
 
 implementation
@@ -47,13 +53,16 @@ end;
 
 procedure TMiniRESTSQLConnectionFactoryBase.GenerateConnections;
 var I : Integer;
+  LConnection: IMiniRESTSQLConnection;
 begin
   FSemaphore := TLightweightSemaphore.Create(FConnectionsCount, FConnectionsCount);
   FCriticalSection := TCriticalSection.Create;
   FStack := TStack<IMiniRESTSQLConnection>.Create;
   for I := 1 to FConnectionsCount do
   begin
-    FStack.Push(InternalGetconnection);
+    LConnection := InternalGetconnection.SetName('Connection' + IntToStr(I));
+    TMiniRESTSQLConnectionBase(LConnection).FEstaNoPool := True;
+    FStack.Push(LConnection);
   end;
 end;
 
@@ -63,6 +72,7 @@ begin
   FCriticalSection.Enter;
   try
     Result := FStack.Pop;
+    TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
   finally
     FCriticalSection.Leave;
   end;
@@ -74,10 +84,11 @@ begin
   FCriticalSection.Enter;
   try
     FStack.Push(AConnection);
+    TMiniRESTSQLConnectionBase(AConnection).FEstaNoPool := True;
+    FSemaphore.Release(1);
   finally
     FCriticalSection.Leave;
   end;
-  FSemaphore.Release(1);
 end;
 
 { TMiniRESTSQLConnectionBase }
@@ -88,10 +99,22 @@ begin
   FOwner := AOwner;
 end;
 
+function TMiniRESTSQLConnectionBase.GetName: string;
+begin
+  Result := FName;
+end;
+
+function TMiniRESTSQLConnectionBase.SetName(
+  const AName: string): IMiniRESTSQLConnection;
+begin
+  FName := AName;
+  Result := Self;
+end;
+
 function TMiniRESTSQLConnectionBase._Release: Integer;
 begin
-  if (FRefCount = 1) and (FOwner <> nil) then
-    FOwner.ReleaseConnection(Self);
+  if (FRefCount = 1) and (FOwner <> nil) and (not FEstaNoPool) then
+    IMiniRESTSQLConnectionFactory(FOwner).ReleaseConnection(Self);
   Result := inherited;
 end;
 
