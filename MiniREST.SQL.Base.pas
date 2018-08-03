@@ -10,12 +10,13 @@ type
   protected
     FSemaphore: TLightweightSemaphore;
     FCriticalSection: TCriticalSection;
-    FStack: TStack<IMiniRESTSQLConnection>;
+    FQueue : TQueue<IMiniRESTSQLConnection>;
     FConnectionsCount: Integer;
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
     procedure GenerateConnections; virtual;
   public
+    constructor Create(const AConnectionCount: Integer);
     destructor Destroy; override;
     function GetConnection: IMiniRESTSQLConnection;
   end;
@@ -43,10 +44,18 @@ implementation
 
 { TMiniRESTSQLConnectionFactoryBase }
 
+constructor TMiniRESTSQLConnectionFactoryBase.Create(const AConnectionCount: Integer);
+begin
+  FConnectionsCount := AConnectionCount;
+  FSemaphore := TLightweightSemaphore.Create(AConnectionCount, AConnectionCount);
+  FCriticalSection := TCriticalSection.Create;
+  FQueue := TQueue<IMiniRESTSQLConnection>.Create;
+end;
+
 destructor TMiniRESTSQLConnectionFactoryBase.Destroy;
 begin
   FSemaphore.Free;
-  FStack.Free;
+  FQueue.Free;
   FCriticalSection.Free;
   inherited;
 end;
@@ -55,14 +64,16 @@ procedure TMiniRESTSQLConnectionFactoryBase.GenerateConnections;
 var I : Integer;
   LConnection: IMiniRESTSQLConnection;
 begin
-  FSemaphore := TLightweightSemaphore.Create(FConnectionsCount, FConnectionsCount);
-  FCriticalSection := TCriticalSection.Create;
-  FStack := TStack<IMiniRESTSQLConnection>.Create;
+  FCriticalSection.Enter;
+  try
   for I := 1 to FConnectionsCount do
-  begin
-    LConnection := InternalGetconnection.SetName('Connection' + IntToStr(I));
-    TMiniRESTSQLConnectionBase(LConnection).FEstaNoPool := True;
-    FStack.Push(LConnection);
+    begin
+      LConnection := InternalGetconnection.SetName('Connection' + IntToStr(I));
+      TMiniRESTSQLConnectionBase(LConnection).FEstaNoPool := True;
+      FQueue.Enqueue(LConnection);
+    end;
+  finally
+    FCriticalSection.Leave;
   end;
 end;
 
@@ -71,7 +82,7 @@ begin
   FSemaphore.Acquire;
   FCriticalSection.Enter;
   try
-    Result := FStack.Pop;
+    Result := FQueue.Dequeue;
     TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
   finally
     FCriticalSection.Leave;
@@ -83,7 +94,7 @@ procedure TMiniRESTSQLConnectionFactoryBase.ReleaseConnection(
 begin
   FCriticalSection.Enter;
   try
-    FStack.Push(AConnection);
+    FQueue.Enqueue(AConnection);
     TMiniRESTSQLConnectionBase(AConnection).FEstaNoPool := True;
     FSemaphore.Release(1);
   finally

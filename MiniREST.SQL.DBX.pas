@@ -106,6 +106,7 @@ uses Variants;
 
 constructor TMiniRESTSQLConnectionFactoryDBX.Create(AParams: IMiniRESTSQLConnectionParamsDBX);
 begin
+  inherited Create(AParams.GetConnectionsCount);
   FConnectionParams := AParams;
   FConnectionsCount := AParams.GetConnectionsCount;
 end;
