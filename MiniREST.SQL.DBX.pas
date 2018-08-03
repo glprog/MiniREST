@@ -74,9 +74,7 @@ type
   TMiniRESTSQLQueryDBX = class(TInterfacedObject, IMiniRESTSQLQuery)
   protected
     FQry : TSimpleDataSet;
-    {$HINTS OFF}
-    FIConnection : IMiniRESTSQLConnection;
-    {$HINTS ON}
+    FConnection : IMiniRESTSQLConnection;
     FSQL: string;
     FParams: TObjectDictionary<string, IMiniRESTSQLParam>;
     procedure InternalAddParam(AParam: IMiniRESTSQLParam);
@@ -157,6 +155,7 @@ end;
 
 constructor TMiniRESTSQLQueryDBX.Create(AConnection: IMiniRESTSQLConnection);
 begin
+  FConnection := AConnection;
   FQry := TSimpleDataSet.Create(nil);
   FQry.DataSet.SQLConnection := TSQLConnection(AConnection.GetObject);
   FParams := TObjectDictionary<string, IMiniRESTSQLParam>.Create([]);
@@ -243,6 +242,7 @@ begin
   begin
     InternalAddParam(LParam);
   end;
+  FConnection.Connect;
   FQry.Open;
 end;
 
@@ -287,6 +287,8 @@ end;
 
 procedure TMiniRESTSQLConnectionDBX.Connect;
 begin
+  if FSQLConnection.Connected then
+    Exit;
   FSQLConnection.DriverName := FConnectionParams.GetDriverName;
   FSQLConnection.LoginPrompt := False;
   FSQLConnection.Params.Text := FConnectionParams.GetConnectionString;
