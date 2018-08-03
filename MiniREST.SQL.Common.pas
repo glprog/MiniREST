@@ -27,12 +27,12 @@ type
     function GetAsVariant: Variant;
     procedure SetAsVariant(const AValue: Variant);
     function GetParamType: TMiniRESTSQLParamType;
-//    property AsString: string read GetAsString write SetAsString;
-//    property AsFloat: Double read GetAsFloat write SetAsFloat;
-//    property AsInteger: Integer read GetAsInteger write SetAsInteger;
-//    property AsDate: TDate read GetAsDate write SetAsDate;
-//    property AsDateTime: TDateTime read GetAsDateTime write SetAsDateTime;
-//    property AsBoolean: Boolean read GetAsBoolean write SetAsBoolean;
+    property AsString: string read GetAsString write SetAsString;
+    property AsFloat: Double read GetAsFloat write SetAsFloat;
+    property AsInteger: Integer read GetAsInteger write SetAsInteger;
+    property AsDate: TDate read GetAsDate write SetAsDate;
+    property AsDateTime: TDateTime read GetAsDateTime write SetAsDateTime;
+    property AsBoolean: Boolean read GetAsBoolean write SetAsBoolean;
   end;
 
   TMiniRESTSQLParam = class(TInterfacedObject, IMiniRESTSQLParam)
