@@ -92,6 +92,7 @@ type
     procedure Close;
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
     function ParamByName(const AParamName: string): IMiniRESTSQLParam;
+    function FieldByName(const AFieldName: string): TField;
     procedure Append;
     procedure Insert;
     procedure Post;
@@ -171,6 +172,11 @@ end;
 function TMiniRESTSQLQueryDBX.Eof: Boolean;
 begin
   Result := FQry.Eof;
+end;
+
+function TMiniRESTSQLQueryDBX.FieldByName(const AFieldName: string): TField;
+begin
+  Result := FQry.FieldByName(AFieldName);
 end;
 
 function TMiniRESTSQLQueryDBX.GetDataSet: TDataSet;

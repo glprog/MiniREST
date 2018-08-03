@@ -13,6 +13,7 @@ type
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
     function GetValue(AField: string) : Variant; overload;
     function GetValue(AField: string; ADefault: Variant): Variant; overload;
+    function FieldByName(const AFieldName: string): TField;
     function Eof: Boolean;
     procedure Next;
     function IsEmpty: Boolean;

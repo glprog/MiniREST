@@ -9,6 +9,7 @@ type
   protected
     FActionContext : IMiniRESTActionContext;
     FLogger : IMiniRESTLogger;
+    procedure InitController; virtual;
   public
     function GetActionContext: IMiniRESTActionContext;
     procedure SetActionContext(AContext: IMiniRESTActionContext);
@@ -47,6 +48,11 @@ end;
 function TMiniRESTControllerBase.GetLogger: IMiniRESTLogger;
 begin
   Result := FLogger;
+end;
+
+procedure TMiniRESTControllerBase.InitController;
+begin
+  Exit;
 end;
 
 function TMiniRESTControllerBase.PathVariable(AVariable: string): string;

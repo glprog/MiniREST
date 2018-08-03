@@ -7,6 +7,7 @@ uses MiniREST.Intf, MiniREST.Common;
 type
   IMiniRESTController = interface
   ['{16EA18CD-7AF3-4851-A85B-B2D9E0B22EB5}']
+    procedure InitController;
     function GetActionContext : IMiniRESTActionContext;
     procedure SetActionContext(AContext : IMiniRESTActionContext);
     procedure Response(AContent : string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode : Integer = 200);
