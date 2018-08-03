@@ -2,7 +2,7 @@ unit MiniREST.SQL.Common;
 
 interface
 
-uses Data.DB, Rtti;
+uses DB, Rtti;
 
 type
   TMiniRESTSQLParamType = (stString, stFloat, stInteger, stDate, stDateTime,
