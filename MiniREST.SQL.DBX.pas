@@ -212,6 +212,7 @@ var
 begin
   LParamType := AParam.GetParamType;
   LParamName := AParam.GetParamName;
+  FQry.Params.AddParameter.Name := AParam.GetParamName;
   case LParamType of
     stString: FQry.Params.ParamByName(LParamName).AsString := AParam.GetAsString;
     stFloat: FQry.Params.ParamByName(LParamName).AsFloat := AParam.GetAsFloat;
