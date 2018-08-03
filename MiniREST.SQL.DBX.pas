@@ -96,11 +96,12 @@ type
     procedure Cancel;
     function ApplyUpdates(const AMaxErrors: Integer = 0): Integer;
     function GetDataSet: TDataSet;
+    function ToJSON: string;
   end;
 
 implementation
 
-uses Variants;
+uses Variants, MiniREST.JSON;
 
 { TMiniRESTSQLConnectionFactoryDBX }
 
@@ -235,6 +236,11 @@ procedure TMiniRESTSQLQueryDBX.SetSQL(const ASQL: string);
 begin
   FSQL := ASQL;
   FQry.DataSet.CommandText := FSQL;
+end;
+
+function TMiniRESTSQLQueryDBX.ToJSON: string;
+begin
+  Result := TMiniRESTJSON.DatasetToJson2(FQry);
 end;
 
 { TMiniRESTSQLConnectionDBX }
