@@ -3,7 +3,7 @@ unit MiniREST.SQL.DBX;
 interface
 
 uses MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, SqlExpr,
-  DBXCommon, SimpleDS, DB;
+  DBXCommon, SimpleDS, DB, Generics.Collections, SysUtils;
 
 type
   IMiniRESTSQLConnectionParamsDBX = interface
@@ -72,12 +72,14 @@ type
   end;
 
   TMiniRESTSQLQueryDBX = class(TInterfacedObject, IMiniRESTSQLQuery)
-  private
+  protected
     FQry : TSimpleDataSet;
     {$HINTS OFF}
     FIConnection : IMiniRESTSQLConnection;
     {$HINTS ON}
     FSQL: string;
+    FParams: TObjectDictionary<string, IMiniRESTSQLParam>;
+    procedure InternalAddParam(AParam: IMiniRESTSQLParam);
   public
     constructor Create(AConnection: IMiniRESTSQLConnection);
     destructor Destroy; override;
@@ -91,6 +93,7 @@ type
     procedure Open;
     procedure Close;
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
+    function ParamByName(const AParamName: string): IMiniRESTSQLParam;
     procedure Append;
     procedure Insert;
     procedure Post;
@@ -127,22 +130,9 @@ end;
 
 function TMiniRESTSQLQueryDBX.AddParam(
   AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
-var
-  LParamType: TMiniRESTSQLParamType;
-  LParamName: string;
 begin
-  LParamType := AParam.GetParamType;
-  LParamName := AParam.GetParamName;
-  case LParamType of
-    stString: FQry.Params.ParamByName(LParamName).AsString := AParam.GetAsString;
-    stFloat: FQry.Params.ParamByName(LParamName).AsFloat := AParam.GetAsFloat;
-    stInteger: FQry.Params.ParamByName(LParamName).AsInteger := AParam.GetAsInteger;
-    stDate: FQry.Params.ParamByName(LParamName).AsDate := AParam.GetAsDate;
-    stDateTime: FQry.Params.ParamByName(LParamName).AsDateTime := AParam.GetAsDateTime;
-    stBoolean: FQry.Params.ParamByName(LParamName).AsBoolean := AParam.GetAsBoolean;
-    stVariant: FQry.Params.ParamByName(LParamName).Value := AParam.GetAsVariant;
-    stUndefined: FQry.Params.ParamByName(LParamName).Value := Null;
-  end;
+  FParams.AddOrSetValue(AParam.GetParamName, AParam);
+  Result := Self;
 end;
 
 procedure TMiniRESTSQLQueryDBX.Append;
@@ -169,11 +159,13 @@ constructor TMiniRESTSQLQueryDBX.Create(AConnection: IMiniRESTSQLConnection);
 begin
   FQry := TSimpleDataSet.Create(nil);
   FQry.DataSet.SQLConnection := TSQLConnection(AConnection.GetObject);
+  FParams := TObjectDictionary<string, IMiniRESTSQLParam>.Create([]);
 end;
 
 destructor TMiniRESTSQLQueryDBX.Destroy;
 begin
   FQry.Free;
+  FParams.Free;
   inherited;
 end;
 
@@ -213,6 +205,25 @@ begin
   FQry.Insert;
 end;
 
+procedure TMiniRESTSQLQueryDBX.InternalAddParam(AParam: IMiniRESTSQLParam);
+var
+  LParamType: TMiniRESTSQLParamType;
+  LParamName: string;
+begin
+  LParamType := AParam.GetParamType;
+  LParamName := AParam.GetParamName;
+  case LParamType of
+    stString: FQry.Params.ParamByName(LParamName).AsString := AParam.GetAsString;
+    stFloat: FQry.Params.ParamByName(LParamName).AsFloat := AParam.GetAsFloat;
+    stInteger: FQry.Params.ParamByName(LParamName).AsInteger := AParam.GetAsInteger;
+    stDate: FQry.Params.ParamByName(LParamName).AsDate := AParam.GetAsDate;
+    stDateTime: FQry.Params.ParamByName(LParamName).AsDateTime := AParam.GetAsDateTime;
+    stBoolean: FQry.Params.ParamByName(LParamName).AsBoolean := AParam.GetAsBoolean;
+    stVariant: FQry.Params.ParamByName(LParamName).Value := AParam.GetAsVariant;
+    stUndefined: FQry.Params.ParamByName(LParamName).Value := Null;
+  end;
+end;
+
 function TMiniRESTSQLQueryDBX.IsEmpty: Boolean;
 begin
   Result := FQry.IsEmpty;
@@ -224,8 +235,30 @@ begin
 end;
 
 procedure TMiniRESTSQLQueryDBX.Open;
+var
+  LParam: IMiniRESTSQLParam;
 begin
+  for LParam in FParams.Values do
+  begin
+    InternalAddParam(LParam);
+  end;
   FQry.Open;
+end;
+
+function TMiniRESTSQLQueryDBX.ParamByName(
+  const AParamName: string): IMiniRESTSQLParam;
+var
+  LParam: IMiniRESTSQLParam;
+  LParamName: string;
+begin
+  LParamName := UpperCase(AParamName);
+  if not FParams.TryGetValue(LParamName, LParam) then
+  begin
+    LParam := TMiniRESTSQLParam.Create;
+    LParam.SetParamName(LParamName);
+    FParams.Add(LParamName, LParam);
+  end;
+  Result := LParam;
 end;
 
 procedure TMiniRESTSQLQueryDBX.Post;

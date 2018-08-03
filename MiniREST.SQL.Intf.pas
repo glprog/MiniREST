@@ -9,6 +9,7 @@ type
   ['{A6624CAD-F305-48BD-B1D4-736DEE685A83}']
     function GetSQL: string;
     procedure SetSQL(const ASQL: string);
+    function ParamByName(const AParamName: string): IMiniRESTSQLParam;
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
     function GetValue(AField: string) : Variant; overload;
     function GetValue(AField: string; ADefault: Variant): Variant; overload;
