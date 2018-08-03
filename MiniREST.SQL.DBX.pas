@@ -64,6 +64,7 @@ type
     procedure StartTransaction; override;
     procedure Commit; override;
     procedure Rollback; override;
+    function GetQuery: IMiniRESTSQLQuery; override;
     function GetQuery(ASQL: string;
     AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery; override;
     function GetQuery(ASQL: string): IMiniRESTSQLQuery; override;
@@ -299,6 +300,11 @@ function TMiniRESTSQLConnectionDBX.GetQuery(ASQL: string): IMiniRESTSQLQuery;
 begin
   Result := TMiniRESTSQLQueryDBX.Create(Self);
   Result.SQL := ASQL;
+end;
+
+function TMiniRESTSQLConnectionDBX.GetQuery: IMiniRESTSQLQuery;
+begin
+  Result := TMiniRESTSQLQueryDBX.Create(Self);
 end;
 
 procedure TMiniRESTSQLConnectionDBX.Rollback;

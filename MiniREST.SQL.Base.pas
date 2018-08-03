@@ -34,6 +34,7 @@ type
     procedure Commit; virtual; abstract;
     procedure Rollback; virtual; abstract;
     procedure Connect; virtual; abstract;
+    function GetQuery: IMiniRESTSQLQuery; overload; virtual; abstract;
     function GetQuery(ASQL: string): IMiniRESTSQLQuery; overload; virtual; abstract;
     function GetQuery(ASQL: string; AParams : array of IMiniRESTSQLParam): IMiniRESTSQLQuery; overload; virtual; abstract;
     function GetName: string;
