@@ -133,14 +133,14 @@ begin
   LParamType := AParam.GetParamType;
   LParamName := AParam.GetParamName;
   case LParamType of
-    stString: FQry.ParamByName(LParamName).AsString := AParam.GetAsString;
-    stFloat: FQry.ParamByName(LParamName).AsFloat := AParam.GetAsFloat;
-    stInteger: FQry.ParamByName(LParamName).AsInteger := AParam.GetAsInteger;
-    stDate: FQry.ParamByName(LParamName).AsDate := AParam.GetAsDate;
-    stDateTime: FQry.ParamByName(LParamName).AsDateTime := AParam.GetAsDateTime;
-    stBoolean: FQry.ParamByName(LParamName).AsBoolean := AParam.GetAsBoolean;
-    stVariant: FQry.ParamByName(LParamName).Value := AParam.GetAsVariant;
-    stUndefined: FQry.ParamByName(LParamName).Value := Null;
+    stString: FQry.Params.ParamByName(LParamName).AsString := AParam.GetAsString;
+    stFloat: FQry.Params.ParamByName(LParamName).AsFloat := AParam.GetAsFloat;
+    stInteger: FQry.Params.ParamByName(LParamName).AsInteger := AParam.GetAsInteger;
+    stDate: FQry.Params.ParamByName(LParamName).AsDate := AParam.GetAsDate;
+    stDateTime: FQry.Params.ParamByName(LParamName).AsDateTime := AParam.GetAsDateTime;
+    stBoolean: FQry.Params.ParamByName(LParamName).AsBoolean := AParam.GetAsBoolean;
+    stVariant: FQry.Params.ParamByName(LParamName).Value := AParam.GetAsVariant;
+    stUndefined: FQry.Params.ParamByName(LParamName).Value := Null;
   end;
 end;
 

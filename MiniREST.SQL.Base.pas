@@ -15,8 +15,8 @@ type
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
     procedure GenerateConnections; virtual;
-  public
     constructor Create(const AConnectionCount: Integer);
+  public
     destructor Destroy; override;
     function GetConnection: IMiniRESTSQLConnection;
   end;
