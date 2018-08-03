@@ -107,7 +107,7 @@ end;
 constructor TMiniRESTSQLConnectionBase.Create(
   AOwner: IMiniRESTSQLConnectionFactory);
 begin
-  FOwner := AOwner;
+  FOwner := Pointer(AOwner);
 end;
 
 function TMiniRESTSQLConnectionBase.GetName: string;
