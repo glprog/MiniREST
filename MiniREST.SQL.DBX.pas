@@ -48,7 +48,6 @@ type
     function InternalGetconnection: IMiniRESTSQLConnection; override;
   public
     constructor Create(AParams: IMiniRESTSQLConnectionParamsDBX); overload;
-    procedure GenerateConnections; override;
   end;
 
   TMiniRESTSQLConnectionDBX = class(TMiniRESTSQLConnectionBase, IMiniRESTSQLConnectionExecute)
@@ -113,11 +112,6 @@ begin
   inherited Create(AParams.GetConnectionsCount);
   FConnectionParams := AParams;
   FConnectionsCount := AParams.GetConnectionsCount;
-end;
-
-procedure TMiniRESTSQLConnectionFactoryDBX.GenerateConnections;
-begin
-  inherited;
 end;
 
 function TMiniRESTSQLConnectionFactoryDBX.InternalGetconnection: IMiniRESTSQLConnection;
