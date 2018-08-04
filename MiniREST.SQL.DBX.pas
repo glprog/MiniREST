@@ -207,20 +207,19 @@ end;
 procedure TMiniRESTSQLQueryDBX.InternalAddParam(AParam: IMiniRESTSQLParam);
 var
   LParamType: TMiniRESTSQLParamType;
-  LParamName: string;
+  LParam: TParam;
 begin
   LParamType := AParam.GetParamType;
-  LParamName := AParam.GetParamName;
-  FQry.Params.AddParameter.Name := AParam.GetParamName;
+  LParam := FQry.Params.ParamByName(AParam.GetParamName);
   case LParamType of
-    stString: FQry.Params.ParamByName(LParamName).AsString := AParam.GetAsString;
-    stFloat: FQry.Params.ParamByName(LParamName).AsFloat := AParam.GetAsFloat;
-    stInteger: FQry.Params.ParamByName(LParamName).AsInteger := AParam.GetAsInteger;
-    stDate: FQry.Params.ParamByName(LParamName).AsDate := AParam.GetAsDate;
-    stDateTime: FQry.Params.ParamByName(LParamName).AsDateTime := AParam.GetAsDateTime;
-    stBoolean: FQry.Params.ParamByName(LParamName).AsBoolean := AParam.GetAsBoolean;
-    stVariant: FQry.Params.ParamByName(LParamName).Value := AParam.GetAsVariant;
-    stUndefined: FQry.Params.ParamByName(LParamName).Value := Null;
+    stString: LParam.AsString := AParam.GetAsString;
+    stFloat: LParam.AsFloat := AParam.GetAsFloat;
+    stInteger: LParam.AsInteger := AParam.GetAsInteger;
+    stDate: LParam.AsDate := AParam.GetAsDate;
+    stDateTime: LParam.AsDateTime := AParam.GetAsDateTime;
+    stBoolean: LParam.AsBoolean := AParam.GetAsBoolean;
+    stVariant: LParam.Value := AParam.GetAsVariant;
+    stUndefined: LParam.Value := Null;
   end;
 end;
 
@@ -238,6 +237,7 @@ procedure TMiniRESTSQLQueryDBX.Open;
 var
   LParam: IMiniRESTSQLParam;
 begin
+  FQry.FetchParams;
   for LParam in FParams.Values do
   begin
     InternalAddParam(LParam);
