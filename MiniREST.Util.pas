@@ -67,7 +67,7 @@ begin
   LPathParamsController := TMiniRESTUtil.ParseMappingtoPathParams(AActionContext.ActionInfo.Mapping);
   for I := 0 to Length(LPathParamsController) - 1 do
   begin
-    if ('{' + AVariable + '}' = LPathParamsController[I]) then
+    if SameText('{' + AVariable + '}', LPathParamsController[I]) then
       Exit(LPathParamsRequest[I]);
   end;
 end;
