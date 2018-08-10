@@ -145,6 +145,7 @@ end;
 
 procedure TMiniRESTSQLQueryDBX.Close;
 begin
+  FParams.Clear;
   FQry.Close;
 end;
 
@@ -237,6 +238,7 @@ procedure TMiniRESTSQLQueryDBX.Open;
 var
   LParam: IMiniRESTSQLParam;
 begin
+  FQry.Params.Clear;
   FQry.FetchParams;
   for LParam in FParams.Values do
   begin
