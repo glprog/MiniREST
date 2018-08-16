@@ -37,9 +37,13 @@ type
     procedure ServeFile(AFilePath: string);
     procedure SetActionInfo(AActionInfo: IMiniRESTActionInfo);
     procedure SetHeader(AName: string; AValue: string);
-    procedure SetResponseContent(AContent: string; AContentType: TMiniRESTResponseType = rtTextHtml;
-      AStatusCode: Integer = 200);
     procedure SetResponseStream(AStream: TStream);
+    function GetResponseContent: string;
+    procedure SetResponseContent(const AContent: string);
+    function GetResponseContentType: TMiniRESTResponseType;
+    procedure SetResponseContentType(const AContentType: TMiniRESTResponseType);
+    function GetResponseStatusCode: Integer;
+    procedure SetResponseStatusCode(const AStatusCode: Integer);
   end;
 
 implementation
@@ -139,6 +143,21 @@ begin
 
 end;
 
+function TMiniRESTActionContextmORMot.GetResponseContent: string;
+begin
+
+end;
+
+function TMiniRESTActionContextmORMot.GetResponseContentType: TMiniRESTResponseType;
+begin
+
+end;
+
+function TMiniRESTActionContextmORMot.GetResponseStatusCode: Integer;
+begin
+
+end;
+
 function TMiniRESTActionContextmORMot.GetURI: string;
 begin
 
@@ -164,8 +183,18 @@ begin
 
 end;
 
-procedure TMiniRESTActionContextmORMot.SetResponseContent(AContent: string;
-  AContentType: TMiniRESTResponseType; AStatusCode: Integer);
+procedure TMiniRESTActionContextmORMot.SetResponseContent(const AContent: string);
+begin
+
+end;
+
+procedure TMiniRESTActionContextmORMot.SetResponseContentType(
+  const AContentType: TMiniRESTResponseType);
+begin
+
+end;
+
+procedure TMiniRESTActionContextmORMot.SetResponseStatusCode(const AStatusCode: Integer);
 begin
 
 end;

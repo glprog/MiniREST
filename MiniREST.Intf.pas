@@ -59,7 +59,13 @@ type
     function GetHeader(AName : string) : string;
     procedure SetHeader(AName, AValue : string);
     procedure AppendHeader(AName, AValue : string);
-    procedure SetResponseContent(AContent : string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode: Integer = 200);
+    //procedure SetResponseContent(AContent : string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode: Integer = 200);
+    function GetResponseContent: string;
+    procedure SetResponseContent(const AContent: string);
+    function GetResponseContentType: TMiniRESTResponseType;
+    procedure SetResponseContentType(const AContentType: TMiniRESTResponseType);
+    function GetResponseStatusCode: Integer;
+    procedure SetResponseStatusCode(const AStatusCode: Integer);
     procedure SetResponseStream(AStream : TStream);
     procedure ServeFile(AFilePath : string);
     procedure SendRedirect(ALocation : string);

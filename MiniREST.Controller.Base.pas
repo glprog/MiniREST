@@ -84,7 +84,10 @@ end;
 procedure TMiniRESTControllerBase.Response(AContent: string;
   AContentType: TMiniRESTResponseType; AStatusCode : Integer);
 begin
-  GetActionContext.SetResponseContent(AContent, AContentType);
+  //GetActionContext.SetResponseContent(AContent, AContentType);
+  GetActionContext.SetResponseContent(AContent);
+  GetActionContext.SetResponseContentType(AContentType);
+  GetActionContext.SetResponseStatusCode(AStatusCode);
 end;
 
 procedure TMiniRESTControllerBase.ResponseErro(AMsgErro: string; AStatusCode : Integer);

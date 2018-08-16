@@ -33,6 +33,9 @@ type
     FRequestInfo : TIdHTTPRequestInfo;
     FResponseInfo : TIdHTTPResponseInfo;
     FRequestContentString : string;
+    FResponseContent: string;
+    FResponseContentType: TMiniRESTResponseType;
+    FResponseStatusCode: Integer;
   public
     class function New(AActionInfo : IMiniRESTActionInfo; AIndyContext : TIdContext;
     ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo) : IMiniRESTActionContext;
@@ -46,7 +49,7 @@ type
     function GetRequestContentAsString: string;
     function GetPathVariable(AVariable: string): string;
     function GetAuthToken: string;
-    procedure SetResponseContent(AContent: string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode: Integer = 200);
+    //procedure SetResponseContent(AContent: string; AContentType : TMiniRESTResponseType = rtTextHtml; AStatusCode: Integer = 200);
     function GetURI: string;
     function GetCommandType: TMiniRESTRequestMethod;
     function GetHeader(AName: string): string;
@@ -57,6 +60,12 @@ type
     procedure SetResponseStream(AStream: TStream);
     function GetQueryParam(AQueryParam: string): IMiniRESTQueryParam;
     function GetQueryParams: System.TArray<MiniREST.Intf.IMiniRESTQueryParam>;
+    function GetResponseContent: string;
+    procedure SetResponseContent(const AContent: string);
+    function GetResponseContentType: TMiniRESTResponseType;
+    procedure SetResponseContentType(const AContentType: TMiniRESTResponseType);
+    function GetResponseStatusCode: Integer;
+    procedure SetResponseStatusCode(const AStatusCode: Integer);
   end;
 
   TMiniRESTQueryParamIndy = class(TMiniRESTQueryParamBase)
@@ -251,9 +260,24 @@ begin
   Result := FRequestInfo;
 end;
 
+function TMiniRESTActionContextIndy.GetResponseContent: string;
+begin
+  Result := FResponseContent;
+end;
+
+function TMiniRESTActionContextIndy.GetResponseContentType: TMiniRESTResponseType;
+begin
+  Result := FResponseContentType;
+end;
+
 function TMiniRESTActionContextIndy.GetResponseInfo: TIdHTTPResponseInfo;
 begin
   Result := FResponseInfo;
+end;
+
+function TMiniRESTActionContextIndy.GetResponseStatusCode: Integer;
+begin
+  Result := FResponseStatusCode;
 end;
 
 function TMiniRESTActionContextIndy.GetURI: string;
@@ -311,6 +335,17 @@ begin
       FResponseInfo.ContentType := MiniRESTResponseTypes[AContentType]; //'text/html; charset=utf-8';
   end;
   FResponseInfo.ResponseNo := AStatusCode;
+end;
+
+procedure TMiniRESTActionContextIndy.SetResponseContentType(
+  const AContentType: TMiniRESTResponseType);
+begin
+
+end;
+
+procedure TMiniRESTActionContextIndy.SetResponseStatusCode(const AStatusCode: Integer);
+begin
+
 end;
 
 procedure TMiniRESTActionContextIndy.SetResponseStream(AStream: TStream);
