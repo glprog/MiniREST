@@ -12,7 +12,32 @@ uses
   DUnitX.Loggers.Xml.NUnit,
   DUnitX.TestFramework,
   uTest in 'uTest.pas',
-  MiniREST.Intf in '..\MiniREST.Intf.pas';
+  JsonDataObjects in '..\JsonDataObjects\Source\JsonDataObjects.pas',
+  MiniREST.ActionContext.Intf in '..\MiniREST.ActionContext.Intf.pas',
+  MiniREST.Attribute in '..\MiniREST.Attribute.pas',
+  MiniREST.Common in '..\MiniREST.Common.pas',
+  MiniREST.Controller.Base in '..\MiniREST.Controller.Base.pas',
+  MiniREST.Controller.Intf in '..\MiniREST.Controller.Intf.pas',
+  MiniREST.Controller.Security.Intf in '..\MiniREST.Controller.Security.Intf.pas',
+  MiniREST.ControllerOtherwise.Intf in '..\MiniREST.ControllerOtherwise.Intf.pas',
+  MiniREST.Indy in '..\MiniREST.Indy.pas',
+  MiniREST.Intf in '..\MiniREST.Intf.pas',
+  MiniREST.JSON in '..\MiniREST.JSON.pas',
+  MiniREST.RequestInfo in '..\MiniREST.RequestInfo.pas',
+  MiniREST.Security.Base in '..\MiniREST.Security.Base.pas',
+  MiniREST.Server.Base in '..\MiniREST.Server.Base.pas',
+  MiniREST.Server.Intf in '..\MiniREST.Server.Intf.pas',
+  MiniREST.SQL.Base in '..\MiniREST.SQL.Base.pas',
+  MiniREST.SQL.Common in '..\MiniREST.SQL.Common.pas',
+  MiniREST.SQL.DBX in '..\MiniREST.SQL.DBX.pas',
+  MiniREST.SQL.Intf in '..\MiniREST.SQL.Intf.pas',
+  MiniREST.Util in '..\MiniREST.Util.pas',
+  Hello.Controller in 'Hello.Controller.pas',
+  HttpConnection in '..\delphi-rest-client-api\src\HttpConnection.pas',
+  HttpConnectionIndy in '..\delphi-rest-client-api\src\HttpConnectionIndy.pas',
+  RestUtils in '..\delphi-rest-client-api\src\RestUtils.pas',
+  RestException in '..\delphi-rest-client-api\src\RestException.pas',
+  ProxyUtils in '..\delphi-rest-client-api\src\ProxyUtils.pas';
 
 var
   runner : ITestRunner;
