@@ -7,7 +7,7 @@ uses
 type
 
   [TestFixture]
-  TMiniRESTTest = class(TObject) 
+  TMiniRESTTest = class(TObject)
   public
     [Setup]
     procedure Setup;
