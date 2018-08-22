@@ -16,22 +16,19 @@ type
     [TearDown]
     procedure TearDown;
     [Test]
-    procedure Test1;
-    [Test]
-    [TestCase('TestA','1,2')]
-    [TestCase('TestB','3,4')]
-    procedure Test2(const AValue1 : Integer;const AValue2 : Integer);
-    [Test]
     procedure TestHello;
+    [Test]
+    procedure TestHelloWithName;
   end;
 
 implementation
 
-uses MiniREST.Indy, HttpConnection, HttpConnectionIndy;
+uses MiniREST.Indy, HttpConnection, HttpConnectionIndy, Hello.Controller;
 
 procedure TMiniRESTTest.Setup;
 begin
   FServer := TMiniRESTServerIndy.Create;
+  FServer.AddController(THelloController);
   FServer.SetPort(8099);
   FServer.Start;
 end;
@@ -41,14 +38,6 @@ begin
   FServer := nil;
 end;
 
-procedure TMiniRESTTest.Test1;
-begin
-end;
-
-procedure TMiniRESTTest.Test2(const AValue1 : Integer;const AValue2 : Integer);
-begin
-end;
-
 procedure TMiniRESTTest.TestHello;
 var
   LConnection: IHttpConnection;
@@ -56,9 +45,26 @@ var
 begin
   LConnection := THttpConnectionIndy.Create;
   LStream := TStringStream.Create;
+  LStream.Position := 0;
   try
     LConnection.Get('http://localhost:8099/hello', LStream);
-    WriteLn(LStream.ToString);
+    Assert.AreEqual('{"msg":"hello"}', LStream.DataString);
+  finally
+    LStream.Free;
+  end;
+end;
+
+procedure TMiniRESTTest.TestHelloWithName;
+var
+  LConnection: IHttpConnection;
+  LStream: TStringStream;
+begin
+  LConnection := THttpConnectionIndy.Create;
+  LStream := TStringStream.Create;
+  LStream.Position := 0;
+  try
+    LConnection.Get('http://localhost:8099/hello/hueBR', LStream);
+    Assert.AreEqual('{"msg":"hello hueBR"}', LStream.DataString);
   finally
     LStream.Free;
   end;
