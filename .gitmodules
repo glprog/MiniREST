@@ -1,3 +1,6 @@
 [submodule "JsonDataObjects"]
 	path = JsonDataObjects
 	url = https://github.com/ahausladen/JsonDataObjects
+[submodule "delphi-rest-client-api"]
+	path = delphi-rest-client-api
+	url = https://github.com/glprog/delphi-rest-client-api
