@@ -4,3 +4,6 @@
 [submodule "delphi-rest-client-api"]
 	path = delphi-rest-client-api
 	url = https://github.com/glprog/delphi-rest-client-api
+[submodule "mORMot"]
+	path = mORMot
+	url = https://github.com/synopse/mORMot

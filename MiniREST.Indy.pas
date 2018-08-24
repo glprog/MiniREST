@@ -326,26 +326,24 @@ begin
   FResponseInfo.CustomHeaders.Values[AName] := AValue;
 end;
 
-procedure TMiniRESTActionContextIndy.SetResponseContent(AContent: string; AContentType : TMiniRESTResponseType; AStatusCode: Integer);
+procedure TMiniRESTActionContextIndy.SetResponseContent(const AContent: string);
 begin
   FResponseInfo.ContentText := AContent;
-  case AContentType of
-    rtTextHtml: FResponseInfo.ContentType := 'text/html; charset=utf-8';
-    else
-      FResponseInfo.ContentType := MiniRESTResponseTypes[AContentType]; //'text/html; charset=utf-8';
-  end;
-  FResponseInfo.ResponseNo := AStatusCode;
 end;
 
 procedure TMiniRESTActionContextIndy.SetResponseContentType(
   const AContentType: TMiniRESTResponseType);
 begin
-
+  case AContentType of
+    rtTextHtml: FResponseInfo.ContentType := 'text/html; charset=utf-8';
+  else
+    FResponseInfo.ContentType := MiniRESTResponseTypes[AContentType]; //'text/html; charset=utf-8';
+  end;
 end;
 
 procedure TMiniRESTActionContextIndy.SetResponseStatusCode(const AStatusCode: Integer);
 begin
-
+  FResponseInfo.ResponseNo := AStatusCode;
 end;
 
 procedure TMiniRESTActionContextIndy.SetResponseStream(AStream: TStream);
