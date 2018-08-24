@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<test-results name="C:\Projetos\DelphiVarios\TGABI\MiniREST\unittest\Win32\Debug\MiniRESTTest.exe" total="2" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2018-08-21" time="3.435">
+<test-results name="C:\Projetos\DelphiVarios\TGABI\MiniREST\unittest\Win32\Debug\MiniRESTTest.exe" total="2" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2018-08-23" time="3.398">
   <culture-info current-culture="en" current-uiculture="en" />
-  <test-suite type="Assembly" name="MiniRESTTest.exe" executed="true" result="Success" success="True" time="3.435" asserts="0">
+  <test-suite type="Assembly" name="MiniRESTTest.exe" executed="true" result="Success" success="True" time="3.398" asserts="0">
     <results>
-        <test-suite type="Namespace" name="uTest" executed="true" result="Success" success="True" time="3.435" asserts="0" >
+        <test-suite type="Namespace" name="uTest" executed="true" result="Success" success="True" time="3.396" asserts="0" >
           <results>
-              <test-suite type="Fixture" name="TMiniRESTTest" executed="True" result="Success" success="True" time="3.435" >
+              <test-suite type="Fixture" name="TMiniRESTTest" executed="True" result="Success" success="True" time="3.396" >
                 <results>
-                  <test-case name="TestHello" executed="True" result="Success" success="True" time="1.235" asserts="0" />
-                  <test-case name="TestHelloWithName" executed="True" result="Success" success="True" time="0.021" asserts="0" />
+                  <test-case name="TestHello" executed="True" result="Success" success="True" time="1.234" asserts="0" />
+                  <test-case name="TestHelloWithName" executed="True" result="Success" success="True" time="0.023" asserts="0" />
                 </results>
               </test-suite>
           </results>
