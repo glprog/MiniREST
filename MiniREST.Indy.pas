@@ -33,9 +33,7 @@ type
     FRequestInfo : TIdHTTPRequestInfo;
     FResponseInfo : TIdHTTPResponseInfo;
     FRequestContentString : string;
-    FResponseContent: string;
     FResponseContentType: TMiniRESTResponseType;
-    FResponseStatusCode: Integer;
   public
     class function New(AActionInfo : IMiniRESTActionInfo; AIndyContext : TIdContext;
     ARequestInfo : TIdHTTPRequestInfo; AResponseInfo : TIdHTTPResponseInfo) : IMiniRESTActionContext;
@@ -262,7 +260,7 @@ end;
 
 function TMiniRESTActionContextIndy.GetResponseContent: string;
 begin
-  Result := FResponseContent;
+  Result := FResponseInfo.ContentText;
 end;
 
 function TMiniRESTActionContextIndy.GetResponseContentType: TMiniRESTResponseType;
@@ -277,7 +275,7 @@ end;
 
 function TMiniRESTActionContextIndy.GetResponseStatusCode: Integer;
 begin
-  Result := FResponseStatusCode;
+  Result := FResponseInfo.ResponseNo;
 end;
 
 function TMiniRESTActionContextIndy.GetURI: string;

@@ -10,6 +10,7 @@ type
   TMiniRESTTest = class(TObject)
   private
     FServer: IMiniRESTServer;
+    FServermORMot: IMiniRESTServer;
   public
     [Setup]
     procedure Setup;
@@ -23,7 +24,8 @@ type
 
 implementation
 
-uses MiniREST.Indy, HttpConnection, HttpConnectionIndy, Hello.Controller;
+uses MiniREST.Indy, MiniREST.mORMot, HttpConnection, HttpConnectionIndy,
+  Hello.Controller;
 
 procedure TMiniRESTTest.Setup;
 begin
@@ -31,6 +33,11 @@ begin
   FServer.AddController(THelloController);
   FServer.SetPort(8099);
   FServer.Start;
+
+  FServermORMot := TMiniRESTServermORMot.Create;
+  FServermORMot.AddController(THelloController);
+  FServermORMot.SetPort(8098);
+  FServermORMot.Start;
 end;
 
 procedure TMiniRESTTest.TearDown;
