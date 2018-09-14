@@ -6,26 +6,26 @@ uses
 
 type
 
-  //[TestFixture]
+  [TestFixture]
   TMiniRESTTest = class(TObject)
   private
     FServer: IMiniRESTServer;
-    FServermORMot: IMiniRESTServer;
   public
-    [Setup]
+    [SetupFixture]
     procedure Setup;
-    [TearDown]
+    [TearDownFixture]
     procedure TearDown;
     [Test]
     procedure TestHello;
     [Test]
     procedure TestHelloWithName;
+    [Test]
+    procedure TestHeader;
   end;
 
 implementation
 
-uses MiniREST.Indy, MiniREST.mORMot, HttpConnection, HttpConnectionIndy,
-  Hello.Controller;
+uses MiniREST.Indy, HttpConnection, HttpConnectionIndy, Hello.Controller;
 
 procedure TMiniRESTTest.Setup;
 begin
@@ -38,6 +38,11 @@ end;
 procedure TMiniRESTTest.TearDown;
 begin
   FServer := nil;
+end;
+
+procedure TMiniRESTTest.TestHeader;
+begin
+
 end;
 
 procedure TMiniRESTTest.TestHello;

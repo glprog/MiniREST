@@ -74,7 +74,7 @@ var
 begin
   LContext := TMiniRESTActionContextmORMot.Create(Ctxt);
   FindController(LContext);
-  Result := 200;
+  Result := LContext.GetResponseStatusCode;
 end;
 
 procedure TMiniRESTServermORMot.SetPort(APort: Integer);
