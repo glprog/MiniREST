@@ -220,7 +220,7 @@ end;
 
 function TMiniRESTActionContextIndy.GetPathVariable(AVariable: string): string;
 begin
-  Result := TMiniRESTUtil.GetPathVariable(AVariable,FRequestInfo.Document, Self);
+  Result := TMiniRESTUtil.GetPathVariable(AVariable, FRequestInfo.Document, Self);
 end;
 
 function TMiniRESTActionContextIndy.GetQueryParam(

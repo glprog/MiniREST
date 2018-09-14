@@ -37,7 +37,11 @@ uses
   HttpConnectionIndy in '..\delphi-rest-client-api\src\HttpConnectionIndy.pas',
   RestUtils in '..\delphi-rest-client-api\src\RestUtils.pas',
   RestException in '..\delphi-rest-client-api\src\RestException.pas',
-  ProxyUtils in '..\delphi-rest-client-api\src\ProxyUtils.pas';
+  ProxyUtils in '..\delphi-rest-client-api\src\ProxyUtils.pas',
+  MiniREST.mORMot in '..\MiniREST.mORMot.pas',
+  SynCrtSock in '..\mORMot\SynCrtSock.pas',
+  SynWinSock in '..\mORMot\SynWinSock.pas',
+  uTest.mORMot in 'uTest.mORMot.pas';
 
 var
   runner : ITestRunner;

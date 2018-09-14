@@ -1,4 +1,4 @@
-unit uTest;
+unit uTest.mORMot;
 
 interface
 uses
@@ -6,15 +6,15 @@ uses
 
 type
 
-  //[TestFixture]
-  TMiniRESTTest = class(TObject)
+  [TestFixture]
+  TMiniRESTTestmORMot = class(TObject)
   private
     FServer: IMiniRESTServer;
     FServermORMot: IMiniRESTServer;
   public
-    [Setup]
+    [SetupFixture]
     procedure Setup;
-    [TearDown]
+    [TearDownFixture]
     procedure TearDown;
     [Test]
     procedure TestHello;
@@ -24,23 +24,26 @@ type
 
 implementation
 
-uses MiniREST.Indy, MiniREST.mORMot, HttpConnection, HttpConnectionIndy,
+uses MiniREST.mORMot, HttpConnection, HttpConnectionIndy,
   Hello.Controller;
 
-procedure TMiniRESTTest.Setup;
+procedure TMiniRESTTestmORMot.Setup;
 begin
-  FServer := TMiniRESTServerIndy.Create;
-  FServer.AddController(THelloController);
-  FServer.SetPort(8099);
-  FServer.Start;
+  if FServermORMot = nil then
+  begin
+    FServermORMot := TMiniRESTServermORMot.Create;
+    FServermORMot.AddController(THelloController);
+    FServermORMot.SetPort(8087);
+    FServermORMot.Start;
+  end;
 end;
 
-procedure TMiniRESTTest.TearDown;
+procedure TMiniRESTTestmORMot.TearDown;
 begin
-  FServer := nil;
+  FServermORMot := nil;
 end;
 
-procedure TMiniRESTTest.TestHello;
+procedure TMiniRESTTestmORMot.TestHello;
 var
   LConnection: IHttpConnection;
   LStream: TStringStream;
@@ -49,14 +52,14 @@ begin
   LStream := TStringStream.Create;
   LStream.Position := 0;
   try
-    LConnection.Get('http://localhost:8099/hello', LStream);
+    LConnection.Get('http://localhost:8087/hello', LStream);
     Assert.AreEqual('{"msg":"hello"}', LStream.DataString);
   finally
     LStream.Free;
   end;
 end;
 
-procedure TMiniRESTTest.TestHelloWithName;
+procedure TMiniRESTTestmORMot.TestHelloWithName;
 var
   LConnection: IHttpConnection;
   LStream: TStringStream;
@@ -65,7 +68,7 @@ begin
   LStream := TStringStream.Create;
   LStream.Position := 0;
   try
-    LConnection.Get('http://localhost:8099/hello/hueBR', LStream);
+    LConnection.Get('http://localhost:8087/hello/hueBR', LStream);
     Assert.AreEqual('{"msg":"hello hueBR"}', LStream.DataString);
   finally
     LStream.Free;
@@ -73,5 +76,5 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TMiniRESTTest);
+  TDUnitX.RegisterTestFixture(TMiniRESTTestmORMot);
 end.

@@ -21,6 +21,7 @@ type
   TMiniRESTActionContextmORMot = class(TInterfacedObject, IMiniRESTActionContext)
   private
     FRequest: THttpServerRequest;
+    FActionInfo: IMiniRESTActionInfo;
   public
     constructor Create(ARequest: THttpServerRequest);
     procedure AppendHeader(AName: string; AValue: string);
@@ -48,10 +49,13 @@ type
 
 implementation
 
+uses MiniREST.Util;
+
 { TMiniRESTServermORMot }
 
 constructor TMiniRESTServermORMot.Create;
 begin
+  inherited;
   FServer := THttpApiServer.Create(True);
   FPort := 8090;
 //  FServer.RegisterCompress(CompressDeflate); // our server will deflate html :)
@@ -105,7 +109,7 @@ end;
 
 function TMiniRESTActionContextmORMot.GetActionInfo: IMiniRESTActionInfo;
 begin
-
+  Result := FActionInfo;
 end;
 
 function TMiniRESTActionContextmORMot.GetAuthToken: string;
@@ -125,7 +129,7 @@ end;
 
 function TMiniRESTActionContextmORMot.GetPathVariable(AVariable: string): string;
 begin
-
+  Result := TMiniRESTUtil.GetPathVariable(AVariable, FRequest.URL, Self);
 end;
 
 function TMiniRESTActionContextmORMot.GetQueryParam(AQueryParam: string): IMiniRESTQueryParam;
@@ -145,7 +149,7 @@ end;
 
 function TMiniRESTActionContextmORMot.GetResponseContent: string;
 begin
-
+  Result := FRequest.OutContent;
 end;
 
 function TMiniRESTActionContextmORMot.GetResponseContentType: TMiniRESTResponseType;
@@ -160,7 +164,7 @@ end;
 
 function TMiniRESTActionContextmORMot.GetURI: string;
 begin
-
+  Result := FRequest.URL;
 end;
 
 procedure TMiniRESTActionContextmORMot.SendRedirect(ALocation: string);
@@ -175,7 +179,7 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetActionInfo(AActionInfo: IMiniRESTActionInfo);
 begin
-
+  FActionInfo := AActionInfo;
 end;
 
 procedure TMiniRESTActionContextmORMot.SetHeader(AName, AValue: string);
@@ -185,7 +189,7 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseContent(const AContent: string);
 begin
-
+  FRequest.OutContent := AContent;
 end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseContentType(
