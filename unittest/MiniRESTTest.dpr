@@ -54,6 +54,7 @@ begin
   exit;
 {$ENDIF}
   try
+    TDUnitX.Options.ExitBehavior := TDUnitXExitBehavior.Continue;
     //Check command line options, will exit if invalid
     TDUnitX.CheckCommandLine;
     //Create the test runner

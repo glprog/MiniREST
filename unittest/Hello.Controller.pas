@@ -10,7 +10,7 @@ type
     [RequestMapping('/hello')]
     procedure Hello;
     [RequestMapping('/hello/{name}')]
-    procedure HelloWithName;
+    procedure HelloWithName;    
   end;
 
 implementation
