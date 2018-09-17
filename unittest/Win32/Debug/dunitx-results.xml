@@ -1,23 +1,35 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<test-results name="C:\Projetos\DelphiVarios\TGABI\MiniREST\unittest\Win32\Debug\MiniRESTTest.exe" total="5" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2018-09-15" time="1.184">
+<test-results name="C:\Projetos\DelphiVarios\TGABI\MiniREST\unittest\Win32\Debug\MiniRESTTest.exe" total="8" errors="0" failures="1" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2018-09-16" time="0.054">
   <culture-info current-culture="en" current-uiculture="en" />
-  <test-suite type="Assembly" name="MiniRESTTest.exe" executed="true" result="Success" success="True" time="1.184" asserts="0">
+  <test-suite type="Assembly" name="MiniRESTTest.exe" executed="true" result="Failure" success="False" time="0.054" asserts="0">
     <results>
-        <test-suite type="Namespace" name="uTest" executed="true" result="Success" success="True" time="1.153" asserts="0" >
+        <test-suite type="Namespace" name="uTest" executed="true" result="Failure" success="False" time="0.038" asserts="0" >
           <results>
-              <test-suite type="Fixture" name="TMiniRESTTestmORMot" executed="True" result="Success" success="True" time="1.153" >
+              <test-suite type="Fixture" name="TMiniRESTTestmORMot" executed="True" result="Failure" success="False" time="0.038" >
                 <results>
-                  <test-case name="TestHello" executed="True" result="Success" success="True" time="1.148" asserts="0" />
-                  <test-case name="TestHelloWithName" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="TestHello" executed="True" result="Success" success="True" time="0.014" asserts="0" />
+                  <test-case name="TestHelloWithName" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="TestRequestHeader" executed="True" result="Failure" success="False" time="0.001" asserts="0" >
+                    <failure>
+                      <message>
+                        <![CDATA[ Expected {"msg": "hello Bob"} is not equal to actual {"msg": "hello "}  ]]>
+                      </message>
+                      <stack-trace>
+                        <![CDATA[  ]]>
+                      </stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="TestResponseHeader" executed="True" result="Success" success="True" time="0.002" asserts="0" />
                 </results>
               </test-suite>
           </results>
         </test-suite>
-        <test-suite type="Fixture" name="TMiniRESTTest" executed="True" result="Success" success="True" time="0.032" >
+        <test-suite type="Fixture" name="TMiniRESTTest" executed="True" result="Success" success="True" time="0.016" >
           <results>
-            <test-case name="TestHello" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+            <test-case name="TestHello" executed="True" result="Success" success="True" time="0.002" asserts="0" />
             <test-case name="TestHelloWithName" executed="True" result="Success" success="True" time="0.002" asserts="0" />
-            <test-case name="TestHeader" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+            <test-case name="TestRequestHeader" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+            <test-case name="TestResponseHeader" executed="True" result="Success" success="True" time="0.003" asserts="0" />
           </results>
         </test-suite>
     </results>

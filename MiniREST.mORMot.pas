@@ -22,6 +22,7 @@ type
   private
     FRequest: THttpServerRequest;
     FActionInfo: IMiniRESTActionInfo;
+    FResponseStatusCode: Integer;
   public
     constructor Create(ARequest: THttpServerRequest);
     procedure AppendHeader(AName: string; AValue: string);
@@ -61,6 +62,65 @@ begin
 //  FServer.RegisterCompress(CompressDeflate); // our server will deflate html :)
   FServer.OnRequest := Process;
   FServer.Clone(31); // will use a thread pool of 32 threads in total
+end;
+
+function IdemPChar(p, up: pAnsiChar): boolean;
+// if the beginning of p^ is same as up^ (ignore case - up^ must be already Upper)
+var c: AnsiChar;
+begin
+  result := false;
+  if p=nil then
+    exit;
+  if (up<>nil) and (up^<>#0) then
+    repeat
+      c := p^;
+      if up^<>c then
+        if c in ['a'..'z'] then begin
+          dec(c,32);
+          if up^<>c then
+            exit;
+        end else exit;
+      inc(up);
+      inc(p);
+    until up^=#0;
+  result := true;
+end;
+
+function GetHeaderValue(var headers: SockString; const upname: SockString;
+  deleteInHeaders: boolean): SockString;
+var i,j,k: integer;
+begin
+  result := '';
+  if (headers='') or (upname='') then
+    exit;
+  i := 1;
+  repeat
+    k := length(headers)+1;
+    for j := i to k-1 do
+      if headers[j]<' ' then begin
+        k := j;
+        break;
+      end;
+    if IdemPChar(@headers[i],pointer(upname)) then begin
+      j := i;
+      inc(i,length(upname));
+      while headers[i]=' ' do inc(i);
+      result := copy(headers,i,k-i);
+      if deleteInHeaders then begin
+        while true do
+          if (headers[k]=#0) or (headers[k]>=' ') then
+            break else
+            inc(k);
+        delete(headers,j,k-j);
+      end;
+      exit;
+    end;
+    i := k;
+    while headers[i]<' ' do
+      if headers[i]=#0 then
+        exit else
+        inc(i);
+  until false;
 end;
 
 function TMiniRESTServermORMot.GetPort: Integer;
@@ -123,8 +183,11 @@ begin
 end;
 
 function TMiniRESTActionContextmORMot.GetHeader(AName: string): string;
+var
+  LHeaders: string;
 begin
-
+  LHeaders := FRequest.OutCustomHeaders;
+  Result := GetHeaderValue(LHeaders, UpperCase(AName), False);
 end;
 
 function TMiniRESTActionContextmORMot.GetPathVariable(AVariable: string): string;
@@ -159,7 +222,7 @@ end;
 
 function TMiniRESTActionContextmORMot.GetResponseStatusCode: Integer;
 begin
-
+  Result := FResponseStatusCode;
 end;
 
 function TMiniRESTActionContextmORMot.GetURI: string;
@@ -184,7 +247,8 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetHeader(AName, AValue: string);
 begin
-
+  FRequest.OutCustomHeaders := FRequest.OutCustomHeaders + #13#10 +
+  AName + ': ' + AValue;
 end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseContent(const AContent: string);
@@ -200,7 +264,7 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseStatusCode(const AStatusCode: Integer);
 begin
-
+  FResponseStatusCode := AStatusCode;
 end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseStream(AStream: TStream);

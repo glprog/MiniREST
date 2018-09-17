@@ -41,7 +41,8 @@ uses
   MiniREST.mORMot in '..\MiniREST.mORMot.pas',
   SynCrtSock in '..\mORMot\SynCrtSock.pas',
   SynWinSock in '..\mORMot\SynWinSock.pas',
-  uTest.mORMot in 'uTest.mORMot.pas';
+  uTest.mORMot in 'uTest.mORMot.pas',
+  uTest.Default in 'uTest.Default.pas';
 
 var
   runner : ITestRunner;
