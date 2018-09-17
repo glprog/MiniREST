@@ -23,6 +23,7 @@ type
     FRequest: THttpServerRequest;
     FActionInfo: IMiniRESTActionInfo;
     FResponseStatusCode: Integer;
+    procedure DecodeAndSetParams;
   public
     constructor Create(ARequest: THttpServerRequest);
     procedure AppendHeader(AName: string; AValue: string);
@@ -50,7 +51,7 @@ type
 
 implementation
 
-uses MiniREST.Util;
+uses StrUtils, MiniREST.Util;
 
 { TMiniRESTServermORMot }
 
@@ -184,10 +185,30 @@ end;
 
 function TMiniRESTActionContextmORMot.GetHeader(AName: string): string;
 var
-  LHeaders: string;
-begin
-  LHeaders := FRequest.OutCustomHeaders;
-  Result := GetHeaderValue(LHeaders, UpperCase(AName), False);
+  LHeaders: TStringList;
+  LName, LHeader: string;
+  i, LPosition: Integer;
+begin  
+  LName := AName;
+  LHeaders := TStringList.Create;  
+  try
+    LHeader := '';     
+    LHeaders.Text := FRequest.InHeaders;           
+    for i := 0 to LHeaders.Count - 1 do
+    begin
+      LPosition := Pos(LName, LHeaders[i]);
+      if LPosition > 0 then
+      begin
+        LHeader := LHeaders[i];
+        LPosition := PosEx(':', LHeader, LPosition);
+        LHeader := Trim(Copy(LHeader, LPosition + 1, Length(LHeader) - LPosition));
+        Break;
+      end;  
+    end;
+    Result := LHeader;    
+  finally
+    LHeaders.Free;
+  end;  
 end;
 
 function TMiniRESTActionContextmORMot.GetPathVariable(AVariable: string): string;
@@ -270,6 +291,11 @@ end;
 procedure TMiniRESTActionContextmORMot.SetResponseStream(AStream: TStream);
 begin
 
+end;
+
+procedure TMiniRESTActionContextmORMot.DecodeAndSetParams;
+begin
+  
 end;
 
 end.

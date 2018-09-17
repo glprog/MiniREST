@@ -1,0 +1,1 @@
+"DCC32.EXE" MiniRESTTest.dpr -B -E..\Bin -NU..\Lib -GD -NS

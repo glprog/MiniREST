@@ -16,7 +16,10 @@ module.exports = function(grunt) {
       bgShell: {
         test: {
           cmd: `${caminhoBat} "${caminho}"`,
-          execOptions: caminho
+          execOptions: caminho,
+          execOpts: {
+            stdio: 'inherit'
+          }
         },
         stdout: true
       },
