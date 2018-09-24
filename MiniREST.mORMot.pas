@@ -65,7 +65,7 @@ begin
   FServer.Clone(31); // will use a thread pool of 32 threads in total
 end;
 
-function IdemPChar(p, up: pAnsiChar): boolean;
+{function IdemPChar(p, up: pAnsiChar): boolean;
 // if the beginning of p^ is same as up^ (ignore case - up^ must be already Upper)
 var c: AnsiChar;
 begin
@@ -122,7 +122,7 @@ begin
         exit else
         inc(i);
   until false;
-end;
+end;}
 
 function TMiniRESTServermORMot.GetPort: Integer;
 begin
@@ -147,7 +147,7 @@ function TMiniRESTServermORMot.Start: Boolean;
 begin
   if FServer.Started then
     FServer.Shutdown;
-  FServer.RemoveUrl('', IntToStr(GetPort));
+  FServer.RemoveUrl(SockString(''), IntToStr(GetPort));
   FServer.AddUrl('', IntToStr(GetPort),false,'+',true);
 end;
 

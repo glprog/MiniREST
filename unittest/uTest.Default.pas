@@ -19,6 +19,8 @@ type
     procedure TestRequestHeader;
     [Test]
     procedure TestResponseHeader;
+    [Test]
+    procedure TestAppendHeader;
   end;
 
 implementation
@@ -56,7 +58,7 @@ procedure TMiniRESTTestdefault.TestResponseHeader;
 var
   LConnection: TIdHTTP;
   LStream: TStringStream;
- LResponseHeader: string;
+  LResponseHeader: string;
 begin
   LConnection := TIdHTTP.Create(nil);
   LStream := TStringStream.Create;
@@ -103,6 +105,27 @@ begin
     LConnection.Free;
     LStream.Free;
   end;
+end;
+
+procedure TMiniRESTTestdefault.TestAppendHeader;
+var
+  LConnection: TIdHTTP;
+  LStream: TStringStream;
+  LResponseHeader: String;
+begin
+  LConnection := TIdHTTP.Create;
+  LStream := TStringStream.Create;
+  LStream.Position := 0;
+  try
+    LConnection.Response.RawHeaders.FoldLines := True;
+    LConnection.Response.RawHeaders.UnFoldLines := False;
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloAppendHeader', LStream);
+    LResponseHeader := LConnection.Response.RawHeaders.Values['TestAppendHeader'];
+    Assert.AreEqual('{"msg":"hello hueBR"}', LResponseHeader);
+  finally
+    LConnection.Free;
+    LStream.Free;
+  end;  
 end;
 
 end.

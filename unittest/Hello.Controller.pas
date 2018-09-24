@@ -12,7 +12,9 @@ type
     [RequestMapping('/hello/{name}')]
     procedure HelloWithName;
     [RequestMapping('/helloHeader')]
-    procedure HelloHeader;    
+    procedure HelloHeader;
+    [RequestMapping('/helloAppendHeader')] 
+    procedure HelloAppendHeader;   
   end;
 
 implementation
@@ -36,6 +38,13 @@ begin
   LNomeNoHeader := GetActionContext.GetHeader('NomeNoHeader');
   GetActionContext.SetHeader('TesteHeader', '321');
   ResponseJson('{"msg": "hello ' + LNomeNoHeader + '"}');  
+end;
+
+procedure THelloController.HelloAppendHeader;
+begin
+  GetActionContext.AppendHeader('TestAppendHeader', 'Hello');
+  GetActionContext.AppendHeader('TestAppendHeader', 'World');
+  ResponseJson('{}');  
 end;
 
 end.
