@@ -25,9 +25,12 @@ type
 
 implementation
 
-uses IdHTTP, {HttpConnection, HttpConnectionIndy,} Hello.Controller;
+uses IdHTTP, IdHeaderList, {HttpConnection, HttpConnectionIndy,} Hello.Controller;
 
 { TMiniRESTTestdefault }
+
+type
+  TIdHeaderListHack = class(TIdHeaderList);
 
 procedure TMiniRESTTestdefault.Setup;
 begin
@@ -111,17 +114,31 @@ procedure TMiniRESTTestdefault.TestAppendHeader;
 var
   LConnection: TIdHTTP;
   LStream: TStringStream;
-  LResponseHeader: String;
+  LResponseHeader, LTemp: string;
+  LHeaders: TIdHeaderList;
+  I: Integer;
 begin
   LConnection := TIdHTTP.Create;
   LStream := TStringStream.Create;
   LStream.Position := 0;
   try
-    LConnection.Response.RawHeaders.FoldLines := True;
-    LConnection.Response.RawHeaders.UnFoldLines := False;
     LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloAppendHeader', LStream);
-    LResponseHeader := LConnection.Response.RawHeaders.Values['TestAppendHeader'];
-    Assert.AreEqual('{"msg":"hello hueBR"}', LResponseHeader);
+    LHeaders := LConnection.Response.RawHeaders;
+    I := 0;
+    while I < LHeaders.Count do
+    begin
+      if LHeaders.Names[I] = 'TestAppendHeader' then
+      begin
+        LTemp := TIdHeaderListHack(LHeaders).GetValueFromLine(I);
+        if LResponseHeader = '' then
+          LResponseHeader := LTemp
+        else
+          LResponseHeader := LResponseHeader + ' ' + LTemp;
+      end
+      else
+        TIdHeaderListHack(LHeaders).SkipValueAtLine(I);
+    end;
+    Assert.AreEqual('Hello World !', LResponseHeader);
   finally
     LConnection.Free;
     LStream.Free;

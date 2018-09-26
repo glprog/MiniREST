@@ -44,6 +44,7 @@ procedure THelloController.HelloAppendHeader;
 begin
   GetActionContext.AppendHeader('TestAppendHeader', 'Hello');
   GetActionContext.AppendHeader('TestAppendHeader', 'World');
+  GetActionContext.AppendHeader('TestAppendHeader', '!');
   ResponseJson('{}');  
 end;
 
