@@ -2,7 +2,8 @@ unit MiniREST.mORMot;
 
 interface
 
-uses Classes, MiniREST.Intf, MiniREST.Common, MiniREST.Server.Base, SynCrtSock, SysUtils;
+uses Classes, MiniREST.Intf, MiniREST.Common, MiniREST.Server.Base, SynCrtSock, SysUtils, IdHeaderList,
+  IdGlobalProtocols;
 
 type
   TMiniRESTServermORMot = class(TMiniRESTServerBase)
@@ -23,9 +24,11 @@ type
     FRequest: THttpServerRequest;
     FActionInfo: IMiniRESTActionInfo;
     FResponseStatusCode: Integer;
+    FHeaders: TIdHeaderList;
     procedure DecodeAndSetParams;
   public
     constructor Create(ARequest: THttpServerRequest);
+    destructor Destroy; override;
     procedure AppendHeader(AName: string; AValue: string);
     function GetActionInfo: IMiniRESTActionInfo;
     function GetAuthToken: string;
@@ -160,12 +163,17 @@ end;
 
 procedure TMiniRESTActionContextmORMot.AppendHeader(AName, AValue: string);
 begin
-
+  FHeaders.Text := FRequest.OutCustomHeaders;
+  FHeaders.AddValue(AName, AValue);
+  FRequest.OutCustomHeaders := FHeaders.Text;
 end;
 
 constructor TMiniRESTActionContextmORMot.Create(ARequest: THttpServerRequest);
 begin
   FRequest := ARequest;
+  FHeaders := TIdHeaderList.Create(QuoteHTTP);
+  FHeaders.FoldLines := True;
+  FHeaders.UnfoldLines := True;
 end;
 
 function TMiniRESTActionContextmORMot.GetActionInfo: IMiniRESTActionInfo;
@@ -184,31 +192,9 @@ begin
 end;
 
 function TMiniRESTActionContextmORMot.GetHeader(AName: string): string;
-var
-  LHeaders: TStringList;
-  LName, LHeader: string;
-  i, LPosition: Integer;
 begin  
-  LName := AName;
-  LHeaders := TStringList.Create;  
-  try
-    LHeader := '';     
-    LHeaders.Text := FRequest.InHeaders;           
-    for i := 0 to LHeaders.Count - 1 do
-    begin
-      LPosition := Pos(LName, LHeaders[i]);
-      if LPosition > 0 then
-      begin
-        LHeader := LHeaders[i];
-        LPosition := PosEx(':', LHeader, LPosition);
-        LHeader := Trim(Copy(LHeader, LPosition + 1, Length(LHeader) - LPosition));
-        Break;
-      end;  
-    end;
-    Result := LHeader;    
-  finally
-    LHeaders.Free;
-  end;  
+  FHeaders.Text := FRequest.InHeaders;
+  Result := FHeaders.Values[AName];
 end;
 
 function TMiniRESTActionContextmORMot.GetPathVariable(AVariable: string): string;
@@ -296,6 +282,12 @@ end;
 procedure TMiniRESTActionContextmORMot.DecodeAndSetParams;
 begin
   
+end;
+
+destructor TMiniRESTActionContextmORMot.Destroy;
+begin
+  FHeaders.Free;
+  inherited;  
 end;
 
 end.
