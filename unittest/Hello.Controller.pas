@@ -2,7 +2,7 @@ unit Hello.Controller;
 
 interface
 
-uses MiniREST.Controller.Base, MiniREST.Attribute;
+uses SysUtils, MiniREST.Controller.Base, MiniREST.Attribute;
 
 type
   THelloController = class(TMiniRESTControllerBase)
@@ -14,7 +14,9 @@ type
     [RequestMapping('/helloHeader')]
     procedure HelloHeader;
     [RequestMapping('/helloAppendHeader')] 
-    procedure HelloAppendHeader;   
+    procedure HelloAppendHeader;
+    [RequestMapping('/queryParam')]
+    procedure HelloQueryParam;   
   end;
 
 implementation
@@ -46,6 +48,18 @@ begin
   GetActionContext.AppendHeader('TestAppendHeader', 'World');
   GetActionContext.AppendHeader('TestAppendHeader', '!');
   ResponseJson('{}');  
+end;
+
+procedure THelloController.HelloQueryParam;
+var
+  LParam1, LParam2, LParam3, LJson: string;
+begin
+  LJson := '{"param1": "%s", "param2": "%s", "param3": "%s"}';
+  LParam1 := QueryParam('param1');
+  LParam2 := QueryParam('param2');
+  LParam3 := QueryParam('param3');
+  LJson := Format(LJson, [LParam1, LParam2, LParam3]);
+  ResponseJson(LJson);
 end;
 
 end.

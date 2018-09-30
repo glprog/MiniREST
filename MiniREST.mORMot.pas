@@ -2,8 +2,8 @@ unit MiniREST.mORMot;
 
 interface
 
-uses Classes, MiniREST.Intf, MiniREST.Common, MiniREST.Server.Base, SynCrtSock, SysUtils, IdHeaderList,
-  IdGlobalProtocols;
+uses Classes, MiniREST.Intf, MiniREST.Common, MiniREST.Server.Base, SynCrtSock,
+  SysUtils, IdHeaderList, IdGlobalProtocols, IdGlobal, IdURI;
 
 type
   TMiniRESTServermORMot = class(TMiniRESTServerBase)
@@ -25,6 +25,8 @@ type
     FActionInfo: IMiniRESTActionInfo;
     FResponseStatusCode: Integer;
     FHeaders: TIdHeaderList;
+    FParams: TStringList;
+    FParamsLoaded: Boolean;
     procedure DecodeAndSetParams;
   public
     constructor Create(ARequest: THttpServerRequest);
@@ -50,6 +52,9 @@ type
     procedure SetResponseContentType(const AContentType: TMiniRESTResponseType);
     function GetResponseStatusCode: Integer;
     procedure SetResponseStatusCode(const AStatusCode: Integer);
+  end;
+
+  TMiniRESTQueryParammORMot = class(TMiniRESTQueryParamBase)
   end;
 
 implementation
@@ -174,6 +179,8 @@ begin
   FHeaders := TIdHeaderList.Create(QuoteHTTP);
   FHeaders.FoldLines := True;
   FHeaders.UnfoldLines := True;
+  FParams := TStringList.Create;
+  FParamsLoaded := False;
 end;
 
 function TMiniRESTActionContextmORMot.GetActionInfo: IMiniRESTActionInfo;
@@ -204,7 +211,12 @@ end;
 
 function TMiniRESTActionContextmORMot.GetQueryParam(AQueryParam: string): IMiniRESTQueryParam;
 begin
-
+  //THttpServerResp(FRequest.ConnectionThread).ServerSock.
+  if not FParamsLoaded then
+    DecodeAndSetParams;
+  Result := nil;
+  if FParams.IndexOfName(AQueryParam) > -1 then
+    Result := TMiniRESTQueryParammORMot.Create(AQueryParam, FParams.Values[AQueryParam]);
 end;
 
 function TMiniRESTActionContextmORMot.GetQueryParams: System.TArray<MiniREST.Intf.IMiniRESTQueryParam>;
@@ -233,8 +245,11 @@ begin
 end;
 
 function TMiniRESTActionContextmORMot.GetURI: string;
+var
+  LUri: TURI;
 begin
-  Result := FRequest.URL;
+  LUri.From(FRequest.URL);
+  Result := LUri.Root;
 end;
 
 procedure TMiniRESTActionContextmORMot.SendRedirect(ALocation: string);
@@ -280,13 +295,51 @@ begin
 end;
 
 procedure TMiniRESTActionContextmORMot.DecodeAndSetParams;
+var
+  i, j, posSep : Integer;
+  s, LCharSet, LValue: string;
+  LEncoding: IIdTextEncoding;
 begin
-  
+  // Convert special characters
+  // ampersand '&' separates values    {Do not Localize}
+  FParams.BeginUpdate;
+  try
+    FParams.Clear;
+    { TODO : CHANGE THIS }
+    FHeaders.Text := FRequest.InHeaders;
+    LCharSet := FHeaders.Params['Content-Type', 'charset'];
+    if LCharSet = '' then
+      LCharSet := 'utf-8';
+    // which charset to use for decoding query string parameters.  We
+    // should not be using the 'Content-Type' charset for that.  For
+    // 'application/x-www-form-urlencoded' forms, we should be, though...
+    posSep := Pos('?', FRequest.URL);
+    if posSep > 0 then
+      LValue := Copy(FRequest.URL, posSep + 1);
+    LEncoding := CharsetToEncoding(LCharSet);
+    i := 1;
+    while i <= Length(LValue) do
+    begin
+      j := i;
+      while (j <= Length(LValue)) and (LValue[j] <> '&') do {do not localize}
+      begin
+        Inc(j);
+      end;
+      s := Copy(LValue, i, j-i);
+      // See RFC 1866 section 8.2.1. TP
+      s := ReplaceAll(s, '+', ' ');  {do not localize}
+      FParams.Add(TIdURI.URLDecode(s, LEncoding));
+      i := j + 1;
+    end;
+  finally
+    FParams.EndUpdate;
+  end;  
 end;
 
 destructor TMiniRESTActionContextmORMot.Destroy;
 begin
   FHeaders.Free;
+  FParams.Free;
   inherited;  
 end;
 

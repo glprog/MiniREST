@@ -21,6 +21,8 @@ type
     procedure TestResponseHeader;
     [Test]
     procedure TestAppendHeader;
+    [Test]
+    procedure TestQueryParam;
   end;
 
 implementation
@@ -139,6 +141,27 @@ begin
         TIdHeaderListHack(LHeaders).SkipValueAtLine(I);
     end;
     Assert.AreEqual('Hello World !', LResponseHeader);
+  finally
+    LConnection.Free;
+    LStream.Free;
+  end;  
+end;
+
+procedure TMiniRESTTestdefault.TestQueryParam;
+var
+  LConnection: TIdHTTP;
+  LStream: TStringStream;
+begin
+  LConnection := TIdHTTP.Create;
+  LStream := TStringStream.Create;
+  LStream.Position := 0;
+  try
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/queryParam?param1=%25Hue123+hn'+
+    '&param2=hhn6%26+%26&param3=kkLP', LStream);
+    //%Hue123 hn
+    //hhn6& &
+    //kkLP
+    Assert.AreEqual('{"param1": "%Hue123 hn", "param2": "hhn6& &", "param3": "kkLP"}', LStream.DataString);
   finally
     LConnection.Free;
     LStream.Free;
