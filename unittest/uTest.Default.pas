@@ -23,6 +23,8 @@ type
     procedure TestAppendHeader;
     [Test]
     procedure TestQueryParam;
+    [Test]
+    procedure TestGetRequestContentAsString;
   end;
 
 implementation
@@ -165,6 +167,29 @@ begin
   finally
     LConnection.Free;
     LStream.Free;
+  end;  
+end;
+
+procedure TMiniRESTTestdefault.TestGetRequestContentAsString;
+var
+  LConnection: TIdHTTP;
+  LRequest, LResponse: TStringStream;
+begin
+  LConnection := TIdHTTP.Create;
+  LRequest := TStringStream.Create;
+  LRequest.Position := 0;
+  LResponse := TStringStream.Create;
+  LResponse.Position := 0;
+  try
+    LRequest.WriteString('{"param1": "%Hue123 hn", "param2": "hhn6& &", "param3": "kkLP"}');
+    LConnection.Post('http://localhost:' + IntToStr(FPorta) + '/getRequestContentAsString', LRequest, LResponse);
+    //%Hue123 hn
+    //hhn6& &
+    //kkLP
+    Assert.AreEqual(LRequest.DataString, LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
   end;  
 end;
 

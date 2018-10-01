@@ -2,7 +2,7 @@ unit Hello.Controller;
 
 interface
 
-uses SysUtils, MiniREST.Controller.Base, MiniREST.Attribute;
+uses SysUtils, MiniREST.Controller.Base, MiniREST.Attribute, MiniREST.Common;
 
 type
   THelloController = class(TMiniRESTControllerBase)
@@ -16,7 +16,9 @@ type
     [RequestMapping('/helloAppendHeader')] 
     procedure HelloAppendHeader;
     [RequestMapping('/queryParam')]
-    procedure HelloQueryParam;   
+    procedure HelloQueryParam;
+    [RequestMapping('/getRequestContentAsString', rmPost)]
+    procedure HelloGetRequestContentAsString;   
   end;
 
 implementation
@@ -60,6 +62,11 @@ begin
   LParam3 := QueryParam('param3');
   LJson := Format(LJson, [LParam1, LParam2, LParam3]);
   ResponseJson(LJson);
+end;
+
+procedure THelloController.HelloGetRequestContentAsString;
+begin
+  ResponseJson(GetActionContext.GetRequestContentAsString);  
 end;
 
 end.

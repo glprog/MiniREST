@@ -195,7 +195,22 @@ end;
 
 function TMiniRESTActionContextmORMot.GetCommandType: TMiniRESTRequestMethod;
 begin
-
+  if FRequest.Method = 'GET' then
+    Result := rmGet
+  else
+  if FRequest.Method = 'POST' then
+    Result := rmPost
+  else
+  if FRequest.Method = 'DELETE' then
+    Result := rmDelete
+  else
+  if FRequest.Method = 'PUT' then
+    Result := rmPut
+  else
+  if FRequest.Method = 'OPTIONS' then
+    Result := rmOptions
+  else
+    raise Exception.Create('Não implementado');
 end;
 
 function TMiniRESTActionContextmORMot.GetHeader(AName: string): string;
@@ -211,7 +226,6 @@ end;
 
 function TMiniRESTActionContextmORMot.GetQueryParam(AQueryParam: string): IMiniRESTQueryParam;
 begin
-  //THttpServerResp(FRequest.ConnectionThread).ServerSock.
   if not FParamsLoaded then
     DecodeAndSetParams;
   Result := nil;
@@ -220,13 +234,21 @@ begin
 end;
 
 function TMiniRESTActionContextmORMot.GetQueryParams: System.TArray<MiniREST.Intf.IMiniRESTQueryParam>;
+var I : Integer;
 begin
-
+  if not FParamsLoaded then
+    DecodeAndSetParams;
+  SetLength(Result, 0);
+  for I := 0 to FParams.Count - 1 do
+  begin
+    SetLength(Result, Length(Result) + 1);
+    Result[Length(Result) - 1] := TMiniRESTQueryParammORMot.Create(FParams.Names[I], FParams.ValueFromIndex[I]);
+  end;
 end;
 
 function TMiniRESTActionContextmORMot.GetRequestContentAsString: string;
 begin
-
+  Result := FRequest.InContent;
 end;
 
 function TMiniRESTActionContextmORMot.GetResponseContent: string;
@@ -332,6 +354,7 @@ begin
       i := j + 1;
     end;
   finally
+    FParamsLoaded := True;
     FParams.EndUpdate;
   end;  
 end;
