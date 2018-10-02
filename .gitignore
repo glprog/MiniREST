@@ -142,3 +142,4 @@ typings/
 
 # Serverless directories
 .serverless
+/unittest/Win32/Debug/dunitx-results.xml
