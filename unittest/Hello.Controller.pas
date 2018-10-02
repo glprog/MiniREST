@@ -18,7 +18,17 @@ type
     [RequestMapping('/queryParam')]
     procedure HelloQueryParam;
     [RequestMapping('/getRequestContentAsString', rmPost)]
-    procedure HelloGetRequestContentAsString;   
+    procedure HelloGetRequestContentAsString;
+    [RequestMapping('/helloGet', rmGet)]
+    procedure HelloGet;
+    [RequestMapping('/helloPut', rmPut)]
+    procedure HelloPut;       
+    [RequestMapping('/helloPost', rmPost)]
+    procedure HelloPost;
+    [RequestMapping('/helloDelete', rmDelete)]
+    procedure HelloDelete;
+    [RequestMapping('/helloOptions', rmOptions)]
+    procedure HelloOptions;    
   end;
 
 implementation
@@ -67,6 +77,31 @@ end;
 procedure THelloController.HelloGetRequestContentAsString;
 begin
   ResponseJson(GetActionContext.GetRequestContentAsString);  
+end;
+
+procedure THelloController.HelloGet;
+begin  
+  ResponseJson('{"msg": "helloGet"}');
+end;
+
+procedure THelloController.HelloPut;
+begin
+  ResponseJson('{"msg": "helloPut"}');
+end;
+
+procedure THelloController.HelloPost;
+begin
+  ResponseJson('{"msg": "helloPost"}');
+end;
+
+procedure THelloController.HelloDelete;
+begin
+  ResponseJson('{"msg": "helloDelete"}');
+end;
+
+procedure THelloController.HelloOptions;
+begin
+  ResponseJson('{"msg": "helloOptions"}');
 end;
 
 end.

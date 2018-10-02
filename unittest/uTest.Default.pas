@@ -25,6 +25,16 @@ type
     procedure TestQueryParam;
     [Test]
     procedure TestGetRequestContentAsString;
+    [Test]
+    procedure TestGet;
+    [Test]
+    procedure TestPut;
+    [Test]
+    procedure TestPost;
+    [Test]
+    procedure TestDelete;    
+    [Test]
+    procedure TestOptions;
   end;
 
 implementation
@@ -190,7 +200,92 @@ begin
   finally
     LConnection.Free;
     LResponse.Free;
+    LRequest.Free;
   end;  
+end;
+
+procedure TMiniRESTTestdefault.TestGet;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloGet', LResponse);
+    Assert.AreEqual('{"msg": "helloGet"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end; 
+end;
+
+procedure TMiniRESTTestdefault.TestPut;
+var
+  LConnection: TIdHTTP;
+  LResponse, LRequest: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  LRequest := TStringStream.Create;
+  try    
+    LConnection.Put('http://localhost:' + IntToStr(FPorta) + '/helloPut', LRequest, LResponse);
+    Assert.AreEqual('{"msg": "helloPut"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+    LRequest.Free;
+  end; 
+end;
+
+procedure TMiniRESTTestdefault.TestPost;
+var
+  LConnection: TIdHTTP;
+  LResponse, LRequest: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  LRequest := TStringStream.Create;
+  try    
+    LConnection.Post('http://localhost:' + IntToStr(FPorta) + '/helloPost', LRequest, LResponse);
+    Assert.AreEqual('{"msg": "helloPost"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+    LRequest.Free;
+  end; 
+end;
+
+procedure TMiniRESTTestdefault.TestDelete;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Delete('http://localhost:' + IntToStr(FPorta) + '/helloDelete', LResponse);
+    Assert.AreEqual('{"msg": "helloDelete"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;
+end;
+
+procedure TMiniRESTTestdefault.TestOptions;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Options('http://localhost:' + IntToStr(FPorta) + '/helloOptions', LResponse);
+    Assert.AreEqual('{"msg": "helloOptions"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;
 end;
 
 end.
