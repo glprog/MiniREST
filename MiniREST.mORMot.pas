@@ -27,6 +27,7 @@ type
     FHeaders: TIdHeaderList;
     FParams: TStringList;
     FParamsLoaded: Boolean;
+    FResponseContentType: TMiniRESTResponseType;
     procedure DecodeAndSetParams;
   public
     constructor Create(ARequest: THttpServerRequest);
@@ -302,8 +303,11 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseContentType(
   const AContentType: TMiniRESTResponseType);
-begin
-
+begin  
+  FResponseContentType := AContentType;
+  case AContentType of
+    rtTextHtml, rtApplicationJson: FRequest.OutContentType := MiniRESTResponseTypes[AContentType] + '; charset=utf-8';  
+  end;   
 end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseStatusCode(const AStatusCode: Integer);

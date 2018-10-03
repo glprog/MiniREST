@@ -296,7 +296,7 @@ begin
 end;
 
 procedure TMiniRESTActionContextIndy.ServeFile(AFilePath: string);
-var LFileStream : TFileStream;
+var 
   LFileName : string;
 begin
   LFileName := ProcessPath(ExtractFilePath(ParamStr(0)), AFilePath);

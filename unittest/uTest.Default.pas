@@ -41,6 +41,10 @@ type
     procedure TestPost2;
     [Test]
     procedure TestMRestToken;
+    [Test]
+    procedure TestContentType;
+    [Test]
+    procedure TestContentTypeJson;
   end;
 
 implementation
@@ -343,6 +347,44 @@ begin
     LConnection.Free;
     LResponse.Free;
   end;   
+end;
+
+procedure TMiniRESTTestdefault.TestContentType;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;
+  LContentType: string;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloContentType', LResponse);        
+    LContentType := LConnection.Response.RawHeaders.Values['Content-Type'];
+    Assert.AreEqual('<h1>Test</h1>', LResponse.DataString);
+    Assert.AreEqual('text/html; charset=utf-8', LContentType);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;   
+end;
+
+procedure TMiniRESTTestdefault.TestContentTypeJson;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;
+  LContentType: string;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloContentTypeJson', LResponse);        
+    LContentType := LConnection.Response.RawHeaders.Values['Content-Type'];
+    Assert.AreEqual('<h1>Test</h1>', LResponse.DataString);
+    Assert.AreEqual('application/json; charset=utf-8', LContentType);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;  
 end;
 
 end.
