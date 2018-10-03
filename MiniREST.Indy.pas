@@ -337,6 +337,7 @@ begin
   else
     FResponseInfo.ContentType := MiniRESTResponseTypes[AContentType]; //'text/html; charset=utf-8';
   end;
+  FResponseContentType := AContentType;
 end;
 
 procedure TMiniRESTActionContextIndy.SetResponseStatusCode(const AStatusCode: Integer);

@@ -32,7 +32,9 @@ type
     [RequestMapping('/helloVerb')]
     procedure HelloGet2;
     [RequestMapping('/helloVerb', rmPost)]
-    procedure HelloPost2;    
+    procedure HelloPost2;
+    [RequestMapping('/helloMRestToken')]
+    procedure HelloMRestToken;    
   end;
 
 implementation
@@ -116,6 +118,11 @@ end;
 procedure THelloController.HelloPost2;
 begin
   ResponseJson('{"msg": "helloPost2"}')  
+end;
+
+procedure THelloController.HelloMRestToken;
+begin
+  ResponseJson(Format('{"msg": "%s"}', [GetActionContext.GetHeader('MRestToken')]))  
 end;
 
 end.

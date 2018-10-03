@@ -190,7 +190,7 @@ end;
 
 function TMiniRESTActionContextmORMot.GetAuthToken: string;
 begin
-
+  Result := GetHeader('MRestToken');
 end;
 
 function TMiniRESTActionContextmORMot.GetCommandType: TMiniRESTRequestMethod;

@@ -39,6 +39,8 @@ type
     procedure TestGet2;
     [Test]
     procedure TestPost2;
+    [Test]
+    procedure TestMRestToken;
   end;
 
 implementation
@@ -323,6 +325,23 @@ begin
     LConnection.Free;
     LResponse.Free;
     LRequest.Free;
+  end;   
+end;
+
+procedure TMiniRESTTestdefault.TestMRestToken;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try
+    LConnection.Request.CustomHeaders.AddValue('MRestToken','121314');    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloMRestToken', LResponse);
+    Assert.AreEqual('{"msg": "121314"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
   end;   
 end;
 
