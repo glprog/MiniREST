@@ -35,6 +35,10 @@ type
     procedure TestDelete;    
     [Test]
     procedure TestOptions;
+    [Test]
+    procedure TestGet2;
+    [Test]
+    procedure TestPost2;
   end;
 
 implementation
@@ -286,6 +290,40 @@ begin
     LConnection.Free;
     LResponse.Free;
   end;
+end;
+
+procedure TMiniRESTTestdefault.TestGet2;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloVerb', LResponse);
+    Assert.AreEqual('{"msg": "helloGet2"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;  
+end;
+
+procedure TMiniRESTTestdefault.TestPost2;
+var
+  LConnection: TIdHTTP;
+  LResponse, LRequest: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  LRequest := TStringStream.Create;
+  try    
+    LConnection.Post('http://localhost:' + IntToStr(FPorta) + '/helloVerb', LRequest, LResponse);
+    Assert.AreEqual('{"msg": "helloPost2"}', LResponse.DataString);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+    LRequest.Free;
+  end;   
 end;
 
 end.

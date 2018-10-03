@@ -28,7 +28,11 @@ type
     [RequestMapping('/helloDelete', rmDelete)]
     procedure HelloDelete;
     [RequestMapping('/helloOptions', rmOptions)]
-    procedure HelloOptions;    
+    procedure HelloOptions;
+    [RequestMapping('/helloVerb')]
+    procedure HelloGet2;
+    [RequestMapping('/helloVerb', rmPost)]
+    procedure HelloPost2;    
   end;
 
 implementation
@@ -102,6 +106,16 @@ end;
 procedure THelloController.HelloOptions;
 begin
   ResponseJson('{"msg": "helloOptions"}');
+end;
+
+procedure THelloController.HelloGet2;
+begin
+  ResponseJson('{"msg": "helloGet2"}')  
+end;
+
+procedure THelloController.HelloPost2;
+begin
+  ResponseJson('{"msg": "helloPost2"}')  
 end;
 
 end.
