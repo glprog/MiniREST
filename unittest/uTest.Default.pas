@@ -2,13 +2,14 @@ unit uTest.Default;
 
 interface
 
-uses SysUtils, Classes, DUnitX.TestFramework, MiniREST.Intf, MiniREST.Server.Intf;
+uses SysUtils, Classes, DUnitX.TestFramework, MiniREST.Intf, MiniREST.Server.Intf, IdHTTP;
 
 type
   TMiniRESTTestdefault = class
   protected
     FServer: IMiniRESTServer;
     FPorta: Integer;
+    procedure OnRedirectTestRedirect(Sender: TObject; var dest: string; var NumRedirect: Integer; var Handled: boolean; var VMethod: TIdHTTPMethod);
   public
     procedure Setup; virtual;
     [Test]
@@ -45,11 +46,13 @@ type
     procedure TestContentType;
     [Test]
     procedure TestContentTypeJson;
+    [Test]
+    procedure TestRedirect;
   end;
 
 implementation
 
-uses IdHTTP, IdHeaderList, {HttpConnection, HttpConnectionIndy,} Hello.Controller;
+uses IdHeaderList, {HttpConnection, HttpConnectionIndy,} Hello.Controller;
 
 { TMiniRESTTestdefault }
 
@@ -385,6 +388,30 @@ begin
     LConnection.Free;
     LResponse.Free;
   end;  
+end;
+
+procedure TMiniRESTTestdefault.TestRedirect;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try
+    LConnection.OnRedirect := OnRedirectTestRedirect;    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloRedirect', LResponse);
+    Assert.AreEqual('http://www.hue.com', LConnection.Response.Location);
+    TDUnitX.CurrentRunner.WriteLn(LConnection.Response.RawHeaders.Text);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;  
+end;
+
+procedure TMiniRESTTestdefault.OnRedirectTestRedirect(Sender: TObject; var dest: string; var NumRedirect: Integer; var Handled: boolean; var VMethod: TIdHTTPMethod);
+begin
+  Assert.AreEqual('http://www.hue.com', dest);
+  Handled := True;  
 end;
 
 end.

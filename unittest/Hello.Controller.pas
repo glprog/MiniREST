@@ -38,7 +38,9 @@ type
     [RequestMapping('/helloContentType')]
     procedure HelloContentType;
     [RequestMapping('/helloContentTypeJson')]
-    procedure HelloContentTypeJson;    
+    procedure HelloContentTypeJson;
+    [RequestMapping('/helloRedirect')]
+    procedure HelloRedirect;    
   end;
 
 implementation
@@ -137,6 +139,11 @@ end;
 procedure THelloController.HelloContentTypeJson;
 begin
   Response('<h1>Test</h1>', rtApplicationJson, 200);  
+end;
+
+procedure THelloController.HelloRedirect;
+begin
+  GetActionContext.SendRedirect('http://www.hue.com');  
 end;
 
 end.

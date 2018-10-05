@@ -64,6 +64,16 @@ uses StrUtils, MiniREST.Util;
 
 { TMiniRESTServermORMot }
 
+function SockStringToString(const ASockString: SockString): string;
+begin
+  Result := string(ASockString);
+end;
+
+function StringToSockString(const AString: string): SockString;
+begin
+  Result := SockString(AString);
+end;
+
 constructor TMiniRESTServermORMot.Create;
 begin
   inherited;
@@ -155,23 +165,25 @@ end;
 function TMiniRESTServermORMot.Start: Boolean;
 begin
   if FServer.Started then
-    FServer.Shutdown;
-  FServer.RemoveUrl(SockString(''), IntToStr(GetPort));
-  FServer.AddUrl('', IntToStr(GetPort),false,'+',true);
+    FServer.Shutdown;  
+  FServer.RemoveUrl(StringToSockString(''), StringToSockString(IntToStr(GetPort)));
+  FServer.AddUrl(StringToSockString(''), StringToSockString(IntToStr(GetPort)), false, StringToSockString('+'),true);
+  Result := True;
 end;
 
 function TMiniRESTServermORMot.Stop: Boolean;
 begin
-  FServer.Shutdown
+  FServer.Shutdown;
+  Result := True;
 end;
 
 { TMiniRESTActionContextmORMot }
 
 procedure TMiniRESTActionContextmORMot.AppendHeader(AName, AValue: string);
 begin
-  FHeaders.Text := FRequest.OutCustomHeaders;
+  FHeaders.Text := SockStringToString(FRequest.OutCustomHeaders);
   FHeaders.AddValue(AName, AValue);
-  FRequest.OutCustomHeaders := FHeaders.Text;
+  FRequest.OutCustomHeaders := StringToSockString(FHeaders.Text);
 end;
 
 constructor TMiniRESTActionContextmORMot.Create(ARequest: THttpServerRequest);
@@ -181,7 +193,8 @@ begin
   FHeaders.FoldLines := True;
   FHeaders.UnfoldLines := True;
   FParams := TStringList.Create;
-  FParamsLoaded := False;
+  FParamsLoaded := False;  
+  SetResponseStatusCode(200);
 end;
 
 function TMiniRESTActionContextmORMot.GetActionInfo: IMiniRESTActionInfo;
@@ -216,13 +229,13 @@ end;
 
 function TMiniRESTActionContextmORMot.GetHeader(AName: string): string;
 begin  
-  FHeaders.Text := FRequest.InHeaders;
+  FHeaders.Text := SockStringToString(FRequest.InHeaders);
   Result := FHeaders.Values[AName];
 end;
 
 function TMiniRESTActionContextmORMot.GetPathVariable(AVariable: string): string;
 begin
-  Result := TMiniRESTUtil.GetPathVariable(AVariable, FRequest.URL, Self);
+  Result := TMiniRESTUtil.GetPathVariable(AVariable, SockStringToString(FRequest.URL), Self);
 end;
 
 function TMiniRESTActionContextmORMot.GetQueryParam(AQueryParam: string): IMiniRESTQueryParam;
@@ -249,17 +262,17 @@ end;
 
 function TMiniRESTActionContextmORMot.GetRequestContentAsString: string;
 begin
-  Result := FRequest.InContent;
+  Result := SockStringToString(FRequest.InContent);
 end;
 
 function TMiniRESTActionContextmORMot.GetResponseContent: string;
 begin
-  Result := FRequest.OutContent;
+  Result := SockStringToString(FRequest.OutContent);
 end;
 
 function TMiniRESTActionContextmORMot.GetResponseContentType: TMiniRESTResponseType;
 begin
-
+  Result := FResponseContentType;
 end;
 
 function TMiniRESTActionContextmORMot.GetResponseStatusCode: Integer;
@@ -272,12 +285,13 @@ var
   LUri: TURI;
 begin
   LUri.From(FRequest.URL);
-  Result := LUri.Root;
+  Result := SockStringToString(LUri.Root);
 end;
 
 procedure TMiniRESTActionContextmORMot.SendRedirect(ALocation: string);
 begin
-
+  SetHeader('Location', ALocation);
+  SetResponseStatusCode(302);
 end;
 
 procedure TMiniRESTActionContextmORMot.ServeFile(AFilePath: string);
@@ -298,7 +312,7 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseContent(const AContent: string);
 begin
-  FRequest.OutContent := AContent;
+  FRequest.OutContent := StringToSockString(AContent);
 end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseContentType(
