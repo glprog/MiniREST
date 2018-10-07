@@ -295,8 +295,12 @@ begin
 end;
 
 procedure TMiniRESTActionContextmORMot.ServeFile(AFilePath: string);
+var
+  LFileName: string;
 begin
-
+  LFileName := ProcessPath(ExtractFilePath(ParamStr(0)), AFilePath);
+  FRequest.OutContentType := HTTP_RESP_STATICFILE;
+  FRequest.OutContent := StringToSockString(LFileName);
 end;
 
 procedure TMiniRESTActionContextmORMot.SetActionInfo(AActionInfo: IMiniRESTActionInfo);
@@ -331,7 +335,7 @@ end;
 
 procedure TMiniRESTActionContextmORMot.SetResponseStream(AStream: TStream);
 begin
-
+  raise Exception.Create('Not implemented');
 end;
 
 procedure TMiniRESTActionContextmORMot.DecodeAndSetParams;

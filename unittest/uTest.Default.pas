@@ -6,6 +6,9 @@ uses SysUtils, Classes, DUnitX.TestFramework, MiniREST.Intf, MiniREST.Server.Int
 
 type
   TMiniRESTTestdefault = class
+  private
+    function MD5(const fileName : string) : string; overload;
+    function MD5(AStream: TStream): string; overload;
   protected
     FServer: IMiniRESTServer;
     FPorta: Integer;
@@ -48,16 +51,21 @@ type
     procedure TestContentTypeJson;
     [Test]
     procedure TestRedirect;
+    [Test]
+    procedure HelloSendFile;
+    [Test]
+    procedure HelloSendStream;
   end;
 
 implementation
 
-uses IdHeaderList, {HttpConnection, HttpConnectionIndy,} Hello.Controller;
+uses IdHeaderList, {HttpConnection, HttpConnectionIndy,} Hello.Controller, IdHashMessageDigest, idHash, Types;
 
 { TMiniRESTTestdefault }
 
 type
   TIdHeaderListHack = class(TIdHeaderList);
+  TIdHashMessageDigest5Hack = class(TIdHashMessageDigest5);
 
 procedure TMiniRESTTestdefault.Setup;
 begin
@@ -412,6 +420,84 @@ procedure TMiniRESTTestdefault.OnRedirectTestRedirect(Sender: TObject; var dest:
 begin
   Assert.AreEqual('http://www.hue.com', dest);
   Handled := True;  
+end;
+
+procedure TMiniRESTTestdefault.HelloSendFile;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;
+  LFiles: TStringDynArray;
+  LHash, LHashResponse: string;
+  i: Integer;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  SetLength(LFiles, 3);
+  LFiles[0] := 'test1.txt';
+  LFiles[1] := 'test2.html';
+  LFiles[2] := 'someImg.jpg';  
+  try
+    for i := 0 to Length(LFiles) - 1 do
+    begin
+      LResponse.Clear;
+      LHash := MD5(ExtractFilePath(ParamStr(0)) + LFiles[i]);
+      LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloSendFile?file=' + LFiles[i], LResponse);
+      if (LResponse.Size > 0) then
+      begin
+        LResponse.SaveToFile(ExtractFilePath(ParamStr(0)) + LFiles[i] + 'return');
+        LHashResponse := MD5(ExtractFilePath(ParamStr(0)) + LFiles[i] + 'return');
+        Assert.AreEqual(LHash, LHashResponse, 'The hash is not equal ' + LFiles[i]);
+      end
+      else
+      begin
+        Assert.Fail('Did not return files', @TMiniRESTTestdefault.HelloSendFile);
+      end;            
+    end;    
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;   
+end;
+
+function TMiniRESTTestdefault.MD5(const fileName: string): string;
+var  
+  fs : TFileStream;  
+begin
+  fs := TFileStream.Create(fileName, fmOpenRead OR fmShareDenyWrite) ;
+  try
+    result := MD5(fs);
+  finally
+    fs.Free;
+  end;  
+end;
+
+function TMiniRESTTestdefault.MD5(AStream: TStream): string;
+var
+  idmd5 : TIdHashMessageDigest5;  
+  hash : T4x4LongWordRecord;
+begin
+  idmd5 := TIdHashMessageDigest5.Create;  
+  try        
+    result := TIdHashMessageDigest5Hack(idmd5).HashToHex(idmd5.HashStream(AStream));
+  finally    
+    idmd5.Free;
+  end;
+end;
+
+procedure TMiniRESTTestdefault.HelloSendStream;
+var
+  LConnection: TIdHTTP;
+  LResponse: TStringStream;  
+begin
+  LConnection := TIdHTTP.Create;
+  LResponse := TStringStream.Create;
+  try    
+    LConnection.Get('http://localhost:' + IntToStr(FPorta) + '/helloSendStream', LResponse);
+    Assert.AreEqual('{}', LResponse.DataString + LConnection.Response.RawHeaders.Text);
+  finally
+    LConnection.Free;
+    LResponse.Free;
+  end;    
 end;
 
 end.

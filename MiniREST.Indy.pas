@@ -181,7 +181,7 @@ begin
   FActionInfo := AActionInfo;
   FIndyContext := AIndyContext;
   FRequestInfo := ARequestInfo;
-  FResponseInfo := AResponseInfo;
+  FResponseInfo := AResponseInfo;  
 end;
 
 function TMiniRESTActionContextIndy.GetActionInfo: IMiniRESTActionInfo;
@@ -347,7 +347,7 @@ end;
 
 procedure TMiniRESTActionContextIndy.SetResponseStream(AStream: TStream);
 begin
-  FResponseInfo.ContentStream := AStream;
+  FResponseInfo.ContentStream := AStream;  
 end;
 
 end.

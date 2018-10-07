@@ -2,7 +2,7 @@ unit Hello.Controller;
 
 interface
 
-uses SysUtils, MiniREST.Controller.Base, MiniREST.Attribute, MiniREST.Common;
+uses Classes, SysUtils, MiniREST.Controller.Base, MiniREST.Attribute, MiniREST.Common;
 
 type
   THelloController = class(TMiniRESTControllerBase)
@@ -40,7 +40,11 @@ type
     [RequestMapping('/helloContentTypeJson')]
     procedure HelloContentTypeJson;
     [RequestMapping('/helloRedirect')]
-    procedure HelloRedirect;    
+    procedure HelloRedirect;
+    [RequestMapping('/helloSendFile')]    
+    procedure HelloSendFile;
+    [RequestMapping('/helloSendStream')]
+    procedure HelloSendStream;
   end;
 
 implementation
@@ -144,6 +148,28 @@ end;
 procedure THelloController.HelloRedirect;
 begin
   GetActionContext.SendRedirect('http://www.hue.com');  
+end;
+
+procedure THelloController.HelloSendFile;
+var
+  LFile: string;
+begin
+  LFile := QueryParam('file');
+  GetActionContext.ServeFile(LFile);
+end;
+
+procedure THelloController.HelloSendStream;
+var
+  LStringStream: TStringStream; 
+begin
+  LStringStream := TStringStream.Create;
+  try
+    LStringStream.WriteString('teste');
+    LStringStream.Position := 0;
+    GetActionContext.SetResponseStream(LStringStream);  
+  finally
+    LStringStream.Free;
+  end;
 end;
 
 end.

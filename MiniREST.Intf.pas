@@ -68,7 +68,7 @@ type
     procedure SetResponseStatusCode(const AStatusCode: Integer);
     procedure SetResponseStream(AStream : TStream);
     procedure ServeFile(AFilePath : string);
-    procedure SendRedirect(ALocation : string);
+    procedure SendRedirect(ALocation : string);    
     property ActionInfo : IMiniRESTActionInfo read GetActionInfo write SetActionInfo;
   end;
 
