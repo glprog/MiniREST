@@ -42,7 +42,9 @@ uses
   SynCrtSock in '..\mORMot\SynCrtSock.pas',
   SynWinSock in '..\mORMot\SynWinSock.pas',
   uTest.mORMot in 'uTest.mORMot.pas',
-  uTest.Default in 'uTest.Default.pas';
+  uTest.Default in 'uTest.Default.pas',
+  MiniREST.ORM.Attribute in '..\MiniREST.ORM.Attribute.pas',
+  MiniREST.ORM.Common in '..\MiniREST.ORM.Common.pas';
 
 var
   runner : ITestRunner;
