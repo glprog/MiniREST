@@ -7,26 +7,27 @@ uses MiniREST.SQL.Common, DB;
 type
   IMiniRESTSQLQuery = interface
   ['{A6624CAD-F305-48BD-B1D4-736DEE685A83}']
+    procedure Open;
+    procedure Close;
     function GetSQL: string;
     procedure SetSQL(const ASQL: string);
     function ParamByName(const AParamName: string): IMiniRESTSQLParam;
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
-    function GetValue(AField: string) : Variant; overload;
+    {function GetValue(AField: string) : Variant; overload;
     function GetValue(AField: string; ADefault: Variant): Variant; overload;
     function FieldByName(const AFieldName: string): TField;
     function Eof: Boolean;
     procedure Next;
     function IsEmpty: Boolean;
-    procedure Open;
-    procedure Close;
     procedure Post;
     procedure Cancel;
     procedure Insert;
-    procedure Append;
+    procedure Append;}
     function ApplyUpdates(const AMaxErrors: Integer = 0): Integer;
     function GetDataSet: TDataSet;
     function ToJSON: string;
     property SQL: string read GetSQL write SetSQL;
+    property DataSet: TDataset read GetDataSet;
   end;
 
   IMiniRESTSQLConnection = interface
