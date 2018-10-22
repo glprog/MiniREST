@@ -3,6 +3,8 @@ const path = require('path');
 module.exports = function(grunt) {
     const caminho = path.join(__dirname, 'unittest');
     const caminhoBat = path.join(caminho, 'test.bat');
+    const caminhoSQL = path.join(__dirname,'unittest', 'SQL');
+    const caminhoBatSQL = path.join(caminhoSQL, 'test.bat');
     grunt.initConfig({
       commands: {
         test: {
@@ -14,9 +16,16 @@ module.exports = function(grunt) {
         }
       },
       bgShell: {
-        test: {
+        server: {
           cmd: `${caminhoBat} "${caminho}"`,
           execOptions: caminho,
+          execOpts: {
+            stdio: 'inherit'
+          }
+        },
+        sql: {
+          cmd: `${caminhoBatSQL} "${caminhoSQL}"`,
+          execOptions: caminhoSQL,
           execOpts: {
             stdio: 'inherit'
           }
@@ -24,8 +33,14 @@ module.exports = function(grunt) {
         stdout: true
       },
       watch: {
-        files: ['**/*.pas'],
-        tasks: ['bgShell:test']
+        server: {
+          files: ['**/*.pas'],
+          tasks: ['bgShell:server']
+        },
+        sql: {
+          files: ['**/*.pas'],
+          tasks: ['bgShell:sql']
+        }
       }
     });
   
@@ -33,6 +48,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bg-shell');
     grunt.loadNpmTasks('grunt-contrib-watch');
   
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['watch:server']);
   
   };

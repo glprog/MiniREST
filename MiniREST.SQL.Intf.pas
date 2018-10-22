@@ -33,10 +33,11 @@ type
   IMiniRESTSQLConnection = interface
   ['{AED7B927-D53B-4E92-B4CA-3CC12182E757}']
     function GetQuery: IMiniRESTSQLQuery; overload;
-    function GetQuery(ASQL: string): IMiniRESTSQLQuery; overload;
-    function GetQuery(ASQL: string; AParams : array of IMiniRESTSQLParam): IMiniRESTSQLQuery; overload;
+    function GetQuery(const ASQL: string): IMiniRESTSQLQuery; overload;
+    function GetQuery(const ASQL: string; AParams : array of IMiniRESTSQLParam): IMiniRESTSQLQuery; overload;
     //function Execute(ACommand: string): IMiniRESTSQLQuery; overload;
-    //function Execute(ACommand: string; AParams: array of Variant): IMiniRESTSQLQuery; overload;
+    //function Execute(ACommand: string; AParams: array of Variant): IMiniRESTSQLQuery; overload;    
+    function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer;
     procedure StartTransaction;
     procedure Commit;
     procedure Rollback;

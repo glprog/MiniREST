@@ -35,10 +35,11 @@ type
     procedure Rollback; virtual; abstract;
     procedure Connect; virtual; abstract;
     function GetQuery: IMiniRESTSQLQuery; overload; virtual; abstract;
-    function GetQuery(ASQL: string): IMiniRESTSQLQuery; overload; virtual; abstract;
-    function GetQuery(ASQL: string; AParams : array of IMiniRESTSQLParam): IMiniRESTSQLQuery; overload; virtual; abstract;
+    function GetQuery(const ASQL: string): IMiniRESTSQLQuery; overload; virtual; abstract;
+    function GetQuery(const ASQL: string; AParams : array of IMiniRESTSQLParam): IMiniRESTSQLQuery; overload; virtual; abstract;
     function GetName: string;
     function SetName(const AName: string): IMiniRESTSQLConnection;
+    function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; virtual; abstract;
   end;
 
 implementation

@@ -1,4 +1,4 @@
-program MiniRESTSQLTest;
+program MiniRESTORMTest;
 
 {$IFNDEF TESTINSIGHT}
 {$APPTYPE CONSOLE}
@@ -12,6 +12,14 @@ uses
   DUnitX.Loggers.Xml.NUnit,
   DUnitX.TestFramework,
   uTest in 'uTest.pas',
+  MiniREST.ORM.Attribute in '..\..\MiniREST.ORM.Attribute.pas',
+  MiniREST.ORM.Column in '..\..\MiniREST.ORM.Column.pas',
+  MiniREST.ORM.Common in '..\..\MiniREST.ORM.Common.pas',
+  MiniREST.ORM.EntityManager in '..\..\MiniREST.ORM.EntityManager.pas',
+  MiniREST.ORM.Intf in '..\..\MiniREST.ORM.Intf.pas',
+  MiniREST.ORM.Mapper in '..\..\MiniREST.ORM.Mapper.pas',
+  MiniREST.ORM.Table in '..\..\MiniREST.ORM.Table.pas',
+  MiniREST.ORM.Utils in '..\..\MiniREST.ORM.Utils.pas',
   MiniREST.SQL.Base in '..\..\MiniREST.SQL.Base.pas',
   MiniREST.SQL.Common in '..\..\MiniREST.SQL.Common.pas',
   MiniREST.SQL.DBX in '..\..\MiniREST.SQL.DBX.pas',
@@ -20,15 +28,7 @@ uses
   JsonDataObjects in '..\..\JsonDataObjects\Source\JsonDataObjects.pas',
   MiniREST.Util in '..\..\MiniREST.Util.pas',
   MiniREST.Intf in '..\..\MiniREST.Intf.pas',
-  MiniREST.Common in '..\..\MiniREST.Common.pas',
-  MiniREST.ORM.Attribute in '..\..\MiniREST.ORM.Attribute.pas',
-  MiniREST.ORM.Common in '..\..\MiniREST.ORM.Common.pas',
-  MiniREST.ORM.Mapper in '..\..\MiniREST.ORM.Mapper.pas',
-  MiniREST.ORM.Intf in '..\..\MiniREST.ORM.Intf.pas',
-  MiniREST.ORM.Utils in '..\..\MiniREST.ORM.Utils.pas',
-  MiniREST.ORM.Table in '..\..\MiniREST.ORM.Table.pas',
-  MiniREST.ORM.Column in '..\..\MiniREST.ORM.Column.pas',
-  MiniREST.ORM.EntityManager in '..\..\MiniREST.ORM.EntityManager.pas';
+  MiniREST.Common in '..\..\MiniREST.Common.pas';
 
 var
   runner : ITestRunner;
@@ -41,7 +41,6 @@ begin
   exit;
 {$ENDIF}
   try
-    TDUnitX.Options.ExitBehavior := TDUnitXExitBehavior.Continue;
     //Check command line options, will exit if invalid
     TDUnitX.CheckCommandLine;
     //Create the test runner
