@@ -2,72 +2,33 @@ unit uTest;
 
 interface
 uses
-  Classes, DUnitX.TestFramework, MiniREST.Intf, MiniREST.Server.Intf;
+  DUnitX.TestFramework, uTest.Default;
 
 type
 
   [TestFixture]
-  TMiniRESTTest = class(TObject)
-  private
-    FServer: IMiniRESTServer;
+  TMiniRESTTest = class(TMiniRESTTestdefault)
   public
-    [Setup]
-    procedure Setup;
-    [TearDown]
+    [SetupFixture]
+    procedure Setup; overload;
+    [TearDownFixture]
     procedure TearDown;
-    [Test]
-    procedure TestHello;
-    [Test]
-    procedure TestHelloWithName;
   end;
 
 implementation
 
-uses MiniREST.Indy, HttpConnection, HttpConnectionIndy, Hello.Controller;
+uses MiniREST.Indy;
 
 procedure TMiniRESTTest.Setup;
 begin
   FServer := TMiniRESTServerIndy.Create;
-  FServer.AddController(THelloController);
-  FServer.SetPort(8099);
-  FServer.Start;
+  FPorta := 8099;
+  inherited;
 end;
 
 procedure TMiniRESTTest.TearDown;
 begin
-  FServer := nil;
-end;
-
-procedure TMiniRESTTest.TestHello;
-var
-  LConnection: IHttpConnection;
-  LStream: TStringStream;
-begin
-  LConnection := THttpConnectionIndy.Create;
-  LStream := TStringStream.Create;
-  LStream.Position := 0;
-  try
-    LConnection.Get('http://localhost:8099/hello', LStream);
-    Assert.AreEqual('{"msg":"hello"}', LStream.DataString);
-  finally
-    LStream.Free;
-  end;
-end;
-
-procedure TMiniRESTTest.TestHelloWithName;
-var
-  LConnection: IHttpConnection;
-  LStream: TStringStream;
-begin
-  LConnection := THttpConnectionIndy.Create;
-  LStream := TStringStream.Create;
-  LStream.Position := 0;
-  try
-    LConnection.Get('http://localhost:8099/hello/hueBR', LStream);
-    Assert.AreEqual('{"msg":"hello hueBR"}', LStream.DataString);
-  finally
-    LStream.Free;
-  end;
+  //FServer := nil;
 end;
 
 initialization

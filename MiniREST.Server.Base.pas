@@ -162,7 +162,10 @@ begin
           LSecurityResponse := FSecurityController.HasPermission(AContext);
           if not LSecurityResponse.HasPermission then
           begin
-            AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}', rtApplicationJson, 403); { TODO : Mudar msg / obter de outro lugar }
+            //AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}', rtApplicationJson, 403); { TODO : Mudar msg / obter de outro lugar }
+            AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}');
+            AContext.SetResponseContentType(rtApplicationJson);
+            AContext.SetResponseStatusCode(403);
             Exit;
           end;
         end;

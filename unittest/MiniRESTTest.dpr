@@ -37,7 +37,14 @@ uses
   HttpConnectionIndy in '..\delphi-rest-client-api\src\HttpConnectionIndy.pas',
   RestUtils in '..\delphi-rest-client-api\src\RestUtils.pas',
   RestException in '..\delphi-rest-client-api\src\RestException.pas',
-  ProxyUtils in '..\delphi-rest-client-api\src\ProxyUtils.pas';
+  ProxyUtils in '..\delphi-rest-client-api\src\ProxyUtils.pas',
+  MiniREST.mORMot in '..\MiniREST.mORMot.pas',
+  SynCrtSock in '..\mORMot\SynCrtSock.pas',
+  SynWinSock in '..\mORMot\SynWinSock.pas',
+  uTest.mORMot in 'uTest.mORMot.pas',
+  uTest.Default in 'uTest.Default.pas',
+  MiniREST.SQL.Firebird in '..\MiniREST.SQL.Firebird.pas',
+  MiniREST.Common.Utils in '..\MiniREST.Common.Utils.pas';
 
 var
   runner : ITestRunner;
@@ -50,6 +57,7 @@ begin
   exit;
 {$ENDIF}
   try
+    TDUnitX.Options.ExitBehavior := TDUnitXExitBehavior.Continue;
     //Check command line options, will exit if invalid
     TDUnitX.CheckCommandLine;
     //Create the test runner
@@ -58,7 +66,7 @@ begin
     runner.UseRTTI := True;
     //tell the runner how we will log things
     //Log to the console window
-    logger := TDUnitXConsoleLogger.Create(true);
+    logger := TDUnitXConsoleLogger.Create(True);
     runner.AddLogger(logger);
     //Generate an NUnit compatible XML File
     nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);

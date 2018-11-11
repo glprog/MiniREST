@@ -18,6 +18,8 @@ type
     function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetPassword: string;
     function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsDBX;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsDBX;
   end;
 
   TMiniRESTSQLConnectionParamsDBX = class(TInterfacedObject, IMiniRESTSQLConnectionParamsDBX)
@@ -27,6 +29,7 @@ type
     FDriverName: string;
     FUserName: string;
     FPassword: string;
+    FDatabaseType: TMiniRESTSQLDatabaseType;
   public
     class function New: IMiniRESTSQLConnectionParamsDBX;
     function GetConnectionString: string;
@@ -39,6 +42,8 @@ type
     function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetPassword: string;
     function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsDBX;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsDBX;
   end;
 
   TMiniRESTSQLConnectionFactoryDBX = class(TMiniRESTSQLConnectionFactoryBase)
@@ -50,7 +55,7 @@ type
     constructor Create(AParams: IMiniRESTSQLConnectionParamsDBX); overload;
   end;
 
-  TMiniRESTSQLConnectionDBX = class(TMiniRESTSQLConnectionBase, IMiniRESTSQLConnectionExecute)
+  TMiniRESTSQLConnectionDBX = class(TMiniRESTSQLConnectionBase)
   protected
     FSQLConnection: TSQLConnection;
     FTransaction: TDBXTransaction;
@@ -64,10 +69,11 @@ type
     procedure Commit; override;
     procedure Rollback; override;
     function GetQuery: IMiniRESTSQLQuery; override;
-    function GetQuery(ASQL: string;
+    function GetQuery(const ASQL: string;
     AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery; override;
-    function GetQuery(ASQL: string): IMiniRESTSQLQuery; override;
-    function Execute(ACommand: string): Integer;
+    function GetQuery(const ASQL: string): IMiniRESTSQLQuery; override;
+    function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; override;
+    function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
   end;
 
   TMiniRESTSQLQueryDBX = class(TInterfacedObject, IMiniRESTSQLQuery)
@@ -103,7 +109,7 @@ type
 
 implementation
 
-uses Variants, MiniREST.JSON;
+uses Variants, MiniREST.JSON, MiniREST.SQL.Firebird;
 
 { TMiniRESTSQLConnectionFactoryDBX }
 
@@ -311,9 +317,43 @@ begin
   inherited;
 end;
 
-function TMiniRESTSQLConnectionDBX.Execute(ACommand: string): Integer;
+function TMiniRESTSQLConnectionDBX.Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer;
+var
+  LParams: TParams;
+  LParam: TParam;
+  LMiniRESTSQLParam: IMiniRESTSQLParam;
 begin
-//  Result := FSQLConnection.Execute(ACommand, );
+  LParams := TParams.Create;
+  try
+    for LMiniRESTSQLParam in AParams do
+    begin
+      LParam := LParams.AddParameter;
+      case LMiniRESTSQLParam.GetParamType of
+        stString: LParam.AsString := LMiniRESTSQLParam.AsString;
+        stFloat: LParam.AsFloat := LMiniRESTSQLParam.AsFloat;
+        stInteger: LParam.AsInteger := LMiniRESTSQLParam.AsInteger;
+        stDate: LParam.AsDate := LMiniRESTSQLParam.AsDate;
+        stDateTime: LParam.AsDateTime := LMiniRESTSQLParam.AsDateTime;
+        stBoolean: LParam.AsBoolean := LMiniRESTSQLParam.AsBoolean;
+        stVariant, stUndefined: LParam.Value := LMiniRESTSQLParam.GetAsVariant;
+      end;
+    end;
+    Self.Connect;
+    Result := FSQLConnection.Execute(ACommand, LParams);    
+  finally
+    LParams.Free;  
+  end;
+end;
+
+function TMiniRESTSQLConnectionDBX.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
+begin
+  Result := nil;
+  case FConnectionParams.GetDatabaseType of
+    dbtFirebird: Result := TMiniRESTSQLDatabaseInfoFirebird.Create(Self);
+    else
+      raise Exception.Create('TMiniRESTSQLConnectionDBX.GetDatabaseInfo: ' +
+      'DatabaseType not implemented');
+  end;
 end;
 
 function TMiniRESTSQLConnectionDBX.GetObject: TObject;
@@ -321,7 +361,7 @@ begin
   Result := FSQLConnection;
 end;
 
-function TMiniRESTSQLConnectionDBX.GetQuery(ASQL: string;
+function TMiniRESTSQLConnectionDBX.GetQuery(const ASQL: string;
   AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery;
 var
   LParam: IMiniRESTSQLParam;
@@ -334,7 +374,7 @@ begin
   end;
 end;
 
-function TMiniRESTSQLConnectionDBX.GetQuery(ASQL: string): IMiniRESTSQLQuery;
+function TMiniRESTSQLConnectionDBX.GetQuery(const ASQL: string): IMiniRESTSQLQuery;
 begin
   Result := TMiniRESTSQLQueryDBX.Create(Self);
   Result.SQL := ASQL;
@@ -365,6 +405,11 @@ end;
 function TMiniRESTSQLConnectionParamsDBX.GetConnectionString: string;
 begin
   Result := FConnectionString;
+end;
+
+function TMiniRESTSQLConnectionParamsDBX.GetDatabaseType: TMiniRESTSQLDatabaseType;
+begin
+  Result := FDatabaseType;
 end;
 
 function TMiniRESTSQLConnectionParamsDBX.GetDriverName: string;
@@ -398,6 +443,13 @@ function TMiniRESTSQLConnectionParamsDBX.SetConnectionString(
   const AConnectionString: string): IMiniRESTSQLConnectionParamsDBX;
 begin
   FConnectionString := AConnectionString;
+  Result := Self;
+end;
+
+function TMiniRESTSQLConnectionParamsDBX.SetDatabseType(
+  const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsDBX;
+begin
+  FDatabaseType := ADatabaseType;
   Result := Self;
 end;
 
