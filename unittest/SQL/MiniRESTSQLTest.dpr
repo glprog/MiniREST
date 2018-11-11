@@ -21,14 +21,8 @@ uses
   MiniREST.Util in '..\..\MiniREST.Util.pas',
   MiniREST.Intf in '..\..\MiniREST.Intf.pas',
   MiniREST.Common in '..\..\MiniREST.Common.pas',
-  MiniREST.ORM.Attribute in '..\..\MiniREST.ORM.Attribute.pas',
-  MiniREST.ORM.Common in '..\..\MiniREST.ORM.Common.pas',
-  MiniREST.ORM.Mapper in '..\..\MiniREST.ORM.Mapper.pas',
-  MiniREST.ORM.Intf in '..\..\MiniREST.ORM.Intf.pas',
-  MiniREST.ORM.Utils in '..\..\MiniREST.ORM.Utils.pas',
-  MiniREST.ORM.Table in '..\..\MiniREST.ORM.Table.pas',
-  MiniREST.ORM.Column in '..\..\MiniREST.ORM.Column.pas',
-  MiniREST.ORM.EntityManager in '..\..\MiniREST.ORM.EntityManager.pas';
+  MiniREST.SQL.Firebird in '..\..\MiniREST.SQL.Firebird.pas',
+  MiniREST.Common.Utils in '..\..\MiniREST.Common.Utils.pas';
 
 var
   runner : ITestRunner;
@@ -41,7 +35,8 @@ begin
   exit;
 {$ENDIF}
   try
-    TDUnitX.Options.ExitBehavior := TDUnitXExitBehavior.Continue;
+    if DebugHook = 0 then
+      TDUnitX.Options.ExitBehavior := TDUnitXExitBehavior.Continue;
     //Check command line options, will exit if invalid
     TDUnitX.CheckCommandLine;
     //Create the test runner

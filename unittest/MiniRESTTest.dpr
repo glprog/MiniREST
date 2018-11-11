@@ -43,8 +43,8 @@ uses
   SynWinSock in '..\mORMot\SynWinSock.pas',
   uTest.mORMot in 'uTest.mORMot.pas',
   uTest.Default in 'uTest.Default.pas',
-  MiniREST.ORM.Attribute in '..\MiniREST.ORM.Attribute.pas',
-  MiniREST.ORM.Common in '..\MiniREST.ORM.Common.pas';
+  MiniREST.SQL.Firebird in '..\MiniREST.SQL.Firebird.pas',
+  MiniREST.Common.Utils in '..\MiniREST.Common.Utils.pas';
 
 var
   runner : ITestRunner;

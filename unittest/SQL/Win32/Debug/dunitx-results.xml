@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<test-results name="C:\Projetos\DelphiVarios\TGABI\MiniREST\unittest\SQL\Win32\Debug\MiniRESTSQLTest.exe" total="6" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2018-10-26" time="3.796">
+<test-results name="C:\Projetos\DelphiVarios\TGABI\MiniREST\unittest\SQL\Win32\Debug\MiniRESTSQLTest.exe" total="6" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2018-11-11" time="0.639">
   <culture-info current-culture="en" current-uiculture="en" />
-  <test-suite type="Assembly" name="MiniRESTSQLTest.exe" executed="true" result="Success" success="True" time="3.796" asserts="0">
+  <test-suite type="Assembly" name="MiniRESTSQLTest.exe" executed="true" result="Success" success="True" time="0.639" asserts="0">
     <results>
-        <test-suite type="Namespace" name="uTest" executed="true" result="Success" success="True" time="3.796" asserts="0" >
+        <test-suite type="Namespace" name="uTest" executed="true" result="Success" success="True" time="0.638" asserts="0" >
           <results>
-              <test-suite type="Fixture" name="TMiniRESTSQLTest" executed="True" result="Success" success="True" time="3.796" >
+              <test-suite type="Fixture" name="TMiniRESTSQLTest" executed="True" result="Success" success="True" time="0.638" >
                 <results>
-                  <test-case name="TestInsert" executed="True" result="Success" success="True" time="1.108" asserts="0" />
-                  <test-case name="TestExecute" executed="True" result="Success" success="True" time="0.197" asserts="0" />
-                  <test-case name="TestJSON" executed="True" result="Success" success="True" time="0.007" asserts="0" />
-                  <test-case name="TestJSON2" executed="True" result="Success" success="True" time="0.006" asserts="0" />
-                  <test-case name="TestTransaction" executed="True" result="Success" success="True" time="0.581" asserts="0" />
-                  <test-case name="TestTransaction2" executed="True" result="Success" success="True" time="0.753" asserts="0" />
+                  <test-case name="TestInsert" executed="True" result="Success" success="True" time="0.153" asserts="0" />
+                  <test-case name="TestExecute" executed="True" result="Success" success="True" time="0.056" asserts="0" />
+                  <test-case name="TestJSON" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                  <test-case name="TestJSON2" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+                  <test-case name="TestTransaction" executed="True" result="Success" success="True" time="0.139" asserts="0" />
+                  <test-case name="TestTransaction2" executed="True" result="Success" success="True" time="0.140" asserts="0" />
                 </results>
               </test-suite>
           </results>
