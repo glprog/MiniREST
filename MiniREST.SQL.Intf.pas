@@ -5,6 +5,8 @@ interface
 uses MiniREST.SQL.Common, DB;
 
 type
+  IMiniRESTSQLDatabaseInfo = interface;
+
   IMiniRESTSQLQuery = interface
   ['{A6624CAD-F305-48BD-B1D4-736DEE685A83}']
     procedure Open;
@@ -45,6 +47,7 @@ type
     procedure Connect;
     function GetName: string;
     function SetName(const AName: string): IMiniRESTSQLConnection;
+    function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
   end;
 
   IMiniRESTSQLConnectionFactory = interface
@@ -56,6 +59,48 @@ type
   IMiniRESTSQLConnectionExecute = interface
   ['{3F313146-9CBE-4037-AA79-EB7D9924D449}']
     function Execute(ACommand: string): Integer;
+  end;
+
+  IMiniRESTSQLPrimaryKeyInfo = interface
+  ['{5FBC1287-FB0E-4457-8E05-F009D0F79AB8}']
+    function GetName: string;
+    procedure SetName(const AName: string);
+    function GetFields: TArray<string>;
+    procedure SetFields(const AFields: TArray<string>);
+    property Name: string read GetName write SetName;
+    property Fields: TArray<string> read GetFields write SetFields;
+  end;
+
+  IMiniRESTSQLForeignKeyInfo = interface
+  ['{06E949D0-3D42-4888-949A-1B08BB987048}']
+    function GetName: string;
+    procedure SetName(const AName: string);
+    function GetFields: TArray<string>;
+    procedure SetFields(const AFields: TArray<string>);
+    function GetFKFields: TArray<string>;
+    procedure SetFKFields(const AFields: TArray<string>);
+    function GetFKTableName: string;
+    procedure SetFKTableName(const AName: string);
+    property Name: string read GetName write SetName;
+    property Fields: TArray<string> read GetFields write SetFields;
+    property FKFields: TArray<string> read GetFKFields write SetFKFields;
+    property FKTableName: string read GetFKTableName write SetFKTableName;
+  end;
+
+  IMiniRESTSQLColumnInfo = interface
+  ['{8959F76F-5F67-400E-A52E-3AB11B265BE5}']
+    function GetName: string;
+    property Name: string read GetName;
+  end;
+
+  IMiniRESTSQLDatabaseInfo = interface
+  ['{7DD8F064-52CC-4D1C-B2A2-E3591D918B05}']
+    function DatabaseType: TMiniRESTSQLDatabaseType;
+    function TableExists(const ATableName: string): Boolean;
+    function FieldExists(const ATableName, AFieldName: string): Boolean;
+    function GetPrimaryKey(const ATableName: string): IMiniRESTSQLPrimaryKeyInfo;
+    function GetForeignKeys(const ATableName: string): TArray<IMiniRESTSQLForeignKeyInfo>;
+    function GetColumns(const ATableName: string): TArray<IMiniRESTSQLColumnInfo>;
   end;
 
 implementation

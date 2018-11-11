@@ -18,6 +18,8 @@ type
     function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetPassword: string;
     function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsDBX;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsDBX;
   end;
 
   TMiniRESTSQLConnectionParamsDBX = class(TInterfacedObject, IMiniRESTSQLConnectionParamsDBX)
@@ -27,6 +29,7 @@ type
     FDriverName: string;
     FUserName: string;
     FPassword: string;
+    FDatabaseType: TMiniRESTSQLDatabaseType;
   public
     class function New: IMiniRESTSQLConnectionParamsDBX;
     function GetConnectionString: string;
@@ -39,6 +42,8 @@ type
     function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetPassword: string;
     function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsDBX;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsDBX;
   end;
 
   TMiniRESTSQLConnectionFactoryDBX = class(TMiniRESTSQLConnectionFactoryBase)
@@ -68,6 +73,7 @@ type
     AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery; override;
     function GetQuery(const ASQL: string): IMiniRESTSQLQuery; override;
     function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; override;
+    function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
   end;
 
   TMiniRESTSQLQueryDBX = class(TInterfacedObject, IMiniRESTSQLQuery)
@@ -103,7 +109,7 @@ type
 
 implementation
 
-uses Variants, MiniREST.JSON;
+uses Variants, MiniREST.JSON, MiniREST.SQL.Firebird;
 
 { TMiniRESTSQLConnectionFactoryDBX }
 
@@ -339,6 +345,17 @@ begin
   end;
 end;
 
+function TMiniRESTSQLConnectionDBX.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
+begin
+  Result := nil;
+  case FConnectionParams.GetDatabaseType of
+    dbtFirebird: Result := TMiniRESTSQLDatabaseInfoFirebird.Create(Self);
+    else
+      raise Exception.Create('TMiniRESTSQLConnectionDBX.GetDatabaseInfo: ' +
+      'DatabaseType not implemented');
+  end;
+end;
+
 function TMiniRESTSQLConnectionDBX.GetObject: TObject;
 begin
   Result := FSQLConnection;
@@ -390,6 +407,11 @@ begin
   Result := FConnectionString;
 end;
 
+function TMiniRESTSQLConnectionParamsDBX.GetDatabaseType: TMiniRESTSQLDatabaseType;
+begin
+  Result := FDatabaseType;
+end;
+
 function TMiniRESTSQLConnectionParamsDBX.GetDriverName: string;
 begin
   Result := FDriverName;
@@ -421,6 +443,13 @@ function TMiniRESTSQLConnectionParamsDBX.SetConnectionString(
   const AConnectionString: string): IMiniRESTSQLConnectionParamsDBX;
 begin
   FConnectionString := AConnectionString;
+  Result := Self;
+end;
+
+function TMiniRESTSQLConnectionParamsDBX.SetDatabseType(
+  const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsDBX;
+begin
+  FDatabaseType := ADatabaseType;
   Result := Self;
 end;
 
