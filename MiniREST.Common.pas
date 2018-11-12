@@ -13,6 +13,8 @@ type
 
   TMiniRESTResponseType = (rtTextHtml, rtApplicationJson);
 
+  TMiniRESTServerType = (stIndy, stmORMot);
+
 const
   MiniRESTResponseTypes : array[rtTextHtml..rtApplicationJson] of string =
   ('text/html',

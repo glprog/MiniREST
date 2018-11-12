@@ -5,8 +5,13 @@ interface
 uses DB, Rtti;
 
 type
+  TMiniRESTSQLDatabaseType = (dbtUnknown, dbtFirebird);
+
   TMiniRESTSQLParamType = (stString, stFloat, stInteger, stDate, stDateTime,
   stBoolean, stVariant, stUndefined);
+
+  TMiniRESTSQLColumnType = (ctString, ctInteger, ctBigInteger, ctSmallInt, ctDecimal,
+    ctDate, ctDateTime, ctBlob, ctMemo, ctDoublePrecision);
 
   IMiniRESTSQLParam = interface
   ['{3C3154D3-6D52-463B-8899-40976ED7B036}']
