@@ -23,7 +23,8 @@ uses
   MiniREST.SQL.Firebird in '..\..\MiniREST.SQL.Firebird.pas',
   MiniREST.Common.Utils in '..\..\MiniREST.Common.Utils.pas',
   Test.SQL.Default in 'Test.SQL.Default.pas',
-  Test.SQL.DBX in 'Test.SQL.DBX.pas';
+  Test.SQL.DBX in 'Test.SQL.DBX.pas',
+  MiniREST.SQL.Firedac in '..\..\MiniREST.SQL.Firedac.pas';
 
 var
   runner : ITestRunner;

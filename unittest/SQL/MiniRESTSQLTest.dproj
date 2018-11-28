@@ -90,6 +90,7 @@
         <DCCReference Include="..\..\MiniREST.Common.Utils.pas"/>
         <DCCReference Include="Test.SQL.Default.pas"/>
         <DCCReference Include="Test.SQL.DBX.pas"/>
+        <DCCReference Include="..\..\MiniREST.SQL.Firedac.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
