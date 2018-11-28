@@ -1,15 +1,16 @@
-unit uTest;
+unit Test.SQL.Default;
 
 interface
 uses
-  DUnitX.TestFramework, Classes, SysUtils, MiniREST.SQL.Intf, Data.DBXFirebird;
+  DUnitX.TestFramework, Classes, SysUtils, MiniREST.SQL.Intf;
 
 type
 
-  [TestFixture]
   TMiniRESTSQLTest = class(TObject)
   private
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
+  protected
+    function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
   public        
     [SetupFixture]
     procedure SetupFixture;
@@ -33,24 +34,9 @@ type
 
 implementation
 
-uses MiniREST.SQL.DBX;
-
 procedure TMiniRESTSQLTest.SetupFixture;
-var
-  LConnectionInfo: TStringList;
 begin
-  LConnectionInfo := TStringList.Create;
-  try
-    LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
-    FConnectionFactory := TMiniRESTSQLConnectionFactoryDBX.Create(
-      TMiniRESTSQLConnectionParamsDBX.New
-      .SetConnectionsCount(5)
-      .SetConnectionString(LConnectionInfo.Text)
-      .SetDriverName('Firebird')
-    );    
-  finally
-    LConnectionInfo.Free;
-  end;
+  FConnectionFactory := GetConnectionFactory;
 end;
 
 procedure TMiniRESTSQLTest.TearDown;
@@ -203,6 +189,4 @@ begin
   Assert.AreEqual(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger); 
 end;
 
-initialization
-  TDUnitX.RegisterTestFixture(TMiniRESTSQLTest);
 end.
