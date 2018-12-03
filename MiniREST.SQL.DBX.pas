@@ -12,8 +12,6 @@ type
     function SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsDBX;
     function GetConnectionString: string;
     function SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsDBX;
-    function GetDriverName: string;
-    function SetDriverName(const ADriverName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetUserName: string;
     function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetPassword: string;
@@ -61,6 +59,7 @@ type
     FTransaction: TDBXTransaction;
     FConnectionParams: IMiniRESTSQLConnectionParamsDBX;
     function GetObject: TObject; override;
+    function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsDBX);
     destructor Destroy; override;
@@ -297,7 +296,7 @@ procedure TMiniRESTSQLConnectionDBX.Connect;
 begin
   if FSQLConnection.Connected then
     Exit;
-  FSQLConnection.DriverName := FConnectionParams.GetDriverName;
+  FSQLConnection.DriverName := GetDriverName(FConnectionParams.GetDatabaseType);
   FSQLConnection.LoginPrompt := False;
   FSQLConnection.Params.Text := FConnectionParams.GetConnectionString;
   FSQLConnection.Connected := True;
@@ -353,6 +352,14 @@ begin
     else
       raise Exception.Create('TMiniRESTSQLConnectionDBX.GetDatabaseInfo: ' +
       'DatabaseType not implemented');
+  end;
+end;
+
+function TMiniRESTSQLConnectionDBX.GetDriverName(
+  const ADatabaseType: TMiniRESTSQLDatabaseType): string;
+begin
+  case ADatabaseType of
+    dbtFirebird: Result := 'Firebird';
   end;
 end;
 
