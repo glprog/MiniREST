@@ -7,6 +7,37 @@ uses SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB;
 type
   IMiniRESTSQLConnectionParamsFiredac = interface
   ['{09A0CEDE-A6F1-4B3B-BF93-7024DE4CB743}']
+    function GetConnectionsCount: Integer;
+    function SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsFiredac;
+    function GetConnectionString: string;
+    function SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsFiredac;
+    function GetUserName: string;
+    function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsFiredac;
+    function GetPassword: string;
+    function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsFiredac;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsFiredac;
+  end;
+
+  TMiniRESTSQLConnectionParamsFiredac = class(TInterfacedObject, IMiniRESTSQLConnectionParamsFiredac)
+  private
+    FConnectionsCount: Integer;
+    FConnectionString: string;
+    FUserName: string;
+    FPassword: string;
+    FDatabaseType: TMiniRESTSQLDatabaseType;
+  public
+    class function New: IMiniRESTSQLConnectionParamsFiredac; 
+    function GetConnectionsCount: Integer;
+    function SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsFiredac;
+    function GetConnectionString: string;
+    function SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsFiredac;
+    function GetUserName: string;
+    function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsFiredac;
+    function GetPassword: string;
+    function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsFiredac;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsFiredac;
   end;
 
   TMiniRESTSQLConnectionFactoryFiredac = class(TMiniRESTSQLConnectionFactoryBase)
@@ -252,6 +283,62 @@ end;
 function TMiniRESTSQLQueryFiredac.ToJSON: string;
 begin
   raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.GetConnectionsCount: Integer;
+begin
+  Result := FConnectionsCount;  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsFiredac;
+begin
+  Result := Self;
+  FConnectionsCount := AConnectionsCount;
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.GetConnectionString: string;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsFiredac;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.GetUserName: string;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsFiredac;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.GetPassword: string;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsFiredac;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.GetDatabaseType: TMiniRESTSQLDatabaseType;
+begin
+  
+end;
+
+function TMiniRESTSQLConnectionParamsFiredac.SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsFiredac;
+begin
+  
+end;
+
+class function TMiniRESTSQLConnectionParamsFiredac.New: IMiniRESTSQLConnectionParamsFiredac;
+begin
+  Result := Create;  
 end;
 
 end.

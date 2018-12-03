@@ -24,7 +24,8 @@ uses
   MiniREST.Common.Utils in '..\..\MiniREST.Common.Utils.pas',
   Test.SQL.Default in 'Test.SQL.Default.pas',
   Test.SQL.DBX in 'Test.SQL.DBX.pas',
-  MiniREST.SQL.Firedac in '..\..\MiniREST.SQL.Firedac.pas';
+  MiniREST.SQL.Firedac in '..\..\MiniREST.SQL.Firedac.pas',
+  Test.SQL.Firedac in 'Test.SQL.Firedac.pas';
 
 var
   runner : ITestRunner;

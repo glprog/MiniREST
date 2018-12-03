@@ -2,7 +2,8 @@ unit Test.SQL.DBX;
 
 interface
 
-uses DUnitX.TestFramework, Test.SQL.Default, MiniREST.SQL.Intf, Classes, SysUtils, Data.DBXFirebird;
+uses DUnitX.TestFramework, Test.SQL.Default, MiniREST.SQL.Intf, Classes, SysUtils,
+  Data.DBXFirebird;
 
 type
   [TestFixture]
@@ -13,22 +14,26 @@ type
 
 implementation
 
-uses MiniREST.SQL.DBX;
+uses MiniREST.SQL.DBX, MiniREST.SQL.Common;
 
 { TMiniRESTSQLTestDBX }
 
 function TMiniRESTSQLTestDBX.GetConnectionFactory: IMiniRESTSQLConnectionFactory;
 var
   LConnectionInfo: TStringList;
+  LDBFilePath: string;
 begin
   LConnectionInfo := TStringList.Create;
   try
     LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
+    LDBFilePath := ExpandFileName('..\..\..\TEST.FDB');
+    LConnectionInfo.Values['Database'] := LDBFilePath;
+    LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactoryDBX.Create(
       TMiniRESTSQLConnectionParamsDBX.New
       .SetConnectionsCount(5)
       .SetConnectionString(LConnectionInfo.Text)
-      .SetDriverName('Firebird')
+      .SetDatabseType(dbtFirebird)
     );
   finally
     LConnectionInfo.Free;
