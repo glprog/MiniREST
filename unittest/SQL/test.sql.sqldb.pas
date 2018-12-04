@@ -5,36 +5,29 @@ unit Test.SQL.SQLDb;
 interface
 
 uses
-  Classes, SysUtils, TestFramework;
+  Classes, SysUtils, TestFramework, Test.SQL.Default;
 
 type
 
-  TTestCase1= class(TTestCase)
+  TMiniRESTSQLTestSQLDbFPC= class(TMiniRESTSQLTest)
   protected
     procedure SetUp; override;
     procedure TearDown; override;
-  published
-    procedure TestHookUp;
   end;
 
 implementation
 
-procedure TTestCase1.TestHookUp;
-begin
-  Fail('Write your own test');
-end;
-
-procedure TTestCase1.SetUp;
+procedure TMiniRESTSQLTestSQLDbFPC.SetUp;
 begin
 
 end;
 
-procedure TTestCase1.TearDown;
+procedure TMiniRESTSQLTestSQLDbFPC.TearDown;
 begin
 
 end;
 
 initialization
-  RegisterTest(TTestCase1.Suite);
+  RegisterTest(TMiniRESTSQLTestSQLDbFPC.Suite);
 end.
 

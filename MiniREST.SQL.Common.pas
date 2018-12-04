@@ -2,7 +2,7 @@ unit MiniREST.SQL.Common;
 
 interface
 
-uses DB, Rtti;
+uses DB {$IFNDEF FPC}, Rtti{$ENDIF};
 
 type
   TMiniRESTSQLDatabaseType = (dbtUnknown, dbtFirebird);
@@ -44,7 +44,17 @@ type
   private
     FParamName: string;
     FParamType: TMiniRESTSQLParamType;
+    {$IFNDEF FPC}
     FValue: TValue;
+    {$ELSE}
+    FValueDate: TDate;
+    FValueDateTime: TDateTime;
+    FValueBoolean: Boolean;
+    FValueDouble: Double;
+    FValueInteger: Integer;
+    FValueString: string;
+    FValueVariant: Variant;
+    {$ENDIF}
   public
     constructor Create;
     class function New: IMiniRESTSQLParam;
@@ -78,37 +88,65 @@ end;
 
 function TMiniRESTSQLParam.GetAsBoolean: Boolean;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsBoolean;
+  {$ELSE}
+  Result := FValueBoolean;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetAsDate: TDate;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsExtended;
+  {$ELSE}
+  Result := FValueDate;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetAsDateTime: TDateTime;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsExtended;
+  {$ELSE}
+  Result := FValueDateTime;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetAsFloat: Double;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsExtended;
+  {$ELSE}
+  Result := FValueDouble;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetAsInteger: Integer;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsInteger;
+  {$ELSE}
+  Result := FValueInteger;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetAsString: string;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsString;
+  {$ELSE}
+  Result := FValueString;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetAsVariant: Variant;
 begin
+  {$IFNDEF FPC}
   Result := FValue.AsVariant;
+  {$ELSE}
+  Result := FValueVariant;
+  {$IFEND}
 end;
 
 function TMiniRESTSQLParam.GetParamName: string;
@@ -128,43 +166,71 @@ end;
 
 procedure TMiniRESTSQLParam.SetAsBoolean(const AValue: Boolean);
 begin
+  {$IFNDEF FPC}
   FValue := AValue;
+  {$ELSE}
+  FValueBoolean := AValue;
+  {$IFEND}
   FParamType := stBoolean;
 end;
 
 procedure TMiniRESTSQLParam.SetAsDate(const AValue: TDate);
 begin
+  {$IFNDEF FPC}
   FValue := AValue;
+  {$ELSE}
+  FValueDate := AValue;
+  {$IFEND}
   FParamType := stDate;
 end;
 
 procedure TMiniRESTSQLParam.SetAsDateTime(const AValue: TDateTime);
 begin
+  {$IFNDEF FPC}
   FValue := AValue;
+  {$ELSE}
+  FValueDateTime := AValue;
+  {$IFEND}
   FParamType := stDateTime;
 end;
 
 procedure TMiniRESTSQLParam.SetAsFloat(const AValue: Double);
 begin
+  {$IFNDEF FPC}
   FValue := AValue;
+  {$ELSE}
+  FValueDouble := AValue;
+  {$IFEND}
   FParamType := stFloat;
 end;
 
 procedure TMiniRESTSQLParam.SetAsInteger(const AValue: Integer);
 begin
+  {$IFNDEF FPC}
   FValue := AValue;
+  {$ELSE}
+  FValueInteger := AValue;
+  {$IFEND}
   FParamType := stInteger;
 end;
 
 procedure TMiniRESTSQLParam.SetAsString(const AValue: string);
 begin
+  {$IFNDEF FPC}
   FValue := AValue;
+  {$ELSE}
+  FValueString := AValue;
+  {$IFEND}
   FParamType := stString;
 end;
 
 procedure TMiniRESTSQLParam.SetAsVariant(const AValue: Variant);
 begin
+  {$IFNDEF FPC}
   FValue := TValue.FromVariant(AValue);
+  {$ELSE}
+  FValueVariant := AValue;
+  {$IFEND}
   FParamType := stVariant;
 end;
 

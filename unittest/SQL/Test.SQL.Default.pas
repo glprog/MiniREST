@@ -2,33 +2,53 @@ unit Test.SQL.Default;
 
 interface
 uses
-  DUnitX.TestFramework, Classes, SysUtils, MiniREST.SQL.Intf;
+  {$IFNDEF FPC}DUnitX.TestFramework {$ELSE} TestFramework{$ENDIF}, Classes,
+    SysUtils, MiniREST.SQL.Intf;
 
 type
 
-  TMiniRESTSQLTest = class(TObject)
+  TMiniRESTSQLTest = class({$IFNDEF FPC}TObject{$ELSE}TTestCase{$IFEND})
   private
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
   protected
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
-  public        
+  public
+    {$IFNDEF FPC}
     [SetupFixture]
+    {$IFEND}
     procedure SetupFixture;
+    {$IFNDEF FPC}
     [Setup]
-    procedure Setup;
+    {$IFEND}
+    procedure Setup; {$IFDEF FPC}override;{$IFEND}
+    {$IFNDEF FPC}
     [TearDown]
-    procedure TearDown;
+    {$IFEND}
+    procedure TearDown; {$IFDEF FPC}override;{$IFEND}
+  published
+    {$IFNDEF FPC}
     [Test]
+    {$IFEND}
     procedure TestInsert;
+    {$IFNDEF FPC}
     [Test]
+    {$IFEND}
     procedure TestExecute;
+    {$IFNDEF FPC}
     [Test]
-    procedure TestJSON;    
+    {$IFEND}
+    procedure TestJSON;
+    {$IFNDEF FPC}
     [Test]
+    {$IFEND}
     procedure TestJSON2;
+    {$IFNDEF FPC}
     [Test]
+    {$IFEND}
     procedure TestTransaction;
+    {$IFNDEF FPC}
     [Test]
+    {$IFEND}
     procedure TestTransaction2;    
   end;
 
@@ -74,7 +94,11 @@ begin
   LQry.ApplyUpdates(0);
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
+  {$IFNDEF FPC}
   Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  Fail('Implement');
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLTest.Setup;
@@ -95,11 +119,19 @@ begin
   LConn2 := FConnectionFactory.GetConnection;
   for I := 0 to 49 do
   begin
-    Assert.IsTrue(LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (''HUE EXECUTE'')', []) > 0, 'Should be greater than 0');    
+    {$IFNDEF FPC}
+    Assert.IsTrue(LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (''HUE EXECUTE'')', []) > 0, 'Should be greater than 0');
+    {$ELSE}
+    Fail('Implement');
+    {$IFEND}
   end;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
+  {$IFNDEF FPC}
   Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  Fail('Implement');
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLTest.TestJSON;
@@ -110,7 +142,11 @@ begin
   LConn1 := FConnectionFactory.GetConnection;
   LQry := LConn1.GetQuery('select ''BOB'' as NAME, 17 as AGE from rdb$database');
   LQry.Open;
+  {$IFNDEF FPC}
   Assert.AreEqual('{"NAME":"BOB","AGE":17}', LQry.ToJSON);
+  {$ELSE}
+  Fail('Implement');
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLTest.TestJSON2;
@@ -122,7 +158,11 @@ begin
   LQry := LConn1.GetQuery('select ''BOB'' as NAME, 17 as AGE from rdb$database ' 
                         + 'UNION ALL select ''MARIA'' as NAME, 18 as AGE from rdb$database');
   LQry.Open;
+  {$IFNDEF FPC}
   Assert.AreEqual('[{"NAME":"BOB  ","AGE":17},{"NAME":"MARIA","AGE":18}]', LQry.ToJSON);
+  {$ELSE}
+  Fail('Implement');
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLTest.TestTransaction;
@@ -154,7 +194,11 @@ begin
   LConn1.Commit;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
-  Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);  
+  {$IFNDEF FPC}
+  Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  Fail('Implement');
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLTest.TestTransaction2;
@@ -186,7 +230,11 @@ begin
   LConn1.Rollback;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
-  Assert.AreEqual(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger); 
+  {$IFNDEF FPC}
+  Assert.AreEqual(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  Fail('Implement');
+  {$IFEND}
 end;
 
 end.

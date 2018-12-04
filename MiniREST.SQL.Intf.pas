@@ -1,8 +1,11 @@
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 unit MiniREST.SQL.Intf;
 
 interface
 
-uses MiniREST.SQL.Common, DB;
+uses SysUtils, MiniREST.SQL.Common, DB;
 
 type
   IMiniRESTSQLDatabaseInfo = interface;

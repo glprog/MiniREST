@@ -10,9 +10,6 @@
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
     </BuildModes>
@@ -32,7 +29,7 @@
         <PackageName Value="FCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="7">
       <Unit0>
         <Filename Value="MiniRESTSQLTest.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -42,6 +39,26 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Test.SQL.SQLDb"/>
       </Unit1>
+      <Unit2>
+        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\MiniREST.SQL.Common.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\..\MiniREST.SQL.Firebird.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\..\MiniREST.SQL.Intf.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Test.SQL.Default.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -52,6 +69,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="..\.."/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
