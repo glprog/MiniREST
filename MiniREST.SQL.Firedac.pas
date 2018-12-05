@@ -2,7 +2,8 @@ unit MiniREST.SQL.Firedac;
 
 interface
 
-uses SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB;
+uses SysUtils, Classes, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
+  Firedac.Comp.Client, Firedac.Stan.Def;
 
 type
   IMiniRESTSQLConnectionParamsFiredac = interface
@@ -51,7 +52,10 @@ type
 
   TMiniRESTSQLConnectionFiredac = class(TMiniRESTSQLConnectionBase)
   protected
+    FFDConnection: TFDConnection;
+    FConnectionParams: IMiniRESTSQLConnectionParamsFiredac;
     function GetObject: TObject; override;
+    function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsFiredac);
     destructor Destroy; override;
@@ -99,12 +103,14 @@ implementation
 constructor TMiniRESTSQLConnectionFactoryFiredac.Create(
   AParams: IMiniRESTSQLConnectionParamsFiredac);
 begin
-  raise Exception.Create('Not implemented');
+  inherited Create(AParams.GetConnectionsCount);
+  FConnectionParams := AParams;
+  FConnectionsCount := AParams.GetConnectionsCount;
 end;
 
 function TMiniRESTSQLConnectionFactoryFiredac.InternalGetconnection: IMiniRESTSQLConnection;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTSQLConnectionFiredac.Create(Self, FConnectionParams);  
 end;
 
 { TMiniRESTSQLConnectionFiredac }
@@ -116,20 +122,40 @@ begin
 end;
 
 procedure TMiniRESTSQLConnectionFiredac.Connect;
+var
+  LStringList: TStringList;
+  LName: string;
+  I: Integer;
 begin
-  inherited;
-  raise Exception.Create('Not implemented');
+  LStringList := TStringList.Create;
+  try
+    if FFDConnection.Connected then
+      Exit;
+    FFDConnection.DriverName := GetDriverName(FConnectionParams.GetDatabaseType);
+    FFDConnection.LoginPrompt := False;
+    LStringList.Text := FConnectionParams.GetConnectionString;
+    for I := 0 to LStringList.Count - 1 do
+    begin
+      LName := LStringList.Names[I];
+      FFDConnection.Params.Values[LName] := LStringList.Values[LName];
+    end;
+    FFDConnection.Connected := True;
+  finally
+    LStringList.Free;
+  end;
 end;
 
 constructor TMiniRESTSQLConnectionFiredac.Create(AOwner: IMiniRESTSQLConnectionFactory;
   AParams: IMiniRESTSQLConnectionParamsFiredac);
 begin
-  raise Exception.Create('Not implemented');
+  FFDConnection := TFDConnection.Create(nil);
+  FConnectionParams := AParams;
+  inherited Create(AOwner);
 end;
 
 destructor TMiniRESTSQLConnectionFiredac.Destroy;
 begin
-  raise Exception.Create('Not implemented');
+  FFDConnection.Free;
   inherited;
 end;
 
@@ -298,47 +324,58 @@ end;
 
 function TMiniRESTSQLConnectionParamsFiredac.GetConnectionString: string;
 begin
-  
+  Result := FConnectionString;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsFiredac;
 begin
-  
+  Result := Self;
+  FConnectionString := AConnectionString;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.GetUserName: string;
 begin
-  
+  Result := FUserName;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsFiredac;
 begin
-  
+  Result := Self;
+  FUserName := AUserName;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.GetPassword: string;
 begin
-  
+  Result := FPassword;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsFiredac;
 begin
-  
+  Result := Self;
+  FPassword := APassword;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.GetDatabaseType: TMiniRESTSQLDatabaseType;
 begin
-  
+  Result := FDatabaseType;
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsFiredac;
 begin
-  
+  Result := Self;
+  FDatabaseType := ADatabaseType;
 end;
 
 class function TMiniRESTSQLConnectionParamsFiredac.New: IMiniRESTSQLConnectionParamsFiredac;
 begin
   Result := Create;  
+end;
+
+function TMiniRESTSQLConnectionFiredac.GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
+begin
+  case ADatabaseType of
+    dbtFirebird: Result := 'FB';
+  end;
 end;
 
 end.
