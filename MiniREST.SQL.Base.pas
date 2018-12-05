@@ -1,19 +1,25 @@
+{$mode DELPHI}
 unit MiniREST.SQL.Base;
 
 interface
 
-uses MiniREST.SQL.Intf, MiniREST.SQL.Common, SyncObjs, Generics.Collections,
-  SysUtils;
+uses MiniREST.SQL.Intf, MiniREST.SQL.Common, SyncObjs, {$IFNDEF FPC}Generics.Collections, 
+{$ELSE} Contnrs,{$IFEND} SysUtils, Classes;
 
 type
   TMiniRESTSQLConnectionFactoryBase = class abstract(TInterfacedObject, IMiniRESTSQLConnectionFactory)
   protected
+    {$IFNDEF FPC}
     FSemaphore: TLightweightSemaphore;
-    FCriticalSection: TCriticalSection;
     FQueue: TQueue<IMiniRESTSQLConnection>;
+    {$ELSE}
+    FSemaphore: Pointer;
+    FQueue: TQueue;
+    {$IFEND}
+    FCriticalSection: TCriticalSection;
     FConnectionCounter: Integer;
     FConnectionsCount: Integer;
-    FConnectionsToNotifyFree: TList<Pointer>;
+    FConnectionsToNotifyFree: TList;
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
     constructor Create(const AConnectionCount: Integer);
@@ -51,8 +57,8 @@ type
     FFields: TArray<string>;
     FName: string;
   public
-    function GetFields: System.TArray<System.string>;
-    procedure SetFields(const AFields: System.TArray<System.string>);
+    function GetFields: TArray<System.string>;
+    procedure SetFields(const AFields: TArray<System.string>);
     function GetName: string;
     procedure SetName(const AName: string);
   end;
@@ -64,12 +70,12 @@ type
     FFields: TArray<string>;
     FName: string;
   public
-    function GetFKFields: System.TArray<System.string>;
-    procedure SetFKFields(const AFields: System.TArray<System.string>);
+    function GetFKFields: TArray<System.string>;
+    procedure SetFKFields(const AFields: TArray<System.string>);
     function GetFKTableName: string;
     procedure SetFKTableName(const AName: string);
-    function GetFields: System.TArray<System.string>;
-    procedure SetFields(const AFields: System.TArray<System.string>);
+    function GetFields: TArray<System.string>;
+    procedure SetFields(const AFields: TArray<System.string>);
     function GetName: string;
     procedure SetName(const AName: string);
   end;
@@ -89,10 +95,12 @@ implementation
 constructor TMiniRESTSQLConnectionFactoryBase.Create(const AConnectionCount: Integer);
 begin
   FConnectionsCount := AConnectionCount;
+  {$IFNDEF FPC}
   FSemaphore := TLightweightSemaphore.Create(AConnectionCount, AConnectionCount);
   FCriticalSection := TCriticalSection.Create;
   FQueue := TQueue<IMiniRESTSQLConnection>.Create;
-  FConnectionsToNotifyFree := TList<Pointer>.Create;
+  {$ENDIF}
+  FConnectionsToNotifyFree := TList.Create;
 end;
 
 destructor TMiniRESTSQLConnectionFactoryBase.Destroy;
@@ -103,7 +111,9 @@ begin
   begin
     TMiniRESTSQLConnectionBase(FConnectionsToNotifyFree.Items[I]).SetOwner(nil);
   end;
+  {$IFNDEF FPC}
   FSemaphore.Free;
+  {$ENDIF}
   FQueue.Free;
   FCriticalSection.Free;
   FConnectionsToNotifyFree.Free;

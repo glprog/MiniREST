@@ -5,7 +5,7 @@ unit Test.SQL.SQLDb;
 interface
 
 uses
-  Classes, SysUtils, TestFramework, Test.SQL.Default;
+  Classes, SysUtils, TestFramework, Test.SQL.Default, MiniREST.SQL.SQLDb;
 
 type
 
