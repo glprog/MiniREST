@@ -2,7 +2,8 @@ unit MiniREST.SQL.SQLDb;
 
 interface
 
-uses SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB;
+uses SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
+  sqldb;
 
 type
   IMiniRESTSQLConnectionParamsSQLDb = interface
@@ -51,8 +52,8 @@ type
 
   TMiniRESTSQLConnectionSQLDb = class(TMiniRESTSQLConnectionBase)
   protected
-    FSQLConnection: TSQLConnection;
-    FTransaction: TDBXTransaction;
+    FSQLConnection: TSQLConnector;
+    //FTransaction: TDBXTransaction;
     FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
     function GetObject: TObject; override;
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
@@ -147,7 +148,7 @@ end;
 
 constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
 begin
-  FSQLConnection := TSQLConnection.Create(nil);
+  FSQLConnection := TSQLConnector.Create(nil);
   FConnectionParams := AParams;
   inherited Create(AOwner);
 end;

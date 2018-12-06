@@ -124,7 +124,10 @@ function TMiniRESTSQLConnectionFactoryBase.GetConnection: IMiniRESTSQLConnection
 var
   LConnection: IMiniRESTSQLConnection;
 begin
+  {$IFNDEF FPC}
   FSemaphore.Acquire;
+  {$IFEND}
+
   FCriticalSection.Enter;
   try
     if FQueue.Count = 0 then
@@ -135,7 +138,12 @@ begin
     end
     else
     begin
+      {$IFNDEF FPC}
       Result := FQueue.Dequeue;
+      {$ELSE}
+      Result := FQueue.Pop;
+      {$IFEND}
+
     end;
     TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
   finally
@@ -148,10 +156,16 @@ procedure TMiniRESTSQLConnectionFactoryBase.ReleaseConnection(
 begin
   FCriticalSection.Enter;
   try
+    {$IFNDEF FPC}
     FQueue.Enqueue(AConnection);
+    {$ELSE}
+    FQueue.Push(AConnection);
+    {$IFEND}
     TMiniRESTSQLConnectionBase(AConnection).FEstaNoPool := True;
     FConnectionsToNotifyFree.Remove(Pointer(AConnection));
+    {$IFNDEF FPC}
     FSemaphore.Release(1);
+    {$IFEND}
   finally
     FCriticalSection.Leave;
   end;
@@ -193,7 +207,7 @@ end;
 
 { TMiniRESTSQLPrimaryKeyInfo }
 
-function TMiniRESTSQLPrimaryKeyInfo.GetFields: System.TArray<System.string>;
+function TMiniRESTSQLPrimaryKeyInfo.GetFields: TArray<System.string>;
 begin
   Result := FFields;
 end;
@@ -204,7 +218,7 @@ begin
 end;
 
 procedure TMiniRESTSQLPrimaryKeyInfo.SetFields(
-  const AFields: System.TArray<System.string>);
+  const AFields: TArray<System.string>);
 begin
   FFields := AFields;
 end;
@@ -216,12 +230,12 @@ end;
 
 { TMiniRESTSQLForeignKeyInfo }
 
-function TMiniRESTSQLForeignKeyInfo.GetFields: System.TArray<System.string>;
+function TMiniRESTSQLForeignKeyInfo.GetFields: TArray<System.string>;
 begin
   Result := FFields;
 end;
 
-function TMiniRESTSQLForeignKeyInfo.GetFKFields: System.TArray<System.string>;
+function TMiniRESTSQLForeignKeyInfo.GetFKFields: TArray<System.string>;
 begin
   Result := FFKFields;
 end;
@@ -237,13 +251,13 @@ begin
 end;
 
 procedure TMiniRESTSQLForeignKeyInfo.SetFields(
-  const AFields: System.TArray<System.string>);
+  const AFields: TArray<System.string>);
 begin
   FFields := AFields;
 end;
 
 procedure TMiniRESTSQLForeignKeyInfo.SetFKFields(
-  const AFields: System.TArray<System.string>);
+  const AFields: TArray<System.string>);
 begin
   FFKFields := AFields;
 end;

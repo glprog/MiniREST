@@ -10,23 +10,25 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="7" Y="10"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="47"/>
       </Unit0>
       <Unit1>
         <Filename Value="test.sql.sqldb.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Test.SQL.SQLDb"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="25" Y="16"/>
-        <UsageCount Value="34"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="40"/>
+        <CursorPos X="19" Y="49"/>
+        <UsageCount Value="47"/>
+        <Loaded Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="62"/>
-        <CursorPos X="40" Y="76"/>
-        <UsageCount Value="34"/>
+        <TopLine Value="20"/>
+        <CursorPos X="51" Y="24"/>
+        <UsageCount Value="47"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -35,7 +37,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="78"/>
         <CursorPos X="36" Y="90"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="47"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\..\MiniREST.SQL.Firebird.pas"/>
@@ -44,119 +46,167 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="47"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\..\MiniREST.SQL.Intf.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="47"/>
       </Unit5>
       <Unit6>
         <Filename Value="Test.SQL.Default.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="65" Y="14"/>
-        <UsageCount Value="34"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="13"/>
+        <CursorPos X="3" Y="10"/>
+        <UsageCount Value="47"/>
+        <Loaded Value="True"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <CursorPos X="74" Y="11"/>
-        <UsageCount Value="31"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="131"/>
+        <CursorPos Y="139"/>
+        <UsageCount Value="44"/>
+        <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\..\..\fptest\src\TestFramework.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="394"/>
         <CursorPos X="15" Y="408"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit8>
     </Units>
-    <JumpHistory Count="20" HistoryIndex="19">
+    <JumpHistory Count="25" HistoryIndex="24">
       <Position1>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="7" Column="28"/>
+        <Caret Line="144" Column="27" TopLine="133"/>
       </Position1>
       <Position2>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="12" Column="51"/>
+        <Caret Line="163" Column="13" TopLine="153"/>
       </Position2>
       <Position3>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="21" Column="36" TopLine="4"/>
+        <Caret Line="168" Column="13" TopLine="158"/>
       </Position3>
       <Position4>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="11" Column="32"/>
+        <Caret Line="210" Column="48" TopLine="204"/>
       </Position4>
       <Position5>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="19" Column="29"/>
+        <Caret Line="221" Column="18" TopLine="215"/>
       </Position5>
       <Position6>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="98" Column="27" TopLine="74"/>
+        <Caret Line="238" Column="50" TopLine="227"/>
       </Position6>
       <Position7>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="105" Column="41" TopLine="87"/>
+        <Caret Line="260" Column="18" TopLine="248"/>
       </Position7>
       <Position8>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="107" Column="56" TopLine="87"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="55" Column="34" TopLine="49"/>
       </Position8>
       <Position9>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="112" Column="27" TopLine="88"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="56" Column="7" TopLine="50"/>
       </Position9>
       <Position10>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="146" Column="29" TopLine="122"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="151" Column="40" TopLine="145"/>
       </Position10>
       <Position11>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="160" Column="28" TopLine="136"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="56" Column="47" TopLine="52"/>
       </Position11>
       <Position12>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="16" Column="41"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="48" Column="14" TopLine="42"/>
       </Position12>
       <Position13>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Column="15"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="45" Column="35" TopLine="42"/>
       </Position13>
       <Position14>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="7" Column="39"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Caret Line="139" TopLine="131"/>
       </Position14>
       <Position15>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="16" Column="42"/>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="16" Column="25" TopLine="7"/>
       </Position15>
       <Position16>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="17" Column="48"/>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="18" Column="55" TopLine="7"/>
       </Position16>
       <Position17>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="58" Column="25" TopLine="34"/>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="36" Column="38" TopLine="31"/>
       </Position17>
       <Position18>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="59" Column="40" TopLine="45"/>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="9" Column="20"/>
       </Position18>
       <Position19>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="71" Column="27" TopLine="57"/>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="45" Column="49" TopLine="40"/>
       </Position19>
       <Position20>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
-        <Caret Line="75" Column="25" TopLine="58"/>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="46" Column="40" TopLine="40"/>
       </Position20>
+      <Position21>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="45" Column="46" TopLine="41"/>
+      </Position21>
+      <Position22>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="41" TopLine="38"/>
+      </Position22>
+      <Position23>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="19" Column="21" TopLine="3"/>
+      </Position23>
+      <Position24>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="43" Column="4" TopLine="8"/>
+      </Position24>
+      <Position25>
+        <Filename Value="test.sql.sqldb.pas"/>
+        <Caret Line="40" Column="28" TopLine="26"/>
+      </Position25>
     </JumpHistory>
   </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="3">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Line Value="139"/>
+      </Item1>
+      <Item2>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="test.sql.sqldb.pas"/>
+        <Line Value="47"/>
+      </Item2>
+      <Item3>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="Test.SQL.Default.pas"/>
+        <Line Value="77"/>
+      </Item3>
+    </BreakPoints>
+  </Debugging>
 </CONFIG>
