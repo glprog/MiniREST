@@ -119,10 +119,20 @@ var
   LQry: IMiniRESTSQLQuery;
 begin
   LConn1 := FConnectionFactory.GetConnection;
-  LQry := LConn1.GetQuery('select ''BOB'' as NAME, 17 as AGE from rdb$database ' 
-                        + 'UNION ALL select ''MARIA'' as NAME, 18 as AGE from rdb$database');
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
   LQry.Open;
-  Assert.AreEqual('[{"NAME":"BOB  ","AGE":17},{"NAME":"MARIA","AGE":18}]', LQry.ToJSON);
+  LQry.DataSet.Append;
+  LQry.DataSet.FieldByName('ID').AsInteger := 1;
+  LQry.DataSet.FieldByName('NAME').AsString := 'BOB';
+  LQry.DataSet.Post;
+
+  LQry.DataSet.Append;
+  LQry.DataSet.FieldByName('ID').AsInteger := 2;
+  LQry.DataSet.FieldByName('NAME').AsString := 'MARIA';
+  LQry.DataSet.Post;
+  
+  Assert.AreEqual('[{"ID":1,"NAME":"BOB"},{"ID":2,"NAME":"MARIA"}]', LQry.ToJSON);
 end;
 
 procedure TMiniRESTSQLTest.TestTransaction;
