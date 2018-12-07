@@ -32,6 +32,8 @@ begin
       .SetConnectionsCount(5)
       .SetConnectionString(LConnectionInfo.Text)
       .SetDatabseType(dbtFirebird)
+      .SetUserName('SYSDBA')
+      .SetPassword('masterkey')
     );
   finally
     LConnectionInfo.Free;

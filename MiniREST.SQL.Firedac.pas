@@ -2,8 +2,9 @@ unit MiniREST.SQL.Firedac;
 
 interface
 
-uses SysUtils, Classes, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
-  Firedac.Comp.Client, Firedac.Stan.Def;
+uses SysUtils, Variants, Classes, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
+  Firedac.Comp.Client, Firedac.Stan.Def, Firedac.Stan.Param, Generics.Collections, FireDAC.Phys.IBBase,
+  FireDAC.Phys.IB, FireDAC.Phys.FB, FireDAC.Stan.Async, FireDAC.Dapt;
 
 type
   IMiniRESTSQLConnectionParamsFiredac = interface
@@ -72,6 +73,12 @@ type
   end;
 
   TMiniRESTSQLQueryFiredac = class(TInterfacedObject, IMiniRESTSQLQuery)
+  protected
+    FConnection: IMiniRESTSQLConnection;
+    FQry: TFDQuery;
+    FSQL: string;
+    FParams: TObjectDictionary<string, IMiniRESTSQLParam>;
+    procedure InternalAddParam(AParam: IMiniRESTSQLParam);
   public
     constructor Create(AConnection: IMiniRESTSQLConnection);
     destructor Destroy; override;
@@ -98,6 +105,8 @@ type
 
 implementation
 
+uses MiniREST.JSON, MiniREST.SQL.Firebird;
+
 { TMiniRESTSQLConnectionFactoryFiredac }
 
 constructor TMiniRESTSQLConnectionFactoryFiredac.Create(
@@ -117,8 +126,7 @@ end;
 
 procedure TMiniRESTSQLConnectionFiredac.Commit;
 begin
-  inherited;
-  raise Exception.Create('Not implemented');
+  FFDConnection.Commit;
 end;
 
 procedure TMiniRESTSQLConnectionFiredac.Connect;
@@ -133,6 +141,8 @@ begin
       Exit;
     FFDConnection.DriverName := GetDriverName(FConnectionParams.GetDatabaseType);
     FFDConnection.LoginPrompt := False;
+    FFDConnection.Params.UserName := FConnectionParams.GetUserName;
+    FFDConnection.Params.Password := FConnectionParams.GetPassword;
     LStringList.Text := FConnectionParams.GetConnectionString;
     for I := 0 to LStringList.Count - 1 do
     begin
@@ -161,154 +171,220 @@ end;
 
 function TMiniRESTSQLConnectionFiredac.Execute(const ACommand: string;
   AParams: array of IMiniRESTSQLParam): Integer;
+var
+  LParams: TFDParams;
+  LParam: TFDParam;
+  LMiniRESTSQLParam: IMiniRESTSQLParam;
 begin
-  raise Exception.Create('Not implemented');
+  LParams := TFDParams.Create;
+  try
+    for LMiniRESTSQLParam in AParams do
+    begin
+      LParam := LParams.Add;
+      case LMiniRESTSQLParam.GetParamType of
+        stString: LParam.AsString := LMiniRESTSQLParam.AsString;
+        stFloat: LParam.AsFloat := LMiniRESTSQLParam.AsFloat;
+        stInteger: LParam.AsInteger := LMiniRESTSQLParam.AsInteger;
+        stDate: LParam.AsDate := LMiniRESTSQLParam.AsDate;
+        stDateTime: LParam.AsDateTime := LMiniRESTSQLParam.AsDateTime;
+        stBoolean: LParam.AsBoolean := LMiniRESTSQLParam.AsBoolean;
+        stVariant, stUndefined: LParam.Value := LMiniRESTSQLParam.GetAsVariant;
+      end;
+    end;
+    Self.Connect;
+    Result := FFDConnection.ExecSQL(ACommand, LParams);    
+  finally
+    //LParams.Free;
+  end;
 end;
 
 function TMiniRESTSQLConnectionFiredac.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
 begin
-  raise Exception.Create('Not implemented');
+  Result := nil;
+  case FConnectionParams.GetDatabaseType of
+    dbtFirebird: Result := TMiniRESTSQLDatabaseInfoFirebird.Create(Self);
+    else
+      raise Exception.Create('TMiniRESTSQLConnectionFiredac.GetDatabaseInfo: ' +
+      'DatabaseType not implemented');
+  end;
 end;
 
 function TMiniRESTSQLConnectionFiredac.GetObject: TObject;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FFDConnection;
 end;
 
 function TMiniRESTSQLConnectionFiredac.GetQuery(const ASQL: string): IMiniRESTSQLQuery;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTSQLQueryFiredac.Create(Self);
+  Result.SQL := ASQL;
 end;
 
 function TMiniRESTSQLConnectionFiredac.GetQuery(const ASQL: string;
   AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery;
+var
+  LParam: IMiniRESTSQLParam;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTSQLQueryFiredac.Create(Self);
+  Result.SQL := ASQL;
+  for LParam in AParams do
+  begin
+    Result.AddParam(LParam);
+  end;
 end;
 
 function TMiniRESTSQLConnectionFiredac.GetQuery: IMiniRESTSQLQuery;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTSQLQueryFiredac.Create(Self);
 end;
 
 procedure TMiniRESTSQLConnectionFiredac.Rollback;
 begin
-  inherited;
-  raise Exception.Create('Not implemented');
+  FFDConnection.Rollback;
 end;
 
 procedure TMiniRESTSQLConnectionFiredac.StartTransaction;
 begin
-  inherited;
-  raise Exception.Create('Not implemented');
+  FFDConnection.StartTransaction;
 end;
 
 { TMiniRESTSQLQueryFiredac }
 
 function TMiniRESTSQLQueryFiredac.AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
 begin
-  raise Exception.Create('Not implemented');
+  FParams.AddOrSetValue(AParam.GetParamName, AParam);
+  Result := Self;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Append;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Append;
 end;
 
 function TMiniRESTSQLQueryFiredac.ApplyUpdates(const AMaxErrors: Integer): Integer;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry.ApplyUpdates(AMaxErrors);
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Cancel;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Cancel;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Close;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Close;
 end;
 
 constructor TMiniRESTSQLQueryFiredac.Create(AConnection: IMiniRESTSQLConnection);
 begin
-  raise Exception.Create('Not implemented');
+  FConnection := AConnection;
+  FQry := TFDQuery.Create(nil);
+  FQry.CachedUpdates := True;
+  FQry.Connection := TFDConnection(AConnection.GetObject);
+  FParams := TObjectDictionary<string, IMiniRESTSQLParam>.Create([]);
 end;
 
 destructor TMiniRESTSQLQueryFiredac.Destroy;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Free;
+  FParams.Free;
   inherited;
 end;
 
 function TMiniRESTSQLQueryFiredac.Eof: Boolean;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry.Eof;
 end;
 
 function TMiniRESTSQLQueryFiredac.FieldByName(const AFieldName: string): TField;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry.FieldByName(AFieldName);
 end;
 
 function TMiniRESTSQLQueryFiredac.GetDataSet: TDataSet;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry;
 end;
 
 function TMiniRESTSQLQueryFiredac.GetSQL: string;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FSQL;
 end;
 
 function TMiniRESTSQLQueryFiredac.GetValue(AField: string): Variant;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry.FieldByName(AField).Value;
 end;
 
 function TMiniRESTSQLQueryFiredac.GetValue(AField: string; ADefault: Variant): Variant;
+var
+  LValue: Variant;
 begin
-  raise Exception.Create('Not implemented');
+  LValue := FQry.FieldByName(AField).Value;
+  if LValue = Null then
+    Result := ADefault
+  else
+    Result := LValue;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Insert;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Insert;
 end;
 
 function TMiniRESTSQLQueryFiredac.IsEmpty: Boolean;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry.IsEmpty;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Next;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Next;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Open;
+var
+  LParam: IMiniRESTSQLParam;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Params.Clear;
+  for LParam in FParams.Values do
+  begin
+    InternalAddParam(LParam);
+  end;
+  FConnection.Connect;
+  FQry.Open;
 end;
 
 function TMiniRESTSQLQueryFiredac.ParamByName(const AParamName: string): IMiniRESTSQLParam;
+var
+  LParam: IMiniRESTSQLParam;
+  LParamName: string;
 begin
-  raise Exception.Create('Not implemented');
+  LParamName := UpperCase(AParamName);
+  if not FParams.TryGetValue(LParamName, LParam) then
+  begin
+    LParam := TMiniRESTSQLParam.Create;
+    LParam.SetParamName(LParamName);
+    FParams.Add(LParamName, LParam);
+  end;
+  Result := LParam;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.Post;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Post;
 end;
 
 procedure TMiniRESTSQLQueryFiredac.SetSQL(const ASQL: string);
 begin
-  raise Exception.Create('Not implemented');
+  FSQL := ASQL;
+  FQry.SQL.Text := ASQL;
 end;
 
 function TMiniRESTSQLQueryFiredac.ToJSON: string;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTJSON.DatasetToJson2(FQry);
 end;
 
 function TMiniRESTSQLConnectionParamsFiredac.GetConnectionsCount: Integer;
@@ -375,6 +451,25 @@ function TMiniRESTSQLConnectionFiredac.GetDriverName(const ADatabaseType: TMiniR
 begin
   case ADatabaseType of
     dbtFirebird: Result := 'FB';
+  end;
+end;
+
+procedure TMiniRESTSQLQueryFiredac.InternalAddParam(AParam: IMiniRESTSQLParam);
+var
+  LParamType: TMiniRESTSQLParamType;
+  LParam: TFDParam;
+begin
+  LParamType := AParam.GetParamType;
+  LParam := FQry.Params.ParamByName(AParam.GetParamName);
+  case LParamType of
+    stString: LParam.AsString := AParam.GetAsString;
+    stFloat: LParam.AsFloat := AParam.GetAsFloat;
+    stInteger: LParam.AsInteger := AParam.GetAsInteger;
+    stDate: LParam.AsDate := AParam.GetAsDate;
+    stDateTime: LParam.AsDateTime := AParam.GetAsDateTime;
+    stBoolean: LParam.AsBoolean := AParam.GetAsBoolean;
+    stVariant: LParam.Value := AParam.GetAsVariant;
+    stUndefined: LParam.Value := Null;
   end;
 end;
 
