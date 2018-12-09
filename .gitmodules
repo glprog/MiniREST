@@ -10,3 +10,6 @@
 [submodule "spring4d"]
 	path = spring4d
 	url = https://bitbucket.org/sglienke/spring4d
+[submodule "unittest/FastMM4"]
+	path = unittest/FastMM4
+	url = https://github.com/pleriche/FastMM4

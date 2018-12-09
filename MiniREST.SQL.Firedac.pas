@@ -175,9 +175,13 @@ var
   LParams: TFDParams;
   LParam: TFDParam;
   LMiniRESTSQLParam: IMiniRESTSQLParam;
+  LFDQuery: TFDQuery;
 begin
-  LParams := TFDParams.Create;
+  Self.Connect;
+  LFDQuery := TFDQuery.Create(nil);
   try
+    LFDQuery.Connection := FFDConnection;
+    LParams := TFDParams.Create;
     for LMiniRESTSQLParam in AParams do
     begin
       LParam := LParams.Add;
@@ -191,10 +195,12 @@ begin
         stVariant, stUndefined: LParam.Value := LMiniRESTSQLParam.GetAsVariant;
       end;
     end;
-    Self.Connect;
-    Result := FFDConnection.ExecSQL(ACommand, LParams);    
+    LFDQuery.SQL.Text := ACommand;
+    LFDQuery.Params.Assign(LParams);
+    Result := LFDQuery.ExecSQL(True);
   finally
-    //LParams.Free;
+    LParams.Free;
+    LFDQuery.Free;
   end;
 end;
 
