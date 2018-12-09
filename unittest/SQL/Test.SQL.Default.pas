@@ -1,18 +1,22 @@
-unit uTest;
+unit Test.SQL.Default;
 
 interface
 uses
-  DUnitX.TestFramework, Classes, SysUtils, MiniREST.SQL.Intf, Data.DBXFirebird;
+  DUnitX.TestFramework, Classes, SysUtils, MiniREST.SQL.Intf,
+    MiniREST.SQL.Common;
 
 type
 
-  [TestFixture]
   TMiniRESTSQLTest = class(TObject)
   private
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
+  protected
+    function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
   public        
     [SetupFixture]
     procedure SetupFixture;
+    [TearDownFixture]
+    procedure TearDownFixture;
     [Setup]
     procedure Setup;
     [TearDown]
@@ -22,35 +26,22 @@ type
     [Test]
     procedure TestExecute;
     [Test]
+    procedure TestExecute2;
+    [Test]
     procedure TestJSON;    
     [Test]
     procedure TestJSON2;
     [Test]
     procedure TestTransaction;
     [Test]
-    procedure TestTransaction2;    
+    procedure TestTransaction2;
   end;
 
 implementation
 
-uses MiniREST.SQL.DBX;
-
 procedure TMiniRESTSQLTest.SetupFixture;
-var
-  LConnectionInfo: TStringList;
 begin
-  LConnectionInfo := TStringList.Create;
-  try
-    LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
-    FConnectionFactory := TMiniRESTSQLConnectionFactoryDBX.Create(
-      TMiniRESTSQLConnectionParamsDBX.New
-      .SetConnectionsCount(5)
-      .SetConnectionString(LConnectionInfo.Text)
-      .SetDriverName('Firebird')
-    );    
-  finally
-    LConnectionInfo.Free;
-  end;
+  FConnectionFactory := GetConnectionFactory;
 end;
 
 procedure TMiniRESTSQLTest.TearDown;
@@ -116,6 +107,31 @@ begin
   Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
 end;
 
+procedure TMiniRESTSQLTest.TestExecute2;
+var
+  LConn1, LConn2: IMiniRESTSQLConnection;
+  LQryCheck: IMiniRESTSQLQuery;
+  I: Integer;
+  LParamName: IMiniRESTSQLParam;
+begin
+  LConn1 := FConnectionFactory.GetConnection;
+  LConn2 := FConnectionFactory.GetConnection;
+  for I := 0 to 49 do
+  begin
+    LParamName := TMiniRESTSQLParam.Create;
+    LParamName.SetParamName('NAME');
+    LParamName.AsString := 'NAME ' + IntToStr(I);
+    Assert.IsTrue(LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (:NAME)', [LParamName]) > 0, 'Should be greater than 0');
+  end;
+  LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
+  LQryCheck.Open;
+  Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  LQryCheck := LConn2.GetQuery('SELECT * FROM CUSTOMER');
+  LQryCheck.Open;
+  Assert.IsTrue(LQryCheck.DataSet.FieldByName('ID').AsInteger > 0, 'Should be greater than 0');
+  Assert.IsTrue(Trim(LQryCheck.DataSet.FieldByName('NAME').AsString) <> '', 'Should be not empty');
+end;
+
 procedure TMiniRESTSQLTest.TestJSON;
 var
   LConn1: IMiniRESTSQLConnection;
@@ -133,10 +149,20 @@ var
   LQry: IMiniRESTSQLQuery;
 begin
   LConn1 := FConnectionFactory.GetConnection;
-  LQry := LConn1.GetQuery('select ''BOB'' as NAME, 17 as AGE from rdb$database ' 
-                        + 'UNION ALL select ''MARIA'' as NAME, 18 as AGE from rdb$database');
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
   LQry.Open;
-  Assert.AreEqual('[{"NAME":"BOB  ","AGE":17},{"NAME":"MARIA","AGE":18}]', LQry.ToJSON);
+  LQry.DataSet.Append;
+  LQry.DataSet.FieldByName('ID').AsInteger := 1;
+  LQry.DataSet.FieldByName('NAME').AsString := 'BOB';
+  LQry.DataSet.Post;
+
+  LQry.DataSet.Append;
+  LQry.DataSet.FieldByName('ID').AsInteger := 2;
+  LQry.DataSet.FieldByName('NAME').AsString := 'MARIA';
+  LQry.DataSet.Post;
+  
+  Assert.AreEqual('[{"ID":1,"NAME":"BOB"},{"ID":2,"NAME":"MARIA"}]', LQry.ToJSON);
 end;
 
 procedure TMiniRESTSQLTest.TestTransaction;
@@ -203,6 +229,9 @@ begin
   Assert.AreEqual(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger); 
 end;
 
-initialization
-  TDUnitX.RegisterTestFixture(TMiniRESTSQLTest);
+procedure TMiniRESTSQLTest.TearDownFixture;
+begin
+  FConnectionFactory := nil;
+end;
+
 end.

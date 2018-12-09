@@ -144,3 +144,6 @@ typings/
 .serverless
 /unittest/Win32/Debug/dunitx-results.xml
 /ignored_files
+/unittest/SQL/Win32/Debug/MiniRESTSQLTest_MemoryManager_EventLog.txt
+*.jdbg
+dunitx-results.xml

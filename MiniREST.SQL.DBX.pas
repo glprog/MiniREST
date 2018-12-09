@@ -3,7 +3,7 @@ unit MiniREST.SQL.DBX;
 interface
 
 uses MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, SqlExpr,
-  DBXCommon, SimpleDS, DB, Generics.Collections, SysUtils;
+  DBXCommon, SimpleDS, DB, Generics.Collections, SysUtils, Classes;
 
 type
   IMiniRESTSQLConnectionParamsDBX = interface
@@ -12,8 +12,6 @@ type
     function SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsDBX;
     function GetConnectionString: string;
     function SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsDBX;
-    function GetDriverName: string;
-    function SetDriverName(const ADriverName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetUserName: string;
     function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsDBX;
     function GetPassword: string;
@@ -61,6 +59,7 @@ type
     FTransaction: TDBXTransaction;
     FConnectionParams: IMiniRESTSQLConnectionParamsDBX;
     function GetObject: TObject; override;
+    function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsDBX);
     destructor Destroy; override;
@@ -294,13 +293,27 @@ begin
 end;
 
 procedure TMiniRESTSQLConnectionDBX.Connect;
+var
+  LStringList: TStringList;
+  LName: string;
+  I: Integer;
 begin
-  if FSQLConnection.Connected then
-    Exit;
-  FSQLConnection.DriverName := FConnectionParams.GetDriverName;
-  FSQLConnection.LoginPrompt := False;
-  FSQLConnection.Params.Text := FConnectionParams.GetConnectionString;
-  FSQLConnection.Connected := True;
+  LStringList := TStringList.Create;
+  try
+    if FSQLConnection.Connected then
+      Exit;
+    FSQLConnection.DriverName := GetDriverName(FConnectionParams.GetDatabaseType);
+    FSQLConnection.LoginPrompt := False;
+    LStringList.Text := FConnectionParams.GetConnectionString;
+    for I := 0 to LStringList.Count - 1 do
+    begin
+      LName := LStringList.Names[I];
+      FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
+    end;
+    FSQLConnection.Connected := True;
+  finally
+    LStringList.Free;
+  end;
 end;
 
 constructor TMiniRESTSQLConnectionDBX.Create(AOwner: IMiniRESTSQLConnectionFactory;
@@ -353,6 +366,14 @@ begin
     else
       raise Exception.Create('TMiniRESTSQLConnectionDBX.GetDatabaseInfo: ' +
       'DatabaseType not implemented');
+  end;
+end;
+
+function TMiniRESTSQLConnectionDBX.GetDriverName(
+  const ADatabaseType: TMiniRESTSQLDatabaseType): string;
+begin
+  case ADatabaseType of
+    dbtFirebird: Result := 'Firebird';
   end;
 end;
 

@@ -1,9 +1,11 @@
+// JCL_DEBUG_EXPERT_GENERATEJDBG ON
 program MiniRESTSQLTest;
 
 {$IFNDEF TESTINSIGHT}
 {$APPTYPE CONSOLE}
 {$ENDIF}{$STRONGLINKTYPES ON}
 uses
+  FastMM4 in '..\FastMM4\FastMM4.pas',
   System.SysUtils,
   {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
@@ -11,7 +13,6 @@ uses
   DUnitX.Loggers.Console,
   DUnitX.Loggers.Xml.NUnit,
   DUnitX.TestFramework,
-  uTest in 'uTest.pas',
   MiniREST.SQL.Base in '..\..\MiniREST.SQL.Base.pas',
   MiniREST.SQL.Common in '..\..\MiniREST.SQL.Common.pas',
   MiniREST.SQL.DBX in '..\..\MiniREST.SQL.DBX.pas',
@@ -22,7 +23,12 @@ uses
   MiniREST.Intf in '..\..\MiniREST.Intf.pas',
   MiniREST.Common in '..\..\MiniREST.Common.pas',
   MiniREST.SQL.Firebird in '..\..\MiniREST.SQL.Firebird.pas',
-  MiniREST.Common.Utils in '..\..\MiniREST.Common.Utils.pas';
+  MiniREST.Common.Utils in '..\..\MiniREST.Common.Utils.pas',
+  Test.SQL.Default in 'Test.SQL.Default.pas',
+  Test.SQL.DBX in 'Test.SQL.DBX.pas',
+  MiniREST.SQL.Firedac in '..\..\MiniREST.SQL.Firedac.pas',
+  Test.SQL.Firedac in 'Test.SQL.Firedac.pas',
+  FastMM4Messages in '..\FastMM4\FastMM4Messages.pas';
 
 var
   runner : ITestRunner;
