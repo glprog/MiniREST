@@ -3,7 +3,7 @@ unit MiniREST.SQL.DBX;
 interface
 
 uses MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, SqlExpr,
-  DBXCommon, SimpleDS, DB, Generics.Collections, SysUtils;
+  DBXCommon, SimpleDS, DB, Generics.Collections, SysUtils, Classes;
 
 type
   IMiniRESTSQLConnectionParamsDBX = interface
@@ -293,13 +293,27 @@ begin
 end;
 
 procedure TMiniRESTSQLConnectionDBX.Connect;
+var
+  LStringList: TStringList;
+  LName: string;
+  I: Integer;
 begin
-  if FSQLConnection.Connected then
-    Exit;
-  FSQLConnection.DriverName := GetDriverName(FConnectionParams.GetDatabaseType);
-  FSQLConnection.LoginPrompt := False;
-  FSQLConnection.Params.Text := FConnectionParams.GetConnectionString;
-  FSQLConnection.Connected := True;
+  LStringList := TStringList.Create;
+  try
+    if FSQLConnection.Connected then
+      Exit;
+    FSQLConnection.DriverName := GetDriverName(FConnectionParams.GetDatabaseType);
+    FSQLConnection.LoginPrompt := False;
+    LStringList.Text := FConnectionParams.GetConnectionString;
+    for I := 0 to LStringList.Count - 1 do
+    begin
+      LName := LStringList.Names[I];
+      FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
+    end;
+    FSQLConnection.Connected := True;
+  finally
+    LStringList.Free;
+  end;
 end;
 
 constructor TMiniRESTSQLConnectionDBX.Create(AOwner: IMiniRESTSQLConnectionFactory;

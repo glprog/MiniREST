@@ -13,13 +13,31 @@ type
 
 implementation
 
-uses MiniREST.SQL.Firedac;
+uses MiniREST.SQL.Firedac, MiniREST.SQL.Common;
 
 { TMiniRESTSQLTestFiredac }
 
 function TMiniRESTSQLTestFiredac.GetConnectionFactory: IMiniRESTSQLConnectionFactory;
+var
+  LConnectionInfo: TStringList;
+  LDBFilePath: string;
 begin
-
+  LConnectionInfo := TStringList.Create;
+  try
+    LDBFilePath := ExpandFileName('..\..\..\TEST.FDB');
+    LConnectionInfo.Values['Database'] := LDBFilePath;
+    LConnectionInfo.Values['Server'] := 'localhost';
+    Result := TMiniRESTSQLConnectionFactoryFiredac.Create(
+      TMiniRESTSQLConnectionParamsFiredac.New
+      .SetConnectionsCount(5)
+      .SetConnectionString(LConnectionInfo.Text)
+      .SetDatabseType(dbtFirebird)
+      .SetUserName('SYSDBA')
+      .SetPassword('masterkey')
+    );
+  finally
+    LConnectionInfo.Free;
+  end;
 end;
 
 initialization
