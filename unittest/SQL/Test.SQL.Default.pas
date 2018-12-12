@@ -156,15 +156,27 @@ begin
     LParamName := TMiniRESTSQLParam.Create;
     LParamName.SetParamName('NAME');
     LParamName.AsString := 'NAME ' + IntToStr(I);
+    {$IFNDEF FPC}
     Assert.IsTrue(LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (:NAME)', [LParamName]) > 0, 'Should be greater than 0');
+    {$ELSE}
+    Fail('Not implemented');
+    {$IFEND}
   end;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
+  {$IFNDEF FPC}
   Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  Fail('Not implemented');
+  {$IFEND}
   LQryCheck := LConn2.GetQuery('SELECT * FROM CUSTOMER');
   LQryCheck.Open;
+  {$IFNDEF FPC}
   Assert.IsTrue(LQryCheck.DataSet.FieldByName('ID').AsInteger > 0, 'Should be greater than 0');
   Assert.IsTrue(Trim(LQryCheck.DataSet.FieldByName('NAME').AsString) <> '', 'Should be not empty');
+  {$ELSE}
+  Fail('Not implemented');
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLTest.TestJSON;
@@ -201,6 +213,7 @@ begin
   LQry.DataSet.FieldByName('NAME').AsString := 'MARIA';
   LQry.DataSet.Post;
   
+  {$IFNDEF FPC}
   Assert.AreEqual('[{"ID":1,"NAME":"BOB"},{"ID":2,"NAME":"MARIA"}]', LQry.ToJSON);
   {$ELSE}
   Fail('Implement');
