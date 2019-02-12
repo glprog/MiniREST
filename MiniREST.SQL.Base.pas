@@ -4,17 +4,20 @@ unit MiniREST.SQL.Base;
 interface
 
 uses MiniREST.SQL.Intf, MiniREST.SQL.Common, SyncObjs, {$IFNDEF FPC}Generics.Collections, 
-{$ELSE} Contnrs,{$IFEND} SysUtils, Classes;
+{$ELSE} Contnrs, lazCollections,{$IFEND} SysUtils, Classes;
 
 type
   TMiniRESTSQLConnectionFactoryBase = class abstract(TInterfacedObject, IMiniRESTSQLConnectionFactory)
   protected
     {$IFNDEF FPC}
     FSemaphore: TLightweightSemaphore;
-    FQueue: TQueue<IMiniRESTSQLConnection>;
+    FQueue: TQueue<IMiniRESTSQLConnection>;    
     {$ELSE}
-    FSemaphore: Pointer;
-    FQueue: TQueue;
+    FConnectionGetEvent: PRTLEvent;
+    FConnectionReleaseEvent: PRTLEvent;
+    FQueue: TArray<IMiniRESTSQLConnection>;
+    FQueuePosition: Integer;
+    FAvailableConnections: Integer;    
     {$IFEND}
     FCriticalSection: TCriticalSection;
     FConnectionCounter: Integer;
@@ -97,9 +100,14 @@ begin
   FConnectionsCount := AConnectionCount;
   {$IFNDEF FPC}
   FSemaphore := TLightweightSemaphore.Create(AConnectionCount, AConnectionCount);
-  FCriticalSection := TCriticalSection.Create;
-  FQueue := TQueue<IMiniRESTSQLConnection>.Create;
+  FQueue := TQueue<IMiniRESTSQLConnection>.Create;  
+  {$ELSE}
+  FAvailableConnections := AConnectionCount;
+  SetLength(FQueue, AConnectionCount);
+  FConnectionGetEvent := RTLEventCreate;
+  FQueuePosition := 0;
   {$ENDIF}
+  FCriticalSection := TCriticalSection.Create;  
   FConnectionsToNotifyFree := TList.Create;
 end;
 
@@ -113,8 +121,10 @@ begin
   end;
   {$IFNDEF FPC}
   FSemaphore.Free;
-  {$ENDIF}
   FQueue.Free;
+  {$ELSE}
+  RTLeventdestroy(FConnectionGetEvent);
+  {$ENDIF}  
   FCriticalSection.Free;
   FConnectionsToNotifyFree.Free;
   inherited;
@@ -126,10 +136,9 @@ var
 begin
   {$IFNDEF FPC}
   FSemaphore.Acquire;
-  {$IFEND}
-
   FCriticalSection.Enter;
   try
+    
     if FQueue.Count = 0 then
     begin
       LConnection := InternalGetconnection.SetName('Connection' + IntToStr(FConnectionCounter));
@@ -138,37 +147,64 @@ begin
     end
     else
     begin
-      {$IFNDEF FPC}
-      Result := FQueue.Dequeue;
-      {$ELSE}
-      Result := FQueue.Pop;
-      {$IFEND}
-
+      Result := FQueue.Dequeue;      
     end;
     TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
+    
   finally
     FCriticalSection.Leave;
   end;
+  {$IFEND}
+  {$IFDEF FPC}
+  if InterlockedDecrement(FAvailableConnections) < 0 then    
+    RTLeventWaitFor(FConnectionReleaseEvent);
+  RTLeventWaitFor(FConnectionGetEvent);
+  try
+    if (FConnectionCounter < FConnectionsCount) then
+    begin
+      LConnection := InternalGetconnection.SetName('Connection' + IntToStr(FConnectionCounter));
+      Inc(FConnectionCounter);
+      Result := LConnection;
+    end
+    else
+    begin
+      Result := FQueue[FQueuePosition];
+    end;
+    Inc(FQueuePosition);
+    if FConnectionsCount = FQueuePosition then
+      FQueuePosition := 0;  
+    TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
+    Inc(FAvailableConnections); 
+  finally
+    RTLeventSetEvent(FConnectionGetEvent);
+  end;
+  {$IFEND}
 end;
 
 procedure TMiniRESTSQLConnectionFactoryBase.ReleaseConnection(
   AConnection: IMiniRESTSQLConnection);
 begin
+  {$IFNDEF FPC}  
   FCriticalSection.Enter;
-  try
-    {$IFNDEF FPC}
-    FQueue.Enqueue(AConnection);
-    {$ELSE}
-    FQueue.Push(AConnection);
-    {$IFEND}
+  try    
+    FQueue.Enqueue(AConnection);    
+    FSemaphore.Release(1);    
     TMiniRESTSQLConnectionBase(AConnection).FEstaNoPool := True;
     FConnectionsToNotifyFree.Remove(Pointer(AConnection));
-    {$IFNDEF FPC}
-    FSemaphore.Release(1);
-    {$IFEND}
   finally
     FCriticalSection.Leave;
   end;
+  {$ELSE}
+  RTLeventWaitFor(FConnectionGetEvent);
+  try
+    FQueue[FQueuePosition - 1] := AConnection;
+    TMiniRESTSQLConnectionBase(AConnection).FEstaNoPool := True;
+    FConnectionsToNotifyFree.Remove(Pointer(AConnection));
+    Dec(FAvailableConnections);
+  finally
+    RTLeventSetEvent(FConnectionGetEvent);
+  end;    
+  {$IFEND}
 end;
 
 { TMiniRESTSQLConnectionBase }
@@ -177,8 +213,8 @@ constructor TMiniRESTSQLConnectionBase.Create(
   AOwner: IMiniRESTSQLConnectionFactory);
 begin
   FOwner := Pointer(AOwner);
-  TMiniRESTSQLConnectionFactoryBase(AOwner)
-  .FConnectionsToNotifyFree.Add(Pointer(Self));
+  //TMiniRESTSQLConnectionFactoryBase(AOwner)
+  //.FConnectionsToNotifyFree.Add(Pointer(Self));
 end;
 
 function TMiniRESTSQLConnectionBase.GetName: string;

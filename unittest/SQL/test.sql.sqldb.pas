@@ -18,6 +18,8 @@ type
     procedure TearDown; override;
     procedure SetUpOnce; override;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; override;
+  published
+    procedure TestSQLDB1;
   end;
 
 implementation
@@ -57,6 +59,13 @@ begin
   finally
     LConnectionInfo.Free;
   end;
+end;
+
+procedure TMiniRESTSQLTestSQLDbFPC.TestSQLDB1;
+var
+  LConn1: IMiniRESTSQLConnection;
+begin
+  LConn1 := GetConnectionFactory.GetConnection;
 end;
 
 initialization

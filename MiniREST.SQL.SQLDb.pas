@@ -155,62 +155,62 @@ end;
 
 destructor TMiniRESTSQLConnectionSQLDb.Destroy;
 begin
-  
+  FSQLConnection.Free;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Connect;
-begin
-  
+begin  
+  raise Exception.Create('Not implemented');
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Commit;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Rollback;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery: IMiniRESTSQLQuery;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery(const ASQL: string; AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery(const ASQL: string): IMiniRESTSQLQuery;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetObject: TObject;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
 begin
-  
+  raise Exception.Create('Not implemented');
 end;
 
 end.

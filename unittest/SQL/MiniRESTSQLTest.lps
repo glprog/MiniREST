@@ -4,31 +4,31 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="9">
+    <Units Count="12">
       <Unit0>
         <Filename Value="MiniRESTSQLTest.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="7" Y="10"/>
-        <UsageCount Value="47"/>
+        <CursorPos X="30" Y="9"/>
+        <UsageCount Value="222"/>
       </Unit0>
       <Unit1>
         <Filename Value="test.sql.sqldb.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Test.SQL.SQLDb"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="37"/>
-        <CursorPos X="19" Y="49"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="46"/>
+        <CursorPos X="33" Y="68"/>
+        <UsageCount Value="222"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="20"/>
-        <CursorPos X="51" Y="24"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="155"/>
+        <CursorPos X="5" Y="168"/>
+        <UsageCount Value="222"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\..\MiniREST.SQL.Common.pas"/>
@@ -36,7 +36,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="78"/>
         <CursorPos X="36" Y="90"/>
-        <UsageCount Value="47"/>
+        <UsageCount Value="222"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\..\MiniREST.SQL.Firebird.pas"/>
@@ -45,38 +45,61 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="47"/>
+        <UsageCount Value="222"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\..\MiniREST.SQL.Intf.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="15"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="44"/>
+        <CursorPos X="14" Y="58"/>
+        <UsageCount Value="222"/>
       </Unit5>
       <Unit6>
         <Filename Value="Test.SQL.Default.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="13"/>
-        <CursorPos X="3" Y="10"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="78"/>
+        <CursorPos Y="79"/>
+        <UsageCount Value="222"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="131"/>
-        <CursorPos Y="139"/>
-        <UsageCount Value="44"/>
+        <TopLine Value="134"/>
+        <CursorPos Y="151"/>
+        <UsageCount Value="219"/>
       </Unit7>
       <Unit8>
-        <Filename Value="..\..\..\fptest\src\TestFramework.pas"/>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\classes\lists.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="394"/>
-        <CursorPos X="15" Y="408"/>
-        <UsageCount Value="9"/>
+        <TopLine Value="699"/>
+        <CursorPos Y="713"/>
+        <UsageCount Value="96"/>
       </Unit8>
+      <Unit9>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\objpas.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="935"/>
+        <CursorPos X="67" Y="940"/>
+        <UsageCount Value="96"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\lazarus\components\lazutils\lazcollections.pas"/>
+        <UnitName Value="lazCollections"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="47"/>
+        <CursorPos X="38" Y="27"/>
+        <UsageCount Value="80"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-base\src\syncobjs.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="96"/>
+        <CursorPos Y="110"/>
+        <UsageCount Value="78"/>
+      </Unit11>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="-1"/>
@@ -84,28 +107,80 @@
     <JumpHistory HistoryIndex="-1"/>
   </ProjectSession>
   <Debugging>
-    <BreakPoints Count="3">
+    <BreakPoints Count="8">
       <Item1>
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\MiniREST.SQL.SQLDb.pas"/>
-        <Line Value="139"/>
+        <Source Value="Test.SQL.Default.pas"/>
+        <Line Value="85"/>
       </Item1>
       <Item2>
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="test.sql.sqldb.pas"/>
-        <Line Value="47"/>
+        <Source Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Line Value="133"/>
       </Item2>
       <Item3>
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="Test.SQL.Default.pas"/>
-        <Line Value="77"/>
+        <Source Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Line Value="159"/>
       </Item3>
+      <Item4>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Line Value="174"/>
+      </Item4>
+      <Item5>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Line Value="213"/>
+      </Item5>
+      <Item6>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="Test.SQL.Default.pas"/>
+        <Line Value="104"/>
+      </Item6>
+      <Item7>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Line Value="189"/>
+      </Item7>
+      <Item8>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Line Value="169"/>
+      </Item8>
     </BreakPoints>
+    <Watches Count="5">
+      <Item1>
+        <Expression Value="FConnectionsInUse"/>
+      </Item1>
+      <Item2>
+        <Expression Value="FConnectionCounter"/>
+      </Item2>
+      <Item3>
+        <Expression Value="FRefCount"/>
+      </Item3>
+      <Item4>
+        <Expression Value="FEstaNoPool"/>
+      </Item4>
+      <Item5>
+        <Expression Value="FOwner &lt;> nil"/>
+      </Item5>
+    </Watches>
   </Debugging>
 </CONFIG>
