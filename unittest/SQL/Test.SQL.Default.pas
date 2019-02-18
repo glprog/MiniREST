@@ -28,11 +28,7 @@ type
     [TearDown]
     {$IFEND}
     procedure TearDown; {$IFDEF FPC}override;{$IFEND}
-
-    {$IFNDEF FPC}
-    [Test]
-    {$IFEND}
-    procedure TestInsert;
+    
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -56,7 +52,12 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
-    procedure TestTransaction2;    
+    procedure TestTransaction2;
+  published
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestInsert;    
   end;
 
 implementation

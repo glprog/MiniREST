@@ -73,6 +73,23 @@ type
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
   end;
 
+  TMiniRESTSQLQuerySQLDb = class(TInterfacedObject, IMiniRESTSQLQuery)
+  protected
+    FConnection: IMiniRESTSQLConnection;
+    FQry: TSQLQuery;
+  public
+    constructor Create(AConnection: IMiniRESTSQLConnection);
+    procedure Open;
+    procedure Close;
+    function GetSQL: string;
+    procedure SetSQL(const ASQL: string);
+    function ParamByName(const AParamName: string): IMiniRESTSQLParam;
+    function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
+    function ApplyUpdates(const AMaxErrors: Integer): Integer;
+    function GetDataSet: TDataSet;
+    function ToJSON: string;
+  end;
+
 implementation
 
 class function TMiniRESTSQLConnectionParamsSQLDb.New: IMiniRESTSQLConnectionParamsSQLDb;
@@ -181,7 +198,7 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery: IMiniRESTSQLQuery;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTSQLQuerySQLDb.Create(Self);
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery(const ASQL: string; AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery;
@@ -212,6 +229,58 @@ end;
 function TMiniRESTSQLConnectionSQLDb.GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
 begin
   raise Exception.Create('Not implemented');
+end;
+
+procedure TMiniRESTSQLQuerySQLDb.Open;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+procedure TMiniRESTSQLQuerySQLDb.Close;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLQuerySQLDb.GetSQL: string;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+procedure TMiniRESTSQLQuerySQLDb.SetSQL(const ASQL: string);
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLQuerySQLDb.ParamByName(const AParamName: string): IMiniRESTSQLParam;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLQuerySQLDb.AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLQuerySQLDb.ApplyUpdates(const AMaxErrors: Integer): Integer;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLQuerySQLDb.GetDataSet: TDataSet;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+function TMiniRESTSQLQuerySQLDb.ToJSON: string;
+begin
+  raise Exception.Create('Not implemented');
+end;
+
+constructor TMiniRESTSQLQuerySQLDb.Create(AConnection: IMiniRESTSQLConnection);
+begin
+  FConnection := AConnection;
+  FQry := TSQLQuery.Create(nil);
+  
 end;
 
 end.

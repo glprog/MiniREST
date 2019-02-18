@@ -1,529 +1,629 @@
-C:\ProjetosGithub\MiniREST\unittest\SQL\MiniRESTSQLTest.exe 
+D:\projetos\MiniREST\unittest\SQL\MiniRESTSQLTest.exe 
 Heap dump by heaptrc unit
-526 memory blocks allocated : 22676/23504
-462 memory blocks freed     : 20462/21160
-64 unfreed memory blocks : 2214
-True heap size : 425984 (112 used in System startup)
-True free heap : 418528
-Should be : 419432
-Call trace for block $01820C70 size 64
-  $0040C06C
-  $0042F377
-  $0040D75E
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783E70 size 24
-  $0040C06C
-  $0042F377
-  $0040D75E
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01830C78 size 92
-  $0042F24F
-  $0040D75E
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01820BE0 size 64
-  $0040C06C
-  $0042F377
-  $0040D75E
-  $00413159
-  $004131F2
-  $0040B372
-  $0040B16A
-  $004370BC  TTESTPROXY__DESTROY,  line 737 of ./src/TestFrameworkProxy.pas
-Call trace for block $017843B0 size 24
-  $0040C06C
-  $0042F377
-  $0040D75E
-  $00413159
-  $004131F2
-  $0040B372
-  $0040B16A
-  $004370BC  TTESTPROXY__DESTROY,  line 737 of ./src/TestFrameworkProxy.pas
-Call trace for block $01830BC8 size 92
-  $0042F24F
-  $0040D75E
-  $00413159
-  $004131F2
-  $0040B372
-  $0040B16A
-  $004370BC  TTESTPROXY__DESTROY,  line 737 of ./src/TestFrameworkProxy.pas
-  $0040BDA2
-Call trace for block $01784530 size 16
-  $00438038  TTESTSUITEPROXY__CREATE,  line 1096 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-  $00423D63  TTEXTTESTLISTENER__REPORT,  line 232 of ./src/TextTestRunner.pas
-  $00424DA7  TTEXTTESTLISTENER__TESTINGENDS,  line 407 of ./src/TextTestRunner.pas
-  $00438CBD  TTESTLISTENERPROXY__TESTINGENDS,  line 1244 of ./src/TestFrameworkProxy.pas
-Call trace for block $01783ED0 size 20
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $004381B9  TTESTSUITEPROXY__CREATE,  line 1111 of ./src/TestFrameworkProxy.pas
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-  $00423D63  TTEXTTESTLISTENER__REPORT,  line 232 of ./src/TextTestRunner.pas
-Call trace for block $01798DA0 size 76
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-  $00423D63  TTEXTTESTLISTENER__REPORT,  line 232 of ./src/TextTestRunner.pas
-  $00424DA7  TTEXTTESTLISTENER__TESTINGENDS,  line 407 of ./src/TextTestRunner.pas
-  $00438CBD  TTESTLISTENERPROXY__TESTINGENDS,  line 1244 of ./src/TestFrameworkProxy.pas
-Call trace for block $01784110 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $00437F82  TTESTSUITEPROXY__CREATE,  line 1085 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-Call trace for block $017842F0 size 16
-  $00417BF3
-  $0041BF4E
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $00437F82  TTESTSUITEPROXY__CREATE,  line 1085 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-Call trace for block $01789760 size 36
-  $0041BF4E
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $00437F82  TTESTSUITEPROXY__CREATE,  line 1085 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-  $00423D63  TTEXTTESTLISTENER__REPORT,  line 232 of ./src/TextTestRunner.pas
-Call trace for block $01784170 size 20
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $00437F82  TTESTSUITEPROXY__CREATE,  line 1085 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-  $00423D63  TTEXTTESTLISTENER__REPORT,  line 232 of ./src/TextTestRunner.pas
-  $00424DA7  TTEXTTESTLISTENER__TESTINGENDS,  line 407 of ./src/TextTestRunner.pas
-Call trace for block $01798D00 size 76
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $0042492E  TTEXTTESTLISTENER__PRINTSETTINGS,  line 343 of ./src/TextTestRunner.pas
-  $00424AB7  TTEXTTESTLISTENER__PRINTHEADER,  line 373 of ./src/TextTestRunner.pas
-  $00423D63  TTEXTTESTLISTENER__REPORT,  line 232 of ./src/TextTestRunner.pas
-  $00424DA7  TTEXTTESTLISTENER__TESTINGENDS,  line 407 of ./src/TextTestRunner.pas
-  $00438CBD  TTESTLISTENERPROXY__TESTINGENDS,  line 1244 of ./src/TestFrameworkProxy.pas
-  $00443B4C  TTESTPROJECT__EXECSTATUSUPDATER,  line 3764 of ./src/TestFramework.pas
-Call trace for block $01784050 size 16
-  $00423C24  TTEXTTESTLISTENER__ADDFAILURE,  line 214 of ./src/TextTestRunner.pas
-  $004393F2  TTESTLISTENERPROXY__ENDTEST,  line 1339 of ./src/TestFrameworkProxy.pas
-  $00443AB0  TTESTPROJECT__EXECSTATUSUPDATER,  line 3759 of ./src/TestFramework.pas
-  $0043DC48  TTESTPROC__SET_EXECSTATUS,  line 2142 of ./src/TestFramework.pas
-  $0043E2FF  TTESTPROC__RUN,  line 2312 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-  $0043FDE9  RUNASTESTCASE,  line 2741 of ./src/TestFramework.pas
-Call trace for block $017841D0 size 16
-  $0043622C  TITESTRESULT__SETFAILURE,  line 413 of ./src/TestFrameworkProxy.pas
-  $0043937F  TTESTLISTENERPROXY__ENDTEST,  line 1335 of ./src/TestFrameworkProxy.pas
-  $00443AB0  TTESTPROJECT__EXECSTATUSUPDATER,  line 3759 of ./src/TestFramework.pas
-  $0043DC48  TTESTPROC__SET_EXECSTATUS,  line 2142 of ./src/TestFramework.pas
-  $0043E2FF  TTESTPROC__RUN,  line 2312 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-  $0043FDE9  RUNASTESTCASE,  line 2741 of ./src/TestFramework.pas
-Call trace for block $01789990 size 25
-  $00439355  TTESTLISTENERPROXY__ENDTEST,  line 1333 of ./src/TestFrameworkProxy.pas
-  $00443AB0  TTESTPROJECT__EXECSTATUSUPDATER,  line 3759 of ./src/TestFramework.pas
-  $0043DC48  TTESTPROC__SET_EXECSTATUS,  line 2142 of ./src/TestFramework.pas
-  $0043E2FF  TTESTPROC__RUN,  line 2312 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-  $0043FDE9  RUNASTESTCASE,  line 2741 of ./src/TestFramework.pas
-  $0043F980  TTESTCASE__RUN,  line 2810 of ./src/TestFramework.pas
-Call trace for block $01789A00 size 36
-  $00439355  TTESTLISTENERPROXY__ENDTEST,  line 1333 of ./src/TestFrameworkProxy.pas
-  $00443AB0  TTESTPROJECT__EXECSTATUSUPDATER,  line 3759 of ./src/TestFramework.pas
-  $0043DC48  TTESTPROC__SET_EXECSTATUS,  line 2142 of ./src/TestFramework.pas
-  $0043E2FF  TTESTPROC__RUN,  line 2312 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-  $0043FDE9  RUNASTESTCASE,  line 2741 of ./src/TestFramework.pas
-  $0043F980  TTESTCASE__RUN,  line 2810 of ./src/TestFramework.pas
-Call trace for block $01784290 size 16
-  $0046EC80  TMINIRESTSQLCONNECTIONBASE__CREATE,  line 236 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.Base.pas
-  $0044B538  TMINIRESTSQLCONNECTIONSQLDB__CREATE,  line 154 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.SQLDb.pas
-  $0044B32C  TMINIRESTSQLCONNECTIONFACTORYSQLDB__INTERNALGETCONNECTION,  line 140 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.SQLDb.pas
-  $0046EA14  TMINIRESTSQLCONNECTIONFACTORYBASE__GETCONNECTION,  line 176 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.Base.pas
-  $004255B0  TMINIRESTSQLTESTSQLDBFPC__TESTSQLDB1,  line 69 of test.sql.sqldb.pas
-  $0043E081  TTESTPROC__RUN,  line 2258 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-Call trace for block $017840B0 size 16
-  $0041775E
-  $0046E81A  TMINIRESTSQLCONNECTIONFACTORYBASE__CREATE,  line 122 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.Base.pas
-  $0044B3CB  TMINIRESTSQLCONNECTIONFACTORYSQLDB__CREATE,  line 145 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.SQLDb.pas
-  $004254E0  TMINIRESTSQLTESTSQLDBFPC__GETCONNECTIONFACTORY,  line 58 of test.sql.sqldb.pas
-  $004255A2  TMINIRESTSQLTESTSQLDBFPC__TESTSQLDB1,  line 69 of test.sql.sqldb.pas
-  $0043E081  TTESTPROC__RUN,  line 2258 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-Call trace for block $01783F90 size 16
-  $0046E81A  TMINIRESTSQLCONNECTIONFACTORYBASE__CREATE,  line 122 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.Base.pas
-  $0044B3CB  TMINIRESTSQLCONNECTIONFACTORYSQLDB__CREATE,  line 145 of C:/ProjetosGithub/MiniREST/MiniREST.SQL.SQLDb.pas
-  $004254E0  TMINIRESTSQLTESTSQLDBFPC__GETCONNECTIONFACTORY,  line 58 of test.sql.sqldb.pas
-  $004255A2  TMINIRESTSQLTESTSQLDBFPC__TESTSQLDB1,  line 69 of test.sql.sqldb.pas
-  $0043E081  TTESTPROC__RUN,  line 2258 of ./src/TestFramework.pas
-  $004402C4  EXECUTETESTMETHOD,  line 2705 of ./src/TestFramework.pas
-  $0043F95B  TTESTCASE__RUN,  line 2808 of ./src/TestFramework.pas
-  $0043FDE9  RUNASTESTCASE,  line 2741 of ./src/TestFramework.pas
-Call trace for block $01798C60 size 88
-  $00443C8D  TTESTPROJECT__EXECUTIONCONTROL,  line 3784 of ./src/TestFramework.pas
-  $00437866  TTESTPROXY__RUN,  line 889 of ./src/TestFrameworkProxy.pas
-  $00435D8C  RUNTEST,  line 322 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783E10 size 16
-  $00438695  TTESTLISTENERPROXY__ADDLISTENER,  line 1183 of ./src/TestFrameworkProxy.pas
-  $00435FDC  TITESTRESULT__ADDLISTENER,  line 388 of ./src/TestFrameworkProxy.pas
-  $00435D54  RUNTEST,  line 319 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783DB0 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00438450  TTESTLISTENERPROXY__CREATE,  line 1154 of ./src/TestFrameworkProxy.pas
-  $00435FB4  TITESTRESULT__ADDLISTENER,  line 387 of ./src/TestFrameworkProxy.pas
-  $00435D54  RUNTEST,  line 319 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-Call trace for block $01783D50 size 16
-  $00417BF3
-  $0041BF4E
-  $00438450  TTESTLISTENERPROXY__CREATE,  line 1154 of ./src/TestFrameworkProxy.pas
-  $00435FB4  TITESTRESULT__ADDLISTENER,  line 387 of ./src/TestFrameworkProxy.pas
-  $00435D54  RUNTEST,  line 319 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01789610 size 36
-  $0041BF4E
-  $00438450  TTESTLISTENERPROXY__CREATE,  line 1154 of ./src/TestFrameworkProxy.pas
-  $00435FB4  TITESTRESULT__ADDLISTENER,  line 387 of ./src/TestFrameworkProxy.pas
-  $00435D54  RUNTEST,  line 319 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783CF0 size 20
-  $00438450  TTESTLISTENERPROXY__CREATE,  line 1154 of ./src/TestFrameworkProxy.pas
-  $00435FB4  TITESTRESULT__ADDLISTENER,  line 387 of ./src/TestFrameworkProxy.pas
-  $00435D54  RUNTEST,  line 319 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01820AC0 size 68
-  $00435FB4  TITESTRESULT__ADDLISTENER,  line 387 of ./src/TestFrameworkProxy.pas
-  $00435D54  RUNTEST,  line 319 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783C90 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00436368  TITESTRESULT__CREATE,  line 427 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-Call trace for block $01783C30 size 16
-  $00417BF3
-  $0041BF4E
-  $00436368  TITESTRESULT__CREATE,  line 427 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $017895A0 size 36
-  $0041BF4E
-  $00436368  TITESTRESULT__CREATE,  line 427 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783BD0 size 20
-  $00436368  TITESTRESULT__CREATE,  line 427 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783B70 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00436345  TITESTRESULT__CREATE,  line 426 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-Call trace for block $01783B10 size 16
-  $00417BF3
-  $0041BF4E
-  $00436345  TITESTRESULT__CREATE,  line 426 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01789530 size 36
-  $0041BF4E
-  $00436345  TITESTRESULT__CREATE,  line 426 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783AB0 size 20
-  $00436345  TITESTRESULT__CREATE,  line 426 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783A50 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00436322  TITESTRESULT__CREATE,  line 425 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-Call trace for block $017839F0 size 16
-  $00417BF3
-  $0041BF4E
-  $00436322  TITESTRESULT__CREATE,  line 425 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $017894C0 size 36
-  $0041BF4E
-  $00436322  TITESTRESULT__CREATE,  line 425 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783990 size 20
-  $00436322  TITESTRESULT__CREATE,  line 425 of ./src/TestFrameworkProxy.pas
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01830B18 size 100
-  $00435C79  GETTESTRESULT,  line 301 of ./src/TestFrameworkProxy.pas
-  $00435CD6  RUNTEST,  line 308 of ./src/TestFrameworkProxy.pas
-  $00424F25  RUNTEST,  line 425 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $005C0074
-  $00510053 of lazutf8sysutils.pas
-  $005C004C
-Call trace for block $01783930 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00423A48  TTEXTTESTLISTENER__CREATE,  line 195 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $017838D0 size 16
-  $00417BF3
-  $0041BF4E
-  $00423A48  TTEXTTESTLISTENER__CREATE,  line 195 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01789450 size 36
-  $0041BF4E
-  $00423A48  TTEXTTESTLISTENER__CREATE,  line 195 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783870 size 20
-  $00423A48  TTEXTTESTLISTENER__CREATE,  line 195 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783810 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00423A25  TTEXTTESTLISTENER__CREATE,  line 194 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $017837B0 size 16
-  $00417BF3
-  $0041BF4E
-  $00423A25  TTEXTTESTLISTENER__CREATE,  line 194 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $017893E0 size 36
-  $0041BF4E
-  $00423A25  TTEXTTESTLISTENER__CREATE,  line 194 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783750 size 20
-  $00423A25  TTEXTTESTLISTENER__CREATE,  line 194 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $00424EEF  RUNTEST,  line 419 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $00424EEF  RUNTEST,  line 419 of ./src/TextTestRunner.pas
-Call trace for block $017836F0 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00423A02  TTEXTTESTLISTENER__CREATE,  line 193 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783690 size 16
-  $00417BF3
-  $0041BF4E
-  $00423A02  TTEXTTESTLISTENER__CREATE,  line 193 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01789370 size 36
-  $0041BF4E
-  $00423A02  TTEXTTESTLISTENER__CREATE,  line 193 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $00437563  TTESTPROXY__LOADCONFIGURATION,  line 853 of ./src/TestFrameworkProxy.pas
-Call trace for block $01783630 size 20
-  $00423A02  TTEXTTESTLISTENER__CREATE,  line 193 of ./src/TextTestRunner.pas
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $017A4568 size 52
-  $00424F05  RUNTEST,  line 420 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-  $00447B61  TPROJECTMANAGER__LOADCONFIGURATION,  line 455 of ./src/ProjectsManager.pas
-  $00437563  TTESTPROXY__LOADCONFIGURATION,  line 853 of ./src/TestFrameworkProxy.pas
-  $00424EEF  RUNTEST,  line 419 of ./src/TextTestRunner.pas
-  $004250FB  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01783510 size 16
-  $0041775E
-  $00417BF3
-  $0041BF4E
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $004381B9  TTESTSUITEPROXY__CREATE,  line 1111 of ./src/TestFrameworkProxy.pas
-  $0043829C  TTESTSUITEPROXY__CREATE,  line 1129 of ./src/TestFrameworkProxy.pas
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-Call trace for block $017834B0 size 16
-  $00417BF3
-  $0041BF4E
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $004381B9  TTESTSUITEPROXY__CREATE,  line 1111 of ./src/TestFrameworkProxy.pas
-  $0043829C  TTESTSUITEPROXY__CREATE,  line 1129 of ./src/TestFrameworkProxy.pas
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-Call trace for block $01789300 size 36
-  $0041BF4E
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $004381B9  TTESTSUITEPROXY__CREATE,  line 1111 of ./src/TestFrameworkProxy.pas
-  $0043829C  TTESTSUITEPROXY__CREATE,  line 1129 of ./src/TestFrameworkProxy.pas
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $004250ED  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-Call trace for block $01783450 size 20
-  $00436FEE  TTESTPROXY__CREATE,  line 731 of ./src/TestFrameworkProxy.pas
-  $004381B9  TTESTSUITEPROXY__CREATE,  line 1111 of ./src/TestFrameworkProxy.pas
-  $0043829C  TTESTSUITEPROXY__CREATE,  line 1129 of ./src/TestFrameworkProxy.pas
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $004250ED  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01798BC0 size 76
-  $0043829C  TTESTSUITEPROXY__CREATE,  line 1129 of ./src/TestFrameworkProxy.pas
-  $0043800D  TTESTSUITEPROXY__CREATE,  line 1094 of ./src/TestFrameworkProxy.pas
-  $00435E4F  REGISTEREDTESTS,  line 353 of ./src/TestFrameworkProxy.pas
-  $00435E96  REGISTEREDTESTS,  line 358 of ./src/TestFrameworkProxy.pas
-  $004250ED  RUNREGISTEREDTESTS,  line 470 of ./src/TextTestRunner.pas
-  $004017D9  main,  line 13 of MiniRESTSQLTest.lpr
-Call trace for block $01820A30 size 57
-  $0043F17C  TTESTCASE__SET_PARENTPATH,  line 2563 of ./src/TestFramework.pas
-  $00444747  TTESTPROJECT__ADDTEST,  line 3968 of ./src/TestFramework.pas
-  $00444A3C  PROJECTREGISTERTEST,  line 4046 of ./src/TestFramework.pas
-  $00444957  REGISTERTEST,  line 4008 of ./src/TestFramework.pas
-  $00425629  TEST.SQL.SQLDB_$$_init$,  line 74 of test.sql.sqldb.pas
-  $0040D354
-Call trace for block $01788F80 size 32
-  $00425869
-  $00446AF4  TPROJECTMANAGER__CREATE,  line 154 of ./src/ProjectsManager.pas
-  $004449BF  PROJECTREGISTERTEST,  line 4038 of ./src/TestFramework.pas
-  $00444957  REGISTERTEST,  line 4008 of ./src/TestFramework.pas
-  $00425629  TEST.SQL.SQLDB_$$_init$,  line 74 of test.sql.sqldb.pas
-  $0040D354
-Call trace for block $01800A10 size 184
-  $0043E981  TTESTCASE__ENUMERATEMETHODS,  line 2446 of ./src/TestFramework.pas
-  $0043EA8F  TTESTCASE__CREATE,  line 2460 of ./src/TestFramework.pas
-  $0043EFDE  TTESTCASE__SUITE,  line 2538 of ./src/TestFramework.pas
-  $00425621  TEST.SQL.SQLDB_$$_init$,  line 74 of test.sql.sqldb.pas
-  $0040D354
-Call trace for block $01782BB0 size 23
-  $0043BA72  TMETHODENUMERATOR__CREATE,  line 1213 of ./src/TestFramework.pas
-  $0043E889  TTESTCASE__ENUMERATEMETHODS,  line 2433 of ./src/TestFramework.pas
-  $0043EA8F  TTESTCASE__CREATE,  line 2460 of ./src/TestFramework.pas
-  $0043EFDE  TTESTCASE__SUITE,  line 2538 of ./src/TestFramework.pas
-  $00425621  TEST.SQL.SQLDB_$$_init$,  line 74 of test.sql.sqldb.pas
-  $0040D354
-Call trace for block $01788DC0 size 37
-  $0043EA5F  TTESTCASE__CREATE,  line 2461 of ./src/TestFramework.pas
-  $0043EFDE  TTESTCASE__SUITE,  line 2538 of ./src/TestFramework.pas
-  $00425621  TEST.SQL.SQLDB_$$_init$,  line 74 of test.sql.sqldb.pas
-  $0040D354
+678 memory blocks allocated : 51432/52760
+609 memory blocks freed     : 44766/46088
+69 unfreed memory blocks : 6666
+True heap size : 753664 (160 used in System startup)
+True free heap : 735616
+Should be : 738000
+Call trace for block $00000000001B9A30 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100019F11
+  $00000001000598B9
+  $0000000100059E39
+  $000000010008AB83
+Call trace for block $00000000001B1A20 size 80
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010008AB1A
+  $0000000100087BC8
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $00000000001B1940 size 56
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010008748A
+  $0000000100087B9B
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141E30 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087B5C
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141D10 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087B21
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141BF0 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087AE6
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141AD0 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087AAB
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $00000000001B9970 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $000000010006B005
+  $000000010006B0D8
+  $0000000100082935
+  $0000000100082BC0
+Call trace for block $00000000001B1860 size 64
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010006B09A
+  $0000000100082935
+  $0000000100082BC0
+  $0000000100087A73
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001419B0 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100082B87
+  $0000000100087A73
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+Call trace for block $00000000001B98B0 size 32
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010001A077
+  $000000010001A40E
+  $000000010001A18D
+  $000000010001F31A
+  $000000010001FE9D
+  $000000010001FA89
+Call trace for block $00000000001B97F0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010001F30A
+  $000000010001FE9D
+  $000000010001FA89
+  $0000000100082B71
+  $0000000100087A73
+Call trace for block $00000000001C0BE0 size 192
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100082B4A
+  $0000000100087A73
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $00000000001B9730 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100019F11
+  $00000001000598B9
+  $0000000100059E39
+  $000000010008B81A
+Call trace for block $00000000001B1780 size 80
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100059DFA
+  $000000010008B81A
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+Call trace for block $0000000000150B50 size 8
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010005A56B
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+Call trace for block $00000000001B9670 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100059F70
+  $000000010005A546
+  $000000010008B7D1
+  $0000000100087A51
+Call trace for block $00000000001B16A0 size 56
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100059F4A
+  $000000010005A546
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B95B0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010005A521
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B94F0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100067FAC
+  $000000010005A500
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B9430 size 48
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100067F7A
+  $000000010005A500
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B9370 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100019F11
+  $00000001000598B9
+  $000000010005F316
+  $000000010005A4CB
+Call trace for block $0000000000148D00 size 88
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010005F2CA
+  $000000010005A4CB
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $000000000015A5B0 size 1000
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100087A2A
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DD2 line 88 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+  $000000010004B700 line 2705 of src/TestFramework.pas
+Call trace for block $00000000001B91F0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100019F11
+  $00000001000598B9
+  $0000000100059E39
+  $000000010008AB83
+Call trace for block $00000000001B15C0 size 80
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010008AB1A
+  $0000000100087BC8
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $00000000001B14E0 size 56
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010008748A
+  $0000000100087B9B
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141890 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087B5C
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141770 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087B21
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141650 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087AE6
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $0000000000141530 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100087AAB
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $00000000001B9130 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $000000010006B005
+  $000000010006B0D8
+  $0000000100082935
+  $0000000100082BC0
+Call trace for block $00000000001B1400 size 64
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010006B09A
+  $0000000100082935
+  $0000000100082BC0
+  $0000000100087A73
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $0000000000141410 size 120
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100082B87
+  $0000000100087A73
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+Call trace for block $00000000001B9070 size 32
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010001A077
+  $000000010001A40E
+  $000000010001A18D
+  $000000010001F31A
+  $000000010001FE9D
+  $000000010001FA89
+Call trace for block $00000000001B8FB0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010001F30A
+  $000000010001FE9D
+  $000000010001FA89
+  $0000000100082B71
+  $0000000100087A73
+Call trace for block $00000000001C0A80 size 192
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100082B4A
+  $0000000100087A73
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $00000000001B8EF0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100019F11
+  $00000001000598B9
+  $0000000100059E39
+  $000000010008B81A
+Call trace for block $00000000001B1320 size 80
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100059DFA
+  $000000010008B81A
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+Call trace for block $0000000000150AB0 size 8
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010005A56B
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+Call trace for block $00000000001B8E30 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100059F70
+  $000000010005A546
+  $000000010008B7D1
+  $0000000100087A51
+Call trace for block $00000000001B1240 size 56
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100059F4A
+  $000000010005A546
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B8D70 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010005A521
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B8CB0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100067FAC
+  $000000010005A500
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B8BF0 size 48
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100067F7A
+  $000000010005A500
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $00000000001B8B30 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $0000000100019B4F
+  $0000000100019F11
+  $00000001000598B9
+  $000000010005F316
+  $000000010005A4CB
+Call trace for block $0000000000148C00 size 88
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010005F2CA
+  $000000010005A4CB
+  $000000010008B7D1
+  $0000000100087A51
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+Call trace for block $000000000015A110 size 1000
+  $000000010000DBC2
+  $000000010000AE27
+  $0000000100087A2A
+  $0000000100058E02 line 282 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100058767 line 201 of ../../MiniREST.SQL.SQLDb.pas
+  $0000000100057DC0 line 87 of Test.SQL.Default.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+  $000000010004B700 line 2705 of src/TestFramework.pas
+Call trace for block $0000000000130280 size 32
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010001A077
+  $000000010001A40E
+  $000000010001A18D
+  $000000010001AC1A
+  $00000001000821FC line 345 of ../../MiniREST.SQL.Base.pas
+  $0000000100082023 line 237 of ../../MiniREST.SQL.Base.pas
+Call trace for block $0000000000130340 size 32
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010001A077
+  $000000010001A40E
+  $000000010001A18D
+  $000000010001AC1A
+  $00000001000821FC line 345 of ../../MiniREST.SQL.Base.pas
+  $0000000100082023 line 237 of ../../MiniREST.SQL.Base.pas
+Call trace for block $0000000000130040 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010001A8BF
+  $0000000100081B60 line 122 of ../../MiniREST.SQL.Base.pas
+  $000000010005839D line 162 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $000000010002B990 line 68 of test.sql.sqldb.pas
+Call trace for block $000000000012FF80 size 32
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010001A886
+  $0000000100081B60 line 122 of ../../MiniREST.SQL.Base.pas
+  $000000010005839D line 162 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $000000010002B990 line 68 of test.sql.sqldb.pas
+  $0000000100049238 line 2258 of src/TestFramework.pas
+Call trace for block $000000000012FE00 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010001A8BF
+  $0000000100081B60 line 122 of ../../MiniREST.SQL.Base.pas
+  $000000010005839D line 162 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+Call trace for block $000000000012FD40 size 32
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010001A886
+  $0000000100081B60 line 122 of ../../MiniREST.SQL.Base.pas
+  $000000010005839D line 162 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+  $000000010002B749 line 39 of test.sql.sqldb.pas
+Call trace for block $000000000012FB00 size 48
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010008ACE6
+  $0000000100081B42 line 121 of ../../MiniREST.SQL.Base.pas
+  $000000010005839D line 162 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+  $000000010002B749 line 39 of test.sql.sqldb.pas
+Call trace for block $00000000001B1080 size 56
+  $000000010000DBC2
+  $000000010000A592
+  $0000000100081AED line 114 of ../../MiniREST.SQL.Base.pas
+  $000000010005839D line 162 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+  $000000010002B749 line 39 of test.sql.sqldb.pas
+  $000000010004AD56 line 2791 of src/TestFramework.pas
+Call trace for block $0000000000148B00 size 104
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $0000000100058365 line 161 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B8E3 line 53 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+  $000000010002B749 line 39 of test.sql.sqldb.pas
+  $000000010004AD56 line 2791 of src/TestFramework.pas
+Call trace for block $00000000001B0FA0 size 54
+  $000000010000DBC2
+  $00000001000068D3
+  $000000010000786C
+  $000000010001BD2B
+  $000000010002B89B line 56 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+  $000000010002B749 line 39 of test.sql.sqldb.pas
+  $000000010004AD56 line 2791 of src/TestFramework.pas
+Call trace for block $00000000001B0EC0 size 72
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $000000010000ACC6
+  $0000000100058047 line 97 of ../../MiniREST.SQL.SQLDb.pas
+  $000000010002B86E line 55 of test.sql.sqldb.pas
+  $0000000100057C1F line 67 of Test.SQL.Default.pas
+  $000000010002B749 line 39 of test.sql.sqldb.pas
+Call trace for block $00000000001410B0 size 144
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $000000010004698E line 1367 of src/TestFramework.pas
+  $000000010004F9B3 line 3782 of src/TestFramework.pas
+  $0000000100041604 line 889 of src/TestFrameworkProxy.pas
+  $000000010003F524 line 322 of src/TestFrameworkProxy.pas
+  $000000010002B314 line 420 of src/TextTestRunner.pas
+Call trace for block $000000000012DD00 size 32
+  $0000000100014D86
+  $000000010000DC5B
+  $000000010001A077
+  $000000010001A40E
+  $000000010001A18D
+  $000000010001AC1A
+  $0000000100020AB4
+  $00000001000468A2 line 1353 of src/TestFramework.pas
+Call trace for block $000000000012D7C0 size 24
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000ACC6
+  $000000010001A8BF
+  $000000010001AEA7
+  $00000001000202FF
+  $000000010004638A line 1284 of src/TestFramework.pas
+  $0000000100049CA7 line 2459 of src/TestFramework.pas
+Call trace for block $000000000012D700 size 32
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010001A886
+  $000000010001AEA7
+  $00000001000202FF
+  $000000010004638A line 1284 of src/TestFramework.pas
+  $0000000100049CA7 line 2459 of src/TestFramework.pas
+  $000000010004F275 line 3707 of src/TestFramework.pas
+Call trace for block $0000000000137B90 size 64
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010001AE56
+  $00000001000202FF
+  $000000010004638A line 1284 of src/TestFramework.pas
+  $0000000100049CA7 line 2459 of src/TestFramework.pas
+  $000000010004F275 line 3707 of src/TestFramework.pas
+  $000000010004F335 line 3713 of src/TestFramework.pas
+Call trace for block $000000000012D640 size 40
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $00000001000202C6
+  $000000010004638A line 1284 of src/TestFramework.pas
+  $0000000100049CA7 line 2459 of src/TestFramework.pas
+  $000000010004F275 line 3707 of src/TestFramework.pas
+  $000000010004F335 line 3713 of src/TestFramework.pas
+Call trace for block $00000000001379D0 size 64
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $0000000100046346 line 1281 of src/TestFramework.pas
+  $0000000100049CA7 line 2459 of src/TestFramework.pas
+  $000000010004F275 line 3707 of src/TestFramework.pas
+  $000000010004F335 line 3713 of src/TestFramework.pas
+  $0000000100050A03 line 4044 of src/TestFramework.pas
+Call trace for block $0000000000159770 size 424
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $000000010004F30A line 3712 of src/TestFramework.pas
+  $0000000100050A03 line 4044 of src/TestFramework.pas
+  $0000000100050913 line 4008 of src/TestFramework.pas
+  $000000010002BA06 line 73 of test.sql.sqldb.pas
+  $000000010000D081
+Call trace for block $000000000012D1C0 size 44
+  $000000010000DBC2
+  $00000001000068D3
+  $0000000100007AAC
+  $000000010002BCFB
+  $0000000100052B05 line 154 of src/ProjectsManager.pas
+  $00000001000509A8 line 4038 of src/TestFramework.pas
+  $0000000100050913 line 4008 of src/TestFramework.pas
+  $000000010002BA06 line 73 of test.sql.sqldb.pas
+Call trace for block $0000000000138D60 size 296
+  $000000010000DBC2
+  $000000010000AE27
+  $000000010000B9DA
+  $0000000100049C66 line 2457 of src/TestFramework.pas
+  $000000010004A2CD line 2538 of src/TestFramework.pas
+  $000000010002B9FD line 73 of test.sql.sqldb.pas
+  $000000010000D081
+  $00000001000017EE line 8 of MiniRESTSQLTest.lpr

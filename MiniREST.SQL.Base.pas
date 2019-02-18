@@ -134,6 +134,7 @@ begin
   FSemaphore.Free;
   FQueue.Free;
   {$ELSE}
+  RTLeventdestroy(FConnectionReleaseEvent);
   RTLeventdestroy(FConnectionGetEvent);
   {$ENDIF}  
   FCriticalSection.Free;
