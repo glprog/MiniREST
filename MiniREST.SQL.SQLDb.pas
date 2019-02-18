@@ -55,6 +55,7 @@ type
     FSQLConnection: TSQLConnector;
     //FTransaction: TDBXTransaction;
     FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
+
     function GetObject: TObject; override;
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
   public
@@ -205,7 +206,7 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.GetObject: TObject;
 begin
-  raise Exception.Create('Not implemented');
+  Result := Self;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;

@@ -8,9 +8,8 @@ uses
 type
 
   TMiniRESTSQLTest = class({$IFNDEF FPC}TObject{$ELSE}TTestCase{$IFEND})
-  private
-    FConnectionFactory: IMiniRESTSQLConnectionFactory;
   protected
+    FConnectionFactory: IMiniRESTSQLConnectionFactory;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
   public
     {$IFNDEF FPC}

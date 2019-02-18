@@ -65,7 +65,9 @@ procedure TMiniRESTSQLTestSQLDbFPC.TestSQLDB1;
 var
   LConn1: IMiniRESTSQLConnection;
 begin
-  LConn1 := GetConnectionFactory.GetConnection;
+  //LConn1 := FConnectionFactory.GetConnection;
+  GetConnectionFactory.GetConnection;
+  Check(Assigned(LConn1));
 end;
 
 initialization

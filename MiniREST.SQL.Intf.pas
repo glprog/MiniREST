@@ -57,6 +57,7 @@ type
   ['{6E405916-A78D-4C75-BCE7-07378517AB2D}']
     function GetConnection : IMiniRESTSQLConnection;
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
+    function GetObject: TObject;
   end;
 
   IMiniRESTSQLConnectionExecute = interface
