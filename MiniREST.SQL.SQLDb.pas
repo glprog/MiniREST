@@ -51,6 +51,8 @@ type
   end;
 
   TMiniRESTSQLConnectionSQLDb = class(TMiniRESTSQLConnectionBase)
+  private
+    function GetConnectorType(const ADatabaseType: TMiniRESTSQLDatabaseType): String;
   protected
     FSQLConnection: TSQLConnector;
     //FTransaction: TDBXTransaction;
@@ -73,12 +75,17 @@ type
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
   end;
 
+  { TMiniRESTSQLQuerySQLDb }
+
   TMiniRESTSQLQuerySQLDb = class(TInterfacedObject, IMiniRESTSQLQuery)
   protected
     FConnection: IMiniRESTSQLConnection;
     FQry: TSQLQuery;
+    FTransaction: TSQLTransaction;
+    FSQL: string;
   public
     constructor Create(AConnection: IMiniRESTSQLConnection);
+    destructor Destroy; override;
     procedure Open;
     procedure Close;
     function GetSQL: string;
@@ -177,7 +184,13 @@ begin
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Connect;
-begin  
+begin
+  if FSQLConnection.Connected then
+    Exit;  
+  FSQLConnection.ConnectorType := GetConnectorType(FConnectionParams.GetDatabaseType);
+  FSQLConnection.LoginPrompt := False;
+  FSQLConnection.UserName := FConnectionParams.GetUserName;
+  FSQLConnection.Password := FConnectionParams.GetPassword;  
   raise Exception.Create('Not implemented');
 end;
 
@@ -233,7 +246,8 @@ end;
 
 procedure TMiniRESTSQLQuerySQLDb.Open;
 begin
-  raise Exception.Create('Not implemented');
+  FConnection.Connect;
+  FQry.Open;
 end;
 
 procedure TMiniRESTSQLQuerySQLDb.Close;
@@ -248,7 +262,8 @@ end;
 
 procedure TMiniRESTSQLQuerySQLDb.SetSQL(const ASQL: string);
 begin
-  raise Exception.Create('Not implemented');
+  FSQL := ASQL;
+  FQry.SQL.Text := ASQL;
 end;
 
 function TMiniRESTSQLQuerySQLDb.ParamByName(const AParamName: string): IMiniRESTSQLParam;
@@ -280,7 +295,24 @@ constructor TMiniRESTSQLQuerySQLDb.Create(AConnection: IMiniRESTSQLConnection);
 begin
   FConnection := AConnection;
   FQry := TSQLQuery.Create(nil);
-  
+  FTransaction := TSQLTransaction.Create(nil);
+  FQry.Transaction := FTransaction;
+  FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
+end;
+
+destructor TMiniRESTSQLQuerySQLDb.Destroy;
+begin
+  FQry.Free;
+  FTransaction.Free;
+  inherited Destroy;
+end;
+
+function TMiniRESTSQLConnectionSQLDb.GetConnectorType(const ADatabaseType: TMiniRESTSQLDatabaseType): String;
+begin
+  case ADatabaseType of
+    dbtUnknown: raise Exception.Create('Database Type not supported');
+    dbtFirebird: Result := 'Firebird';
+  end;  
 end;
 
 end.
