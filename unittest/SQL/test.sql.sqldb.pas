@@ -9,7 +9,6 @@ uses
   MiniREST.SQL.Intf, MiniREST.SQL.Common;
 
 type
-
   { TMiniRESTSQLTestSQLDbFPC }
 
   TMiniRESTSQLTestSQLDbFPC= class(TMiniRESTSQLTest)
@@ -47,14 +46,17 @@ begin
   LConnectionInfo := TStringList.Create;
   try
     //LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
-    //LDBFilePath := ExpandFileName('..\..\..\TEST.FDB');
-    LConnectionInfo.Values['Database'] := LDBFilePath;
+    LDBFilePath := ExpandFileName('..\TEST.FDB');
+    LConnectionInfo.Values['DatabaseName'] := LDBFilePath;
     LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactorySQLDb.Create(
       TMiniRESTSQLConnectionParamsSQLDb.New
       .SetConnectionsCount(5)
       .SetConnectionString(LConnectionInfo.Text)
       .SetDatabseType(dbtFirebird)
+      .SetDatabaseName(LDBFilePath)
+      .SetUserName('SYSDBA')
+      .SetPassword('masterkey')
     );
   finally
     LConnectionInfo.Free;

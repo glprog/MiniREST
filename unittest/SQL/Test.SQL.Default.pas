@@ -105,7 +105,7 @@ begin
   {$IFNDEF FPC}
   Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$ELSE}
-  Fail('Implement');
+  CheckEquals(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
 end;
 

@@ -2,8 +2,8 @@ unit MiniREST.SQL.SQLDb;
 
 interface
 
-uses SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
-  sqldb;
+uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
+  sqldb, IBConnection;
 
 type
   IMiniRESTSQLConnectionParamsSQLDb = interface
@@ -18,6 +18,8 @@ type
     function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsSQLDb;
     function GetDatabaseType: TMiniRESTSQLDatabaseType;
     function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
+    function GetDatabaseName: string;
+    function SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
   end;
 
   TMiniRESTSQLConnectionParamsSQLDb = class(TInterfacedObject, IMiniRESTSQLConnectionParamsSQLDb)
@@ -27,6 +29,7 @@ type
     FUserName: string;
     FPassword: string;
     FDatabaseType: TMiniRESTSQLDatabaseType;
+    FDatabaseName: string;
   public
     class function New: IMiniRESTSQLConnectionParamsSQLDb; 
     function GetConnectionsCount: Integer;
@@ -39,6 +42,8 @@ type
     function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsSQLDb;
     function GetDatabaseType: TMiniRESTSQLDatabaseType;
     function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
+    function GetDatabaseName: string;
+    function SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
   end;
 
   TMiniRESTSQLConnectionFactorySQLDb = class(TMiniRESTSQLConnectionFactoryBase)
@@ -57,7 +62,7 @@ type
     FSQLConnection: TSQLConnector;
     //FTransaction: TDBXTransaction;
     FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
-
+    FTransaction: TSQLTransaction;
     function GetObject: TObject; override;
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
   public
@@ -174,6 +179,8 @@ end;
 constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
 begin
   FSQLConnection := TSQLConnector.Create(nil);
+  FTransaction := TSQLTransaction.Create(nil);
+  FSQLConnection.Transaction := FTransaction;
   FConnectionParams := AParams;
   inherited Create(AOwner);
 end;
@@ -181,17 +188,34 @@ end;
 destructor TMiniRESTSQLConnectionSQLDb.Destroy;
 begin
   FSQLConnection.Free;
+  FTransaction.Free;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Connect;
+var
+  LStringList: TStringList;
+  LName: string;
+  I: Integer;
 begin
-  if FSQLConnection.Connected then
-    Exit;  
-  FSQLConnection.ConnectorType := GetConnectorType(FConnectionParams.GetDatabaseType);
-  FSQLConnection.LoginPrompt := False;
-  FSQLConnection.UserName := FConnectionParams.GetUserName;
-  FSQLConnection.Password := FConnectionParams.GetPassword;  
-  raise Exception.Create('Not implemented');
+  LStringList := TStringList.Create;
+  try
+    if FSQLConnection.Connected then
+      Exit;  
+    FSQLConnection.ConnectorType := GetConnectorType(FConnectionParams.GetDatabaseType);
+    FSQLConnection.LoginPrompt := False;
+    FSQLConnection.UserName := FConnectionParams.GetUserName;
+    FSQLConnection.Password := FConnectionParams.GetPassword;
+    FSQLConnection.DatabaseName := FConnectionParams.GetDatabaseName;  
+    LStringList.Text := FConnectionParams.GetConnectionString;
+    for I := 0 to LStringList.Count - 1 do      
+    begin
+      LName := LStringList.Names[I];
+      FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
+    end;
+    FSQLConnection.Connected := True;
+  finally
+    LStringList.Free;
+  end;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
@@ -221,7 +245,8 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery(const ASQL: string): IMiniRESTSQLQuery;
 begin
-  raise Exception.Create('Not implemented');
+  Result := TMiniRESTSQLQuerySQLDb.Create(Self);
+  Result.SQL := ASQL;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer;
@@ -252,7 +277,7 @@ end;
 
 procedure TMiniRESTSQLQuerySQLDb.Close;
 begin
-  raise Exception.Create('Not implemented');
+  FQry.Close;
 end;
 
 function TMiniRESTSQLQuerySQLDb.GetSQL: string;
@@ -277,13 +302,16 @@ begin
 end;
 
 function TMiniRESTSQLQuerySQLDb.ApplyUpdates(const AMaxErrors: Integer): Integer;
-begin
-  raise Exception.Create('Not implemented');
+begin  
+  FQry.ApplyUpdates(AMaxErrors);
+  TSQLTransaction(FQry.Transaction).Commit;  
+  Result := 0;
+  {TODO: Tratar o retorno. Transformar em procedure?}
 end;
 
 function TMiniRESTSQLQuerySQLDb.GetDataSet: TDataSet;
 begin
-  raise Exception.Create('Not implemented');
+  Result := FQry;
 end;
 
 function TMiniRESTSQLQuerySQLDb.ToJSON: string;
@@ -313,6 +341,17 @@ begin
     dbtUnknown: raise Exception.Create('Database Type not supported');
     dbtFirebird: Result := 'Firebird';
   end;  
+end;
+
+function TMiniRESTSQLConnectionParamsSQLDb.GetDatabaseName: string;
+begin
+  Result := FDatabaseName;
+end;
+
+function TMiniRESTSQLConnectionParamsSQLDb.SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
+begin
+  Result := Self;
+  FDatabaseName := ADatabaseName;
 end;
 
 end.
