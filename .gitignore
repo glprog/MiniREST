@@ -149,3 +149,4 @@ typings/
 dunitx-results.xml
 lib/
 backup/
+/unittest/SQL/heap.trc
