@@ -1,4 +1,10 @@
 {
     "files.encoding" : "windows1252",
-    "omnipascal.defaultDevelopmentEnvironment": "FreePascal"
+    "omnipascal.defaultDevelopmentEnvironment": "FreePascal",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    }
 }

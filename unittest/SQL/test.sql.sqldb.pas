@@ -34,7 +34,7 @@ begin
   LConnectionInfo := TStringList.Create;
   try
     //LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
-    LDBFilePath := ExpandFileName('..\TEST.FDB');
+    LDBFilePath := ExpandFileName('.\TEST.FDB');
     LConnectionInfo.Values['DatabaseName'] := LDBFilePath;
     LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactorySQLDb.Create(
