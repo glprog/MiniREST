@@ -13,8 +13,6 @@ type
 
   TMiniRESTSQLTestSQLDbFPC= class(TMiniRESTSQLTest)
   protected
-    procedure SetUp; override;
-    procedure TearDown; override;
     procedure SetUpOnce; override;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; override;
   published
@@ -22,16 +20,6 @@ type
   end;
 
 implementation
-
-procedure TMiniRESTSQLTestSQLDbFPC.SetUp;
-begin
-
-end;
-
-procedure TMiniRESTSQLTestSQLDbFPC.TearDown;
-begin
-
-end;
 
 procedure TMiniRESTSQLTestSQLDbFPC.SetUpOnce;
 begin

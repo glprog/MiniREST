@@ -251,7 +251,9 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer;
 begin
-  raise Exception.Create('Not implemented');
+  Self.Connect;
+  FSQLConnection.ExecuteDirect(ACommand);
+  //raise Exception.Create('Not implemented');
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
