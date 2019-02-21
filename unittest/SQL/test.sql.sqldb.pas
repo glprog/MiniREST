@@ -30,11 +30,13 @@ function TMiniRESTSQLTestSQLDbFPC.GetConnectionFactory: IMiniRESTSQLConnectionFa
 var
   LConnectionInfo: TStringList;
   LDBFilePath: string;
+  LPathAux: string;
 begin
   LConnectionInfo := TStringList.Create;
   try
     //LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
-    LDBFilePath := ExpandFileName('.\TEST.FDB');
+    LPathAux := ExtractFilePath(ParamStr(0)) + '..\TEST.FDB';
+    LDBFilePath := ExpandFileName(LPathAux);
     LConnectionInfo.Values['DatabaseName'] := LDBFilePath;
     LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactorySQLDb.Create(
@@ -55,7 +57,7 @@ procedure TMiniRESTSQLTestSQLDbFPC.TestSQLDB1;
 var
   LConn1: IMiniRESTSQLConnection;
 begin  
-  LConn1 := GetConnectionFactory.GetConnection;
+  LConn1 := FConnectionFactory.GetConnection;
   Check(Assigned(LConn1));
 end;
 

@@ -71,8 +71,8 @@ procedure TMiniRESTSQLTest.TearDown;
 var
   LConnection: IMiniRESTSQLConnection;  
 begin
-  //LConnection := FConnectionFactory.GetConnection;  
-  //LConnection.Execute('DELETE FROM CUSTOMER', []);
+  LConnection := FConnectionFactory.GetConnection;  
+  LConnection.Execute('DELETE FROM CUSTOMER', []);  
 end;
 
 procedure TMiniRESTSQLTest.TestInsert;
@@ -113,8 +113,8 @@ procedure TMiniRESTSQLTest.Setup;
 var
   LConnection: IMiniRESTSQLConnection;  
 begin
-  //LConnection := FConnectionFactory.GetConnection;  
-  //LConnection.Execute('DELETE FROM CUSTOMER', []);
+  LConnection := FConnectionFactory.GetConnection;  
+  LConnection.Execute('DELETE FROM CUSTOMER', []);
 end;
 
 procedure TMiniRESTSQLTest.TestExecute;

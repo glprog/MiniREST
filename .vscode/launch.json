@@ -10,7 +10,7 @@
             "request": "launch",
             "target": "./unittest/SQL/MiniRESTSQLTest.exe",
             "cwd": "${workspaceRoot}",
-            "gdbpath": "C:\\msys64\\mingw64\\bin\\gdb.exe"
+            "gdbpath": "C:\\msys32\\mingw32\\bin\\gdb.exe"
         }
     ]
 }
