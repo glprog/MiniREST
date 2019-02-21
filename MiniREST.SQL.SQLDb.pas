@@ -253,6 +253,7 @@ function TMiniRESTSQLConnectionSQLDb.Execute(const ACommand: string; AParams: ar
 begin
   Self.Connect;
   FSQLConnection.ExecuteDirect(ACommand);
+  FSQLConnection.Transaction.Commit;
   //raise Exception.Create('Not implemented');
 end;
 
