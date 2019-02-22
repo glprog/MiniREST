@@ -22,8 +22,8 @@ type
     {$ELSE}
     FConnectionGetEvent: PRTLEvent;
     FConnectionReleaseEvent: PRTLEvent;
-    FQueue: TArray<IMiniRESTSQLConnection>;
-    //FQueue: TLazThreadedQueue<IMiniRESTSQLConnection>;
+    //FQueue: TArray<IMiniRESTSQLConnection>;
+    FQueue: TLazThreadedQueue<IMiniRESTSQLConnection>;
     FQueuePosition: Integer;
     FAvailableConnections: Integer;    
     {$IFEND}
@@ -114,8 +114,8 @@ begin
   FQueue := TQueue<IMiniRESTSQLConnection>.Create;  
   {$ELSE}
   FAvailableConnections := AConnectionCount;
-  SetLength(FQueue, AConnectionCount);
-  //FQueue := TLazThreadedQueue<IMiniRESTSQLConnection>.Create(AConnectionCount);
+  //SetLength(FQueue, AConnectionCount);
+  FQueue := TLazThreadedQueue<IMiniRESTSQLConnection>.Create(AConnectionCount);
   FConnectionGetEvent := RTLEventCreate;
   FConnectionReleaseEvent := RTLEventCreate;
   RTLeventSetEvent(FConnectionGetEvent);
@@ -142,6 +142,7 @@ begin
   {$ELSE}
   RTLeventdestroy(FConnectionReleaseEvent);
   RTLeventdestroy(FConnectionGetEvent);
+  FQueue.Free;
   {$ENDIF}  
   FCriticalSection.Free;
   FConnectionsToNotifyFree.Free;
@@ -186,8 +187,8 @@ begin
     end
     else
     begin
-      Result := FQueue[FQueuePosition];
-      //FQueue.PopItem(Result);
+      //Result := FQueue[FQueuePosition];
+      FQueue.PopItem(Result);
     end;
     Inc(FQueuePosition);
     if FConnectionsCount = FQueuePosition then
@@ -223,8 +224,8 @@ begin
   {$ELSE}
   RTLeventWaitFor(FConnectionGetEvent);
   try
-    FQueue[FQueuePosition - 1] := AConnection;
-    //FQueue.PushItem(AConnection);
+    //FQueue[FQueuePosition - 1] := AConnection;
+    FQueue.PushItem(AConnection);
     TMiniRESTSQLConnectionBase(AConnection.GetObject).FEstaNoPool := True;
     FConnectionsToNotifyFree.Remove(AConnection.GetObject);
     Inc(FAvailableConnections);

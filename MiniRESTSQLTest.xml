@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestResults>
+<!--Generated using FPTest on 2019-02-22 18:06:57-->
+<TestListing ElapsedTime="00:07:27,877" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="1" NumberOfChecksCalled="1">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:07:27,877" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="1">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:07:27,877" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="1">
+<Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:03,430"/>
+
+
+
+
+<Test Name="TestInsert" Result="Error" ElapsedTime="00:00:00,000">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestInsert: TearDown failed: Access violation</Message>
+          <ExceptionClass>EAccessViolation</ExceptionClass>
+          <ExceptionMessage>TearDown failed: Access violation</ExceptionMessage>
+        </Test>
+</TestSuite>
+    </TestSuite>
+  </TestListing>
+<Title>FPTest XML test report</Title>
+<NumberOfRunTests>2</NumberOfRunTests>
+<NumberOfErrors>1</NumberOfErrors>
+<NumberOfFailures>0</NumberOfFailures>
+<NumberOfWarnings>1</NumberOfWarnings>
+<NumberOfExcludedTests>0</NumberOfExcludedTests>
+<NumberOfChecksCalled>1</NumberOfChecksCalled>
+<TotalElapsedTime>00:07:27,877</TotalElapsedTime>
+<DateTimeRan>2019-02-22 18:14:28</DateTimeRan>
+</TestResults>

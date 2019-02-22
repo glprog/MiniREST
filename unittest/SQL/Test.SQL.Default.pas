@@ -81,7 +81,7 @@ var
   LQry, LQryID, LQryCheck: IMiniRESTSQLQuery;
   LId: Integer;
   I: Integer;
-begin
+begin  
   LConn1 := FConnectionFactory.GetConnection;
   LConn2 := FConnectionFactory.GetConnection;
   LQry := LConn1.GetQuery;
@@ -294,7 +294,7 @@ end;
 
 procedure TMiniRESTSQLTest.TearDownFixture;
 begin
-  FConnectionFactory := nil;
+  //FConnectionFactory := nil;
 end;
 
 end.

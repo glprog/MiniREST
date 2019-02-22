@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-<!--Generated using FPTest on 2019-02-21 18:25:12-->
-<TestListing ElapsedTime="00:00:00,174" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0" NumberOfChecksCalled="2">
-    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:00,174" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0">
-<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:00,174" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0">
+<!--Generated using FPTest on 2019-02-22 18:32:34-->
+<TestListing ElapsedTime="00:00:00,192" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0" NumberOfChecksCalled="2">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:00,192" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:00,192" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0">
 <Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:00,000"/>
-
-
-
-
-<Test Name="TestInsert" Result="Error" ElapsedTime="00:00:00,127">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestInsert: Access violation</Message>
-          <ExceptionClass>EAccessViolation</ExceptionClass>
-          <ExceptionMessage>Access violation</ExceptionMessage>
-        </Test>
+<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,135"/>
 </TestSuite>
     </TestSuite>
   </TestListing>
 <Title>FPTest XML test report</Title>
 <NumberOfRunTests>2</NumberOfRunTests>
-<NumberOfErrors>1</NumberOfErrors>
+<NumberOfErrors>0</NumberOfErrors>
 <NumberOfFailures>0</NumberOfFailures>
 <NumberOfWarnings>0</NumberOfWarnings>
 <NumberOfExcludedTests>0</NumberOfExcludedTests>
 <NumberOfChecksCalled>2</NumberOfChecksCalled>
-<TotalElapsedTime>00:00:00,174</TotalElapsedTime>
-<DateTimeRan>2019-02-21 18:25:12</DateTimeRan>
+<TotalElapsedTime>00:00:00,192</TotalElapsedTime>
+<DateTimeRan>2019-02-22 18:32:34</DateTimeRan>
 </TestResults>

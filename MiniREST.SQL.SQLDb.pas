@@ -187,6 +187,7 @@ end;
 
 destructor TMiniRESTSQLConnectionSQLDb.Destroy;
 begin
+  FSQLConnection.Params.Free;
   FSQLConnection.Free;
   FTransaction.Free;
 end;
@@ -196,6 +197,7 @@ var
   LStringList: TStringList;
   LName: string;
   I: Integer;
+  LValue: string;
 begin
   LStringList := TStringList.Create;
   try
@@ -209,7 +211,7 @@ begin
     LStringList.Text := FConnectionParams.GetConnectionString;
     for I := 0 to LStringList.Count - 1 do      
     begin
-      LName := LStringList.Names[I];
+      LName := LStringList.Names[I];      
       FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
     end;
     FSQLConnection.Connected := True;
