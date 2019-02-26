@@ -1,21 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-<!--Generated using FPTest on 2019-02-22 18:32:34-->
-<TestListing ElapsedTime="00:00:00,192" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0" NumberOfChecksCalled="2">
-    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:00,192" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0">
-<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:00,192" NumberOfErrors="0" NumberOfFailures="0" NumberOfRunTests="2" NumberOfWarnings="0">
+<!--Generated using FPTest on 2019-02-26 18:27:44-->
+<TestListing ElapsedTime="00:00:00,436" NumberOfErrors="2" NumberOfFailures="4" NumberOfRunTests="8" NumberOfWarnings="0" NumberOfChecksCalled="2">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:00,436" NumberOfErrors="2" NumberOfFailures="4" NumberOfRunTests="8" NumberOfWarnings="0">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:00,436" NumberOfErrors="2" NumberOfFailures="4" NumberOfRunTests="8" NumberOfWarnings="0">
 <Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:00,000"/>
-<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,135"/>
+<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,173"/>
+
+
+
+
+<Test Name="TestExecute" Result="Failed" ElapsedTime="00:00:00,000">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestExecute: Implement</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Implement</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestExecute2" Result="Failed" ElapsedTime="00:00:00,000">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestExecute2: Not implemented</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Not implemented</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestJSON" Result="Failed" ElapsedTime="00:00:00,002">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON: Implement</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Implement</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,006">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON2: Implement</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Implement</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestTransaction" Result="Error" ElapsedTime="00:00:00,098">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction: Not implemented</Message>
+          <ExceptionClass>Exception</ExceptionClass>
+          <ExceptionMessage>Not implemented</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestTransaction2" Result="Error" ElapsedTime="00:00:00,093">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction2: Not implemented</Message>
+          <ExceptionClass>Exception</ExceptionClass>
+          <ExceptionMessage>Not implemented</ExceptionMessage>
+        </Test>
 </TestSuite>
     </TestSuite>
   </TestListing>
 <Title>FPTest XML test report</Title>
-<NumberOfRunTests>2</NumberOfRunTests>
-<NumberOfErrors>0</NumberOfErrors>
-<NumberOfFailures>0</NumberOfFailures>
+<NumberOfRunTests>8</NumberOfRunTests>
+<NumberOfErrors>2</NumberOfErrors>
+<NumberOfFailures>4</NumberOfFailures>
 <NumberOfWarnings>0</NumberOfWarnings>
 <NumberOfExcludedTests>0</NumberOfExcludedTests>
 <NumberOfChecksCalled>2</NumberOfChecksCalled>
-<TotalElapsedTime>00:00:00,192</TotalElapsedTime>
-<DateTimeRan>2019-02-22 18:32:34</DateTimeRan>
+<TotalElapsedTime>00:00:00,436</TotalElapsedTime>
+<DateTimeRan>2019-02-26 18:27:44</DateTimeRan>
 </TestResults>

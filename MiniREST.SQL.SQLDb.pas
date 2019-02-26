@@ -186,10 +186,10 @@ begin
 end;
 
 destructor TMiniRESTSQLConnectionSQLDb.Destroy;
-begin
-  FSQLConnection.Params.Free;
+begin  
   FSQLConnection.Free;
   FTransaction.Free;
+  inherited Destroy;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Connect;

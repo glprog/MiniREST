@@ -4,7 +4,7 @@ unit MiniREST.SQL.Base;
 interface
 
 uses MiniREST.SQL.Intf, MiniREST.SQL.Common, SyncObjs, {$IFNDEF FPC}Generics.Collections, 
-{$ELSE} Contnrs, lazCollections, fgl,{$IFEND} SysUtils, Classes;
+{$ELSE} Contnrs, fgl,{$IFEND} SysUtils, Classes;
 
 type
 
@@ -21,9 +21,8 @@ type
     FQueue: TQueue<IMiniRESTSQLConnection>;    
     {$ELSE}
     FConnectionGetEvent: PRTLEvent;
-    FConnectionReleaseEvent: PRTLEvent;
-    //FQueue: TArray<IMiniRESTSQLConnection>;
-    FQueue: TLazThreadedQueue<IMiniRESTSQLConnection>;
+    FConnectionReleaseEvent: PRTLEvent;    
+    FQueue: TFPGInterfacedObjectList<IMiniRESTSQLConnection>;
     FQueuePosition: Integer;
     FAvailableConnections: Integer;    
     {$IFEND}
@@ -113,9 +112,8 @@ begin
   FSemaphore := TLightweightSemaphore.Create(AConnectionCount, AConnectionCount);
   FQueue := TQueue<IMiniRESTSQLConnection>.Create;  
   {$ELSE}
-  FAvailableConnections := AConnectionCount;
-  //SetLength(FQueue, AConnectionCount);
-  FQueue := TLazThreadedQueue<IMiniRESTSQLConnection>.Create(AConnectionCount);
+  FAvailableConnections := AConnectionCount;  
+  FQueue := TFPGInterfacedObjectList<IMiniRESTSQLConnection>.Create;
   FConnectionGetEvent := RTLEventCreate;
   FConnectionReleaseEvent := RTLEventCreate;
   RTLeventSetEvent(FConnectionGetEvent);
@@ -151,7 +149,7 @@ end;
 
 function TMiniRESTSQLConnectionFactoryBase.GetConnection: IMiniRESTSQLConnection;
 var
-  LConnection: IMiniRESTSQLConnection;
+  LConnection: IMiniRESTSQLConnection;  
 begin
   {$IFNDEF FPC}
   FSemaphore.Acquire;
@@ -186,9 +184,9 @@ begin
       Result := LConnection;
     end
     else
-    begin
-      //Result := FQueue[FQueuePosition];
-      FQueue.PopItem(Result);
+    begin      
+      LConnection := FQueue.Last;
+      Result := FQueue.Extract(LConnection);      
     end;
     Inc(FQueuePosition);
     if FConnectionsCount = FQueuePosition then
@@ -196,7 +194,7 @@ begin
       FQueuePosition := 0;
     end;
 
-    TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
+    TMiniRESTSQLConnectionBase(Result.GetObject).FEstaNoPool := False;
   finally
     RTLeventSetEvent(FConnectionGetEvent);
   end;
@@ -223,9 +221,8 @@ begin
   end;
   {$ELSE}
   RTLeventWaitFor(FConnectionGetEvent);
-  try
-    //FQueue[FQueuePosition - 1] := AConnection;
-    FQueue.PushItem(AConnection);
+  try    
+    FQueue.Add(AConnection);
     TMiniRESTSQLConnectionBase(AConnection.GetObject).FEstaNoPool := True;
     FConnectionsToNotifyFree.Remove(AConnection.GetObject);
     Inc(FAvailableConnections);
