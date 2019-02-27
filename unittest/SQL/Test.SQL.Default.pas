@@ -36,6 +36,10 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
+    procedure TestInsert2;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
     procedure TestExecute;
     {$IFNDEF FPC}
     [Test]
@@ -59,7 +63,19 @@ type
     procedure TestTransaction2;        
   end;
 
+  TThreadTesteInsert2 = class(TThread)
+  private
+    FFactory: IMiniRESTSQLConnectionFactory;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory);
+  end;
+
 implementation
+
+var
+  gContatorTesteInsert2: Integer;
 
 procedure TMiniRESTSQLTest.SetupFixture;
 begin
@@ -294,6 +310,66 @@ end;
 procedure TMiniRESTSQLTest.TearDownFixture;
 begin
   //FConnectionFactory := nil;
+end;
+
+procedure TMiniRESTSQLTest.TestInsert2;
+var
+  LConn: IMiniRESTSQLConnection;
+  LQryCheck: IMiniRESTSQLQuery;  
+  I: Integer;
+  LThread: TThreadTesteInsert2;
+begin
+  gContatorTesteInsert2 := 0;
+  for I := 1 to 100 do
+  begin
+    TThreadTesteInsert2.Create(False, FConnectionFactory);
+  end;
+  while not (gContatorTesteInsert2 = 100) do
+    Sleep(1000);  
+  LConn := FConnectionFactory.GetConnection;
+  LQryCheck := LConn.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
+  LQryCheck.Open;
+  {$IFNDEF FPC}
+  Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  CheckEquals(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$IFEND}
+end;
+
+procedure TThreadTesteInsert2.Execute;
+var
+  LConn: IMiniRESTSQLConnection;
+  LQry, LQryID: IMiniRESTSQLQuery;
+  LId: Integer;
+begin
+  try
+    LConn := FFactory.GetConnection;  
+    LQry := LConn.GetQuery;
+    LQryID := LConn.GetQuery;
+    LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
+    LQry.Open;
+    
+    LQryID.Close;
+    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+    LQryID.Open;
+    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
+    LQryID.Close;      
+    LQry.DataSet.Append;
+    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
+    LQry.DataSet.Post;    
+        
+    LQry.ApplyUpdates(0);    
+  finally
+    InterLockedIncrement(gContatorTesteInsert2);    
+  end;    
+end;
+
+constructor TThreadTesteInsert2.Create(ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory);
+begin
+  inherited Create(ACreateSuspended);
+  FFactory := AFactory;
+  FreeOnTerminate := True;  
 end;
 
 end.

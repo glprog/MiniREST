@@ -23,7 +23,7 @@ type
     FConnectionGetEvent: PRTLEvent;
     FConnectionReleaseEvent: PRTLEvent;    
     FQueue: TFPGInterfacedObjectList<IMiniRESTSQLConnection>;
-    FQueuePosition: Integer;
+    //FQueuePosition: Integer;
     FAvailableConnections: Integer;    
     {$IFEND}
     FCriticalSection: TCriticalSection;
@@ -117,8 +117,7 @@ begin
   FConnectionGetEvent := RTLEventCreate;
   FConnectionReleaseEvent := RTLEventCreate;
   RTLeventSetEvent(FConnectionGetEvent);
-  RTLeventSetEvent(FConnectionReleaseEvent);
-  FQueuePosition := 0;
+  RTLeventSetEvent(FConnectionReleaseEvent);  
   {$ENDIF}
   FCriticalSection := TCriticalSection.Create;  
   FConnectionsToNotifyFree := TList.Create;
@@ -188,11 +187,6 @@ begin
       LConnection := FQueue.Last;
       Result := FQueue.Extract(LConnection);      
     end;
-    Inc(FQueuePosition);
-    if FConnectionsCount = FQueuePosition then
-    begin
-      FQueuePosition := 0;
-    end;
 
     TMiniRESTSQLConnectionBase(Result.GetObject).FEstaNoPool := False;
   finally
@@ -227,6 +221,7 @@ begin
     FConnectionsToNotifyFree.Remove(AConnection.GetObject);
     Inc(FAvailableConnections);
   finally
+    RTLeventSetEvent(FConnectionReleaseEvent);
     RTLeventSetEvent(FConnectionGetEvent);
   end;    
   {$IFEND}

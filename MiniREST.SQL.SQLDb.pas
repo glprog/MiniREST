@@ -222,12 +222,12 @@ end;
 
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
 begin
-  raise Exception.Create('Not implemented');
+  FSQLConnection.Transaction.StartTransaction;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Commit;
 begin
-  raise Exception.Create('Not implemented');
+  FSQLConnection.Transaction.Commit;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Rollback;
@@ -307,7 +307,8 @@ begin
 end;
 
 function TMiniRESTSQLQuerySQLDb.ApplyUpdates(const AMaxErrors: Integer): Integer;
-begin  
+begin
+  TSQLTransaction(FQry.Transaction).StartTransaction;  
   FQry.ApplyUpdates(AMaxErrors);
   TSQLTransaction(FQry.Transaction).Commit;  
   Result := 0;

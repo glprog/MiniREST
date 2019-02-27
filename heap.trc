@@ -1,8 +1,0 @@
-D:\projetos\MiniREST\unittest\SQL\MiniRESTSQLTest.exe 
-Heap dump by heaptrc unit
-26117 memory blocks allocated : 2679554/2738232
-26117 memory blocks freed     : 2679554/2738232
-0 unfreed memory blocks : 0
-True heap size : 262144
-True free heap : 261984
-Should be : 262144

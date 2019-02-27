@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-<!--Generated using FPTest on 2019-02-26 18:27:44-->
-<TestListing ElapsedTime="00:00:00,436" NumberOfErrors="2" NumberOfFailures="4" NumberOfRunTests="8" NumberOfWarnings="0" NumberOfChecksCalled="2">
-    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:00,436" NumberOfErrors="2" NumberOfFailures="4" NumberOfRunTests="8" NumberOfWarnings="0">
-<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:00,436" NumberOfErrors="2" NumberOfFailures="4" NumberOfRunTests="8" NumberOfWarnings="0">
+<!--Generated using FPTest on 2019-02-27 18:34:33-->
+<TestListing ElapsedTime="00:00:01,583" NumberOfErrors="3" NumberOfFailures="5" NumberOfRunTests="9" NumberOfWarnings="0" NumberOfChecksCalled="2">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:01,583" NumberOfErrors="3" NumberOfFailures="5" NumberOfRunTests="9" NumberOfWarnings="0">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:01,583" NumberOfErrors="3" NumberOfFailures="5" NumberOfRunTests="9" NumberOfWarnings="0">
 <Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:00,000"/>
-<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,173"/>
+
+
+
+
+<Test Name="TestInsert" Result="Error" ElapsedTime="00:00:00,177">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestInsert: Transaction already active</Message>
+          <ExceptionClass>EDatabaseError</ExceptionClass>
+          <ExceptionMessage>Transaction already active</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestInsert2" Result="Failed" ElapsedTime="00:00:01,124">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestInsert2: Expected:
+  "100"
+But was:
+  "0"</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Expected:
+  "100"
+But was:
+  "0"</ExceptionMessage>
+        </Test>
 
 
 
@@ -37,7 +60,7 @@
 
 
 
-<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,006">
+<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,004">
           <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON2: Implement</Message>
           <ExceptionClass>ETestFailure</ExceptionClass>
           <ExceptionMessage>Implement</ExceptionMessage>
@@ -46,30 +69,30 @@
 
 
 
-<Test Name="TestTransaction" Result="Error" ElapsedTime="00:00:00,098">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction: Not implemented</Message>
-          <ExceptionClass>Exception</ExceptionClass>
-          <ExceptionMessage>Not implemented</ExceptionMessage>
+<Test Name="TestTransaction" Result="Error" ElapsedTime="00:00:00,102">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction: Transaction already active</Message>
+          <ExceptionClass>EDatabaseError</ExceptionClass>
+          <ExceptionMessage>Transaction already active</ExceptionMessage>
         </Test>
 
 
 
 
-<Test Name="TestTransaction2" Result="Error" ElapsedTime="00:00:00,093">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction2: Not implemented</Message>
-          <ExceptionClass>Exception</ExceptionClass>
-          <ExceptionMessage>Not implemented</ExceptionMessage>
+<Test Name="TestTransaction2" Result="Error" ElapsedTime="00:00:00,086">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction2: Transaction already active</Message>
+          <ExceptionClass>EDatabaseError</ExceptionClass>
+          <ExceptionMessage>Transaction already active</ExceptionMessage>
         </Test>
 </TestSuite>
     </TestSuite>
   </TestListing>
 <Title>FPTest XML test report</Title>
-<NumberOfRunTests>8</NumberOfRunTests>
-<NumberOfErrors>2</NumberOfErrors>
-<NumberOfFailures>4</NumberOfFailures>
+<NumberOfRunTests>9</NumberOfRunTests>
+<NumberOfErrors>3</NumberOfErrors>
+<NumberOfFailures>5</NumberOfFailures>
 <NumberOfWarnings>0</NumberOfWarnings>
 <NumberOfExcludedTests>0</NumberOfExcludedTests>
 <NumberOfChecksCalled>2</NumberOfChecksCalled>
-<TotalElapsedTime>00:00:00,436</TotalElapsedTime>
-<DateTimeRan>2019-02-26 18:27:44</DateTimeRan>
+<TotalElapsedTime>00:00:01,583</TotalElapsedTime>
+<DateTimeRan>2019-02-27 18:34:34</DateTimeRan>
 </TestResults>
