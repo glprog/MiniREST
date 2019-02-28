@@ -179,7 +179,8 @@ end;
 constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
 begin
   FSQLConnection := TSQLConnector.Create(nil);
-  FTransaction := TSQLTransaction.Create(nil);
+  FTransaction := TSQLTransaction.Create(nil);  
+  FTransaction.Action := caCommit;
   FSQLConnection.Transaction := FTransaction;
   FConnectionParams := AParams;
   inherited Create(AOwner);
@@ -222,17 +223,19 @@ end;
 
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
 begin
-  FSQLConnection.Transaction.StartTransaction;
+  //FSQLConnection.StartTransaction;
+  if not FTransaction.Active then
+    FTransaction.StartTransaction;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Commit;
-begin
-  FSQLConnection.Transaction.Commit;
+begin  
+  FTransaction.Commit;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Rollback;
 begin
-  raise Exception.Create('Not implemented');
+  FTransaction.Rollback;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery: IMiniRESTSQLQuery;
@@ -308,9 +311,10 @@ end;
 
 function TMiniRESTSQLQuerySQLDb.ApplyUpdates(const AMaxErrors: Integer): Integer;
 begin
-  TSQLTransaction(FQry.Transaction).StartTransaction;  
-  FQry.ApplyUpdates(AMaxErrors);
-  TSQLTransaction(FQry.Transaction).Commit;  
+  //TSQLTransaction(FQry.Transaction).StartTransaction;          
+  FQry.ApplyUpdates;
+  TSQLTransaction(FQry.Transaction).Commit;
+  TSQLTransaction(FQry.Transaction).EndTransaction;
   Result := 0;
   {TODO: Tratar o retorno. Transformar em procedure?}
 end;
@@ -330,8 +334,9 @@ begin
   FConnection := AConnection;
   FQry := TSQLQuery.Create(nil);
   FTransaction := TSQLTransaction.Create(nil);
+  FTransaction.Action := caNone;
   FQry.Transaction := FTransaction;
-  FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
+  FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;  
 end;
 
 destructor TMiniRESTSQLQuerySQLDb.Destroy;

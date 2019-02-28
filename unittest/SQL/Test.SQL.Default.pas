@@ -114,7 +114,9 @@ begin
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
+  LConn1.StartTransaction;
   LQry.ApplyUpdates(0);
+  LConn1.Commit;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
@@ -267,7 +269,7 @@ begin
   {$IFNDEF FPC}
   Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$ELSE}
-  Fail('Implement');
+  CheckEquals(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
 end;
 
@@ -303,7 +305,7 @@ begin
   {$IFNDEF FPC}
   Assert.AreEqual(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$ELSE}
-  Fail('Implement');
+  CheckEquals(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
 end;
 
@@ -320,7 +322,7 @@ var
   LThread: TThreadTesteInsert2;
 begin
   gContatorTesteInsert2 := 0;
-  for I := 1 to 100 do
+  for I := 0 to 99 do
   begin
     TThreadTesteInsert2.Create(False, FConnectionFactory);
   end;
@@ -353,7 +355,7 @@ begin
     LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
     LQryID.Open;
     LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
-    LQryID.Close;      
+    LQryID.Close;          
     LQry.DataSet.Append;
     LQry.DataSet.FieldByName('ID').AsInteger := LId;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
