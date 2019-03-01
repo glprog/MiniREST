@@ -114,9 +114,7 @@ begin
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
-  LConn1.StartTransaction;
-  LQry.ApplyUpdates(0);
-  LConn1.Commit;
+  LQry.ApplyUpdates(0);  
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-<!--Generated using FPTest on 2019-02-28 18:09:52-->
-<TestListing ElapsedTime="00:00:01,560" NumberOfErrors="0" NumberOfFailures="6" NumberOfRunTests="9" NumberOfWarnings="0" NumberOfChecksCalled="5">
-    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:01,560" NumberOfErrors="0" NumberOfFailures="6" NumberOfRunTests="9" NumberOfWarnings="0">
-<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:01,560" NumberOfErrors="0" NumberOfFailures="6" NumberOfRunTests="9" NumberOfWarnings="0">
+<!--Generated using FPTest on 2019-03-01 18:22:30-->
+<TestListing ElapsedTime="00:00:01,733" NumberOfErrors="0" NumberOfFailures="6" NumberOfRunTests="9" NumberOfWarnings="0" NumberOfChecksCalled="5">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:01,733" NumberOfErrors="0" NumberOfFailures="6" NumberOfRunTests="9" NumberOfWarnings="0">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:01,733" NumberOfErrors="0" NumberOfFailures="6" NumberOfRunTests="9" NumberOfWarnings="0">
 <Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:00,000"/>
-<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,142"/>
+<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,137"/>
 
 
 
 
-<Test Name="TestInsert2" Result="Failed" ElapsedTime="00:00:01,104">
+<Test Name="TestInsert2" Result="Failed" ElapsedTime="00:00:01,090">
           <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestInsert2: Expected:
   "100"
 But was:
@@ -43,7 +43,7 @@ But was:
 
 
 
-<Test Name="TestJSON" Result="Failed" ElapsedTime="00:00:00,001">
+<Test Name="TestJSON" Result="Failed" ElapsedTime="00:00:00,003">
           <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON: Implement</Message>
           <ExceptionClass>ETestFailure</ExceptionClass>
           <ExceptionMessage>Implement</ExceptionMessage>
@@ -52,17 +52,17 @@ But was:
 
 
 
-<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,001">
+<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,002">
           <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON2: Implement</Message>
           <ExceptionClass>ETestFailure</ExceptionClass>
           <ExceptionMessage>Implement</ExceptionMessage>
         </Test>
-<Test Name="TestTransaction" Result="OK" ElapsedTime="00:00:00,127"/>
+<Test Name="TestTransaction" Result="OK" ElapsedTime="00:00:00,133"/>
 
 
 
 
-<Test Name="TestTransaction2" Result="Failed" ElapsedTime="00:00:00,129">
+<Test Name="TestTransaction2" Result="Failed" ElapsedTime="00:00:00,161">
           <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestTransaction2: Expected:
   "0"
 But was:
@@ -83,6 +83,6 @@ But was:
 <NumberOfWarnings>0</NumberOfWarnings>
 <NumberOfExcludedTests>0</NumberOfExcludedTests>
 <NumberOfChecksCalled>5</NumberOfChecksCalled>
-<TotalElapsedTime>00:00:01,560</TotalElapsedTime>
-<DateTimeRan>2019-02-28 18:09:54</DateTimeRan>
+<TotalElapsedTime>00:00:01,733</TotalElapsedTime>
+<DateTimeRan>2019-03-01 18:22:32</DateTimeRan>
 </TestResults>
