@@ -50,6 +50,7 @@ type
   protected
     FConnectionString: string;
     FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
+    procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection); override;
     function InternalGetconnection: IMiniRESTSQLConnection; override;
   public
     constructor Create(AParams: IMiniRESTSQLConnectionParamsSQLDb); overload;
@@ -63,6 +64,7 @@ type
     //FTransaction: TDBXTransaction;
     FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
     FTransaction: TSQLTransaction;
+    FInExplicitTransaction: Boolean;
     function GetObject: TObject; override;
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
   public
@@ -103,6 +105,9 @@ type
   end;
 
 implementation
+
+type
+  TMiniRESTSQLConnectionBaseCrack = class(TMiniRESTSQLConnectionBase);
 
 class function TMiniRESTSQLConnectionParamsSQLDb.New: IMiniRESTSQLConnectionParamsSQLDb;
 begin
@@ -179,10 +184,12 @@ end;
 constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
 begin
   FSQLConnection := TSQLConnector.Create(nil);
-  FTransaction := TSQLTransaction.Create(nil);  
+  FTransaction := TSQLTransaction.Create(nil);    
   //FTransaction.Options := [stoUseImplicit];
   FSQLConnection.Transaction := FTransaction;
+  FTransaction.Action := caCommit;
   FConnectionParams := AParams;
+  FInExplicitTransaction := False;
   inherited Create(AOwner);
 end;
 
@@ -224,18 +231,21 @@ end;
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
 begin
   if FTransaction.Active then
-    FTransaction.Rollback;
+    FTransaction.Rollback;  
   FTransaction.StartTransaction;
+  FInExplicitTransaction := True;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Commit;
 begin  
   FTransaction.Commit;
+  FInExplicitTransaction := False;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Rollback;
 begin
   FTransaction.Rollback;
+  FInExplicitTransaction := False;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery: IMiniRESTSQLQuery;
@@ -310,9 +320,13 @@ begin
 end;
 
 function TMiniRESTSQLQuerySQLDb.ApplyUpdates(const AMaxErrors: Integer): Integer;
-begin  
+var
+  LConnectionInExplicitTransaction: Boolean;
+begin    
+  LConnectionInExplicitTransaction := TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).FInExplicitTransaction;
   FQry.ApplyUpdates;
-  FTransaction.Commit;  
+  if not LConnectionInExplicitTransaction then
+    FConnection.Commit;
   Result := 0;
   {TODO: Tratar o retorno. Transformar em procedure?}
 end;
@@ -331,17 +345,19 @@ constructor TMiniRESTSQLQuerySQLDb.Create(AConnection: IMiniRESTSQLConnection);
 begin
   FConnection := AConnection;
   FQry := TSQLQuery.Create(nil);
-  FTransaction := TSQLTransaction.Create(nil);
+  FQry.Options := [sqoKeepOpenOnCommit];
+  //FTransaction := TSQLTransaction.Create(nil);
+  //FTransaction.Action := caNone;
   //FTransaction.Options := [stoUseImplicit];
-  FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
-  FQry.Transaction := FTransaction;
+  //FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
+  //FQry.Transaction := FTransaction;
   FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;  
 end;
 
 destructor TMiniRESTSQLQuerySQLDb.Destroy;
 begin
   FQry.Free;
-  FTransaction.Free;
+  //FTransaction.Free;
   inherited Destroy;
 end;
 
@@ -362,6 +378,20 @@ function TMiniRESTSQLConnectionParamsSQLDb.SetDatabaseName(const ADatabaseName: 
 begin
   Result := Self;
   FDatabaseName := ADatabaseName;
+end;
+
+procedure TMiniRESTSQLConnectionFactorySQLDb.ReleaseConnection(AConnection: IMiniRESTSQLConnection);
+begin
+  RTLeventWaitFor(FConnectionGetEvent);
+  try    
+    FQueue.Add(AConnection);    
+    TMiniRESTSQLConnectionBaseCrack(AConnection.GetObject).FEstaNoPool := True;
+    RemoveConnectionToNotifyFree(AConnection);
+    Inc(FAvailableConnections);
+  finally
+    RTLeventSetEvent(FConnectionReleaseEvent);
+    RTLeventSetEvent(FConnectionGetEvent);
+  end; 
 end;
 
 end.

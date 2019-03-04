@@ -48,19 +48,19 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
-    procedure TestJSON;
-    {$IFNDEF FPC}
-    [Test]
-    {$IFEND}
-    procedure TestJSON2;
-    {$IFNDEF FPC}
-    [Test]
-    {$IFEND}
     procedure TestTransaction;
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
-    procedure TestTransaction2;        
+    procedure TestTransaction2;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestJSON;    
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestJSON2;          
   end;
 
   TThreadTesteInsert2 = class(TThread)
@@ -114,7 +114,7 @@ begin
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
-  LQry.ApplyUpdates(0);  
+  LQry.ApplyUpdates(0);
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
@@ -316,23 +316,24 @@ procedure TMiniRESTSQLTest.TestInsert2;
 var
   LConn: IMiniRESTSQLConnection;
   LQryCheck: IMiniRESTSQLQuery;  
-  I: Integer;
+  LCount, I: Integer;
   LThread: TThreadTesteInsert2;
 begin
+  LCount := 10;
   gContatorTesteInsert2 := 0;
-  for I := 0 to 99 do
+  for I := 1 to LCount do
   begin
     TThreadTesteInsert2.Create(False, FConnectionFactory);
   end;
-  while not (gContatorTesteInsert2 = 100) do
+  while not (gContatorTesteInsert2 = LCount) do
     Sleep(1000);  
   LConn := FConnectionFactory.GetConnection;
   LQryCheck := LConn.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(LCount, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$ELSE}
-  CheckEquals(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(LCount, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
 end;
 
@@ -343,18 +344,18 @@ var
   LId: Integer;
 begin
   try
-    LConn := FFactory.GetConnection;  
+    LConn := FFactory.GetConnection;       
     LQry := LConn.GetQuery;
     LQryID := LConn.GetQuery;
-    LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
-    LQry.Open;
     
     LQryID.Close;
     LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
     LQryID.Open;
     LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
-    LQryID.Close;          
-    LQry.DataSet.Append;
+    LQryID.Close;
+    LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
+    LQry.Open;          
+    LQry.DataSet.Insert;
     LQry.DataSet.FieldByName('ID').AsInteger := LId;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    

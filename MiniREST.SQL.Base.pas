@@ -30,7 +30,8 @@ type
     FConnectionCounter: Integer;
     FConnectionsCount: Integer;
     procedure AddConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
-    procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection);
+    procedure RemoveConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
+    procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection); virtual;
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
     constructor Create(const AConnectionCount: Integer);
   public
@@ -48,7 +49,7 @@ type
     function _Release: Integer; stdcall;
     function GetObject: TObject; virtual; abstract;
     procedure SetOwner(AOwner: Pointer);
-    constructor Create(AOwner : IMiniRESTSQLConnectionFactory);
+    constructor Create(AOwner : IMiniRESTSQLConnectionFactory);    
   public
     procedure StartTransaction; virtual; abstract;
     procedure Commit; virtual; abstract;
@@ -213,18 +214,7 @@ begin
   finally
     FCriticalSection.Leave;
   end;
-  {$ELSE}
-  RTLeventWaitFor(FConnectionGetEvent);
-  try    
-    FQueue.Add(AConnection);
-    TMiniRESTSQLConnectionBase(AConnection.GetObject).FEstaNoPool := True;
-    FConnectionsToNotifyFree.Remove(AConnection.GetObject);
-    Inc(FAvailableConnections);
-  finally
-    RTLeventSetEvent(FConnectionReleaseEvent);
-    RTLeventSetEvent(FConnectionGetEvent);
-  end;    
-  {$IFEND}
+  {$IFEND}  
 end;
 
 { TMiniRESTSQLConnectionBase }
@@ -345,6 +335,11 @@ end;
 procedure TMiniRESTSQLConnectionFactoryBase.AddConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
 begin
   FConnectionsToNotifyFree.Add(AConnection.GetObject);
+end;
+
+procedure TMiniRESTSQLConnectionFactoryBase.RemoveConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
+begin
+  FConnectionsToNotifyFree.Remove(AConnection.GetObject);
 end;
 
 end.
