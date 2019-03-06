@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, TestFramework, Test.SQL.Default, MiniREST.SQL.SQLDb,
-  MiniREST.SQL.Intf, MiniREST.SQL.Common;
+  MiniREST.SQL.Intf, MiniREST.SQL.Common, sqldb;
 
 type
   { TMiniRESTSQLTestSQLDbFPC }
@@ -20,6 +20,22 @@ type
   end;
 
 implementation
+
+var
+  gLog: TStringList;
+  gRTLEvent: PRTLEvent;
+
+procedure LogEvent(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
+begin
+  if not gLogHabilitado then
+    Exit;
+  RTLeventWaitFor(gRTLEvent);
+  try
+    gLog.Add(Msg);
+  finally
+    RTLeventSetEvent(gRTLEvent);
+  end;
+end;
 
 procedure TMiniRESTSQLTestSQLDbFPC.SetUpOnce;
 begin
@@ -41,12 +57,13 @@ begin
     LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactorySQLDb.Create(
       TMiniRESTSQLConnectionParamsSQLDb.New
-      .SetConnectionsCount(5)
+      .SetConnectionsCount(3)
       .SetConnectionString(LConnectionInfo.Text)
       .SetDatabseType(dbtFirebird)
       .SetDatabaseName(LDBFilePath)
       .SetUserName('SYSDBA')
       .SetPassword('masterkey')
+      .SetLogEvent(@LogEvent)
     );
   finally
     LConnectionInfo.Free;
@@ -63,5 +80,14 @@ end;
 
 initialization
   RegisterTest(TMiniRESTSQLTestSQLDbFPC.Suite);
+  if FileExists('log.txt') then
+    DeleteFile('log.txt');
+  gLog := TStringList.Create;
+  gRTLEvent := RTLEventCreate;
+  RTLeventSetEvent(gRTLEvent);
+finalization
+  gLog.SaveToFile('log.txt');
+  gLog.Free;
+  RTLEventDestroy(gRTLEvent);
 end.
 

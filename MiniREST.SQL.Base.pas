@@ -40,6 +40,8 @@ type
     function GetObject: TObject;
   end;
 
+  { TMiniRESTSQLConnectionBase }
+
   TMiniRESTSQLConnectionBase = class abstract(TInterfacedObject, IMiniRESTSQLConnection)
   strict private
     FOwner : TObject;
@@ -246,7 +248,7 @@ begin
   FOwner := AOwner;
 end;
 
-function TMiniRESTSQLConnectionBase._Release: Integer;
+function TMiniRESTSQLConnectionBase._Release: Integer; stdcall;
 begin
   if (FRefCount = 1) and (FOwner <> nil) and (not FEstaNoPool) then
     TMiniRESTSQLConnectionFactoryBase(FOwner).ReleaseConnection(Self);

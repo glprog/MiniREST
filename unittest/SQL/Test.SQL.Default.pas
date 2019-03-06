@@ -28,15 +28,12 @@ type
     [TearDown]
     {$IFEND}
     procedure TearDown; {$IFDEF FPC}override;{$IFEND}
-  published
+  //published
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
     procedure TestInsert;
-    {$IFNDEF FPC}
-    [Test]
-    {$IFEND}
-    procedure TestInsert2;
+
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -60,7 +57,12 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
-    procedure TestJSON2;          
+    procedure TestJSON2;
+  published
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestInsert2;          
   end;
 
   TThreadTesteInsert2 = class(TThread)
@@ -72,6 +74,8 @@ type
     constructor Create(ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory);
   end;
 
+var
+  gLogHabilitado: Boolean;
 implementation
 
 var
@@ -319,6 +323,7 @@ var
   LCount, I: Integer;
   LThread: TThreadTesteInsert2;
 begin
+  gLogHabilitado := True;
   LCount := 10;
   gContatorTesteInsert2 := 0;
   for I := 1 to LCount do
@@ -335,6 +340,7 @@ begin
   {$ELSE}
   CheckEquals(LCount, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
+  gLogHabilitado := False;
 end;
 
 procedure TThreadTesteInsert2.Execute;

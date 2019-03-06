@@ -6,6 +6,7 @@ uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Commo
   sqldb, IBConnection;
 
 type
+  TLogEvent = procedure (Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
   IMiniRESTSQLConnectionParamsSQLDb = interface
   ['{F2FB358A-6369-4FCE-AA9B-75FFECA18E88}']
     function GetConnectionsCount: Integer;
@@ -20,6 +21,8 @@ type
     function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
     function GetDatabaseName: string;
     function SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
+    function GetLogEvent: TLogEvent;
+    function SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
   end;
 
   TMiniRESTSQLConnectionParamsSQLDb = class(TInterfacedObject, IMiniRESTSQLConnectionParamsSQLDb)
@@ -30,6 +33,7 @@ type
     FPassword: string;
     FDatabaseType: TMiniRESTSQLDatabaseType;
     FDatabaseName: string;
+    FLogEvent: TLogEvent;
   public
     class function New: IMiniRESTSQLConnectionParamsSQLDb; 
     function GetConnectionsCount: Integer;
@@ -44,6 +48,8 @@ type
     function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
     function GetDatabaseName: string;
     function SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
+    function GetLogEvent: TLogEvent;
+    function SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
   end;
 
   TMiniRESTSQLConnectionFactorySQLDb = class(TMiniRESTSQLConnectionFactoryBase)
@@ -56,6 +62,8 @@ type
     constructor Create(AParams: IMiniRESTSQLConnectionParamsSQLDb); overload;
   end;
 
+  { TMiniRESTSQLConnectionSQLDb }
+
   TMiniRESTSQLConnectionSQLDb = class(TMiniRESTSQLConnectionBase)
   private
     function GetConnectorType(const ADatabaseType: TMiniRESTSQLDatabaseType): String;
@@ -65,8 +73,10 @@ type
     FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
     FTransaction: TSQLTransaction;
     FInExplicitTransaction: Boolean;
+    FLogEvent: TLogEvent;
     function GetObject: TObject; override;
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
+    procedure Log(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
     destructor Destroy; override;
@@ -187,9 +197,11 @@ begin
   FTransaction := TSQLTransaction.Create(nil);    
   //FTransaction.Options := [stoUseImplicit];
   FSQLConnection.Transaction := FTransaction;
+  FSQLConnection.OnLog := @Log;
   FTransaction.Action := caCommit;
   FConnectionParams := AParams;
   FInExplicitTransaction := False;
+  FLogEvent := AParams.GetLogEvent;  
   inherited Create(AOwner);
 end;
 
@@ -287,6 +299,13 @@ begin
   raise Exception.Create('Not implemented');
 end;
 
+procedure TMiniRESTSQLConnectionSQLDb.Log(Sender: TSQLConnection;
+  EventType: TDBEventType; const Msg: String);
+begin
+  if Assigned(FLogEvent) then
+    FLogEvent(Sender, EventType, Msg);
+end;
+
 procedure TMiniRESTSQLQuerySQLDb.Open;
 begin
   FConnection.Connect;
@@ -326,7 +345,8 @@ begin
   LConnectionInExplicitTransaction := TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).FInExplicitTransaction;
   FQry.ApplyUpdates;
   if not LConnectionInExplicitTransaction then
-    FConnection.Commit;
+    FTransaction.Commit;
+    //FConnection.Commit;  
   Result := 0;
   {TODO: Tratar o retorno. Transformar em procedure?}
 end;
@@ -345,19 +365,19 @@ constructor TMiniRESTSQLQuerySQLDb.Create(AConnection: IMiniRESTSQLConnection);
 begin
   FConnection := AConnection;
   FQry := TSQLQuery.Create(nil);
-  FQry.Options := [sqoKeepOpenOnCommit];
-  //FTransaction := TSQLTransaction.Create(nil);
+  //FQry.Options := [sqoKeepOpenOnCommit];
+  FTransaction := TSQLTransaction.Create(nil);
   //FTransaction.Action := caNone;
   //FTransaction.Options := [stoUseImplicit];
-  //FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
-  //FQry.Transaction := FTransaction;
+  FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
+  FQry.Transaction := FTransaction;
   FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;  
 end;
 
 destructor TMiniRESTSQLQuerySQLDb.Destroy;
 begin
   FQry.Free;
-  //FTransaction.Free;
+  FTransaction.Free;
   inherited Destroy;
 end;
 
@@ -384,7 +404,7 @@ procedure TMiniRESTSQLConnectionFactorySQLDb.ReleaseConnection(AConnection: IMin
 begin
   RTLeventWaitFor(FConnectionGetEvent);
   try    
-    FQueue.Add(AConnection);    
+    FQueue.Add(AConnection);       
     TMiniRESTSQLConnectionBaseCrack(AConnection.GetObject).FEstaNoPool := True;
     RemoveConnectionToNotifyFree(AConnection);
     Inc(FAvailableConnections);
@@ -392,6 +412,16 @@ begin
     RTLeventSetEvent(FConnectionReleaseEvent);
     RTLeventSetEvent(FConnectionGetEvent);
   end; 
+end;
+
+function TMiniRESTSQLConnectionParamsSQLDb.GetLogEvent: TLogEvent;
+begin
+  Result := FLogEvent;
+end;
+
+function TMiniRESTSQLConnectionParamsSQLDb.SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
+begin
+  FLogEvent := ALogEvent;
 end;
 
 end.
