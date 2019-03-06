@@ -6,11 +6,12 @@ uses
     SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Common;
 
 type
-
+  TLogMessageProc = procedure (const AMessage: string) of object;
   TMiniRESTSQLTest = class({$IFNDEF FPC}TObject{$ELSE}TTestCase{$IFEND})
   protected
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
+    procedure LogMessage(const AMessage: string); virtual;
   public
     {$IFNDEF FPC}
     [SetupFixture]
@@ -67,11 +68,14 @@ type
 
   TThreadTesteInsert2 = class(TThread)
   private
+    FID: Integer;
     FFactory: IMiniRESTSQLConnectionFactory;
+    FLogMessageProc: TLogMessageProc;
+    procedure LogMessage(const AMessage: string);
   protected
     procedure Execute; override;
   public
-    constructor Create(ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory);
+    constructor Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc);
   end;
 
 var
@@ -91,7 +95,7 @@ var
   LConnection: IMiniRESTSQLConnection;  
 begin
   LConnection := FConnectionFactory.GetConnection;  
-  LConnection.Execute('DELETE FROM CUSTOMER', []);  
+  //LConnection.Execute('DELETE FROM CUSTOMER', []);  
 end;
 
 procedure TMiniRESTSQLTest.TestInsert;
@@ -324,15 +328,17 @@ var
   LThread: TThreadTesteInsert2;
 begin
   gLogHabilitado := True;
-  LCount := 10;
+  LCount := 20;
   gContatorTesteInsert2 := 0;
+  LConn := FConnectionFactory.GetConnection;
+  LConn.Execute('alter sequence gen_customer_id restart with 0', []);
   for I := 1 to LCount do
   begin
-    TThreadTesteInsert2.Create(False, FConnectionFactory);
+    TThreadTesteInsert2.Create(I, False, FConnectionFactory, @LogMessage);
   end;
   while not (gContatorTesteInsert2 = LCount) do
-    Sleep(1000);  
-  LConn := FConnectionFactory.GetConnection;
+    Sleep(1000);
+  LogMessage('Finalizou');
   LQryCheck := LConn.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
@@ -349,15 +355,16 @@ var
   LQry, LQryID: IMiniRESTSQLQuery;
   LId: Integer;
 begin
-  try
-    LConn := FFactory.GetConnection;       
+  try    
+    LConn := FFactory.GetConnection;    
     LQry := LConn.GetQuery;
     LQryID := LConn.GetQuery;
     
     LQryID.Close;
     LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
-    LQryID.Open;
+    LQryID.Open;    
     LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
+    LogMessage('CUSTOMER ID: ' + IntToStr(LId));
     LQryID.Close;
     LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
     LQry.Open;          
@@ -372,11 +379,24 @@ begin
   end;    
 end;
 
-constructor TThreadTesteInsert2.Create(ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory);
+constructor TThreadTesteInsert2.Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc);
 begin
   inherited Create(ACreateSuspended);
   FFactory := AFactory;
-  FreeOnTerminate := True;  
+  FreeOnTerminate := True;
+  FLogMessageProc := ALogMessageProc;
+  FID := AID;  
+end;
+
+procedure TMiniRESTSQLTest.LogMessage(const AMessage: string);
+begin
+  
+end;
+
+procedure TThreadTesteInsert2.LogMessage(const AMessage: string);
+begin
+  if Assigned(FLogMessageProc) then
+    FLogMessageProc('THREAD ' + IntToStr(FID) + ' ' + AMessage);
 end;
 
 end.

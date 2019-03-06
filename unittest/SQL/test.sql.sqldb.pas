@@ -15,6 +15,7 @@ type
   protected
     procedure SetUpOnce; override;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; override;
+    procedure LogMessage(const AMessage: string); override;
   published
     procedure TestSQLDB1;
   end;
@@ -25,7 +26,19 @@ var
   gLog: TStringList;
   gRTLEvent: PRTLEvent;
 
-procedure LogEvent(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
+procedure LogEvent(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String); overload;
+begin
+  if not gLogHabilitado then
+    Exit;
+  RTLeventWaitFor(gRTLEvent);
+  try
+    gLog.Add(Msg);
+  finally
+    RTLeventSetEvent(gRTLEvent);
+  end;
+end;
+
+procedure LogEvent(Const Msg : String); overload;
 begin
   if not gLogHabilitado then
     Exit;
@@ -76,6 +89,11 @@ var
 begin  
   LConn1 := FConnectionFactory.GetConnection;
   Check(Assigned(LConn1));
+end;
+
+procedure TMiniRESTSQLTestSQLDbFPC.LogMessage(const AMessage: string);
+begin
+  LogEvent(AMessage);
 end;
 
 initialization
