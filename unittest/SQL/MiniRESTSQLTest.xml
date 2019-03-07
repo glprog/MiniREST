@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestResults>
+<!--Generated using FPTest on 2019-03-06 22:58:42-->
+<TestListing ElapsedTime="00:00:03,686" NumberOfErrors="0" NumberOfFailures="2" NumberOfRunTests="9" NumberOfWarnings="0" NumberOfChecksCalled="109">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:03,686" NumberOfErrors="0" NumberOfFailures="2" NumberOfRunTests="9" NumberOfWarnings="0">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:03,685" NumberOfErrors="0" NumberOfFailures="2" NumberOfRunTests="9" NumberOfWarnings="0">
+<Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:00,000"/>
+<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,299"/>
+<Test Name="TestInsert2" Result="OK" ElapsedTime="00:00:00,906"/>
+<Test Name="TestExecute" Result="OK" ElapsedTime="00:00:00,111"/>
+<Test Name="TestExecute2" Result="OK" ElapsedTime="00:00:00,113"/>
+<Test Name="TestTransaction" Result="OK" ElapsedTime="00:00:00,237"/>
+<Test Name="TestTransaction2" Result="OK" ElapsedTime="00:00:00,332"/>
+
+
+
+
+<Test Name="TestJSON" Result="Failed" ElapsedTime="00:00:00,002">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON: Implement</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Implement</ExceptionMessage>
+        </Test>
+
+
+
+
+<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,002">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON2: Implement</Message>
+          <ExceptionClass>ETestFailure</ExceptionClass>
+          <ExceptionMessage>Implement</ExceptionMessage>
+        </Test>
+</TestSuite>
+    </TestSuite>
+  </TestListing>
+<Title>FPTest XML test report</Title>
+<NumberOfRunTests>9</NumberOfRunTests>
+<NumberOfErrors>0</NumberOfErrors>
+<NumberOfFailures>2</NumberOfFailures>
+<NumberOfWarnings>0</NumberOfWarnings>
+<NumberOfExcludedTests>0</NumberOfExcludedTests>
+<NumberOfChecksCalled>109</NumberOfChecksCalled>
+<TotalElapsedTime>00:00:03,686</TotalElapsedTime>
+<DateTimeRan>2019-03-06 22:58:46</DateTimeRan>
+</TestResults>

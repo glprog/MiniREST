@@ -29,12 +29,15 @@ type
     [TearDown]
     {$IFEND}
     procedure TearDown; {$IFDEF FPC}override;{$IFEND}
-  //published
+  published
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
     procedure TestInsert;
-
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestInsert2;  
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -58,12 +61,7 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
-    procedure TestJSON2;
-  published
-    {$IFNDEF FPC}
-    [Test]
-    {$IFEND}
-    procedure TestInsert2;          
+    procedure TestJSON2;      
   end;
 
   TThreadTesteInsert2 = class(TThread)
@@ -95,7 +93,7 @@ var
   LConnection: IMiniRESTSQLConnection;  
 begin
   LConnection := FConnectionFactory.GetConnection;  
-  //LConnection.Execute('DELETE FROM CUSTOMER', []);  
+  LConnection.Execute('DELETE FROM CUSTOMER', []);  
 end;
 
 procedure TMiniRESTSQLTest.TestInsert;
@@ -144,16 +142,17 @@ procedure TMiniRESTSQLTest.TestExecute;
 var
   LConn1, LConn2: IMiniRESTSQLConnection;
   LQryCheck: IMiniRESTSQLQuery;  
-  I: Integer;
-begin
+  LRowsAffected, I: Integer;
+begin  
   LConn1 := FConnectionFactory.GetConnection;
   LConn2 := FConnectionFactory.GetConnection;
   for I := 0 to 49 do
   begin
+    LRowsAffected := LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (''HUE EXECUTE'')', []);
     {$IFNDEF FPC}
-    Assert.IsTrue(LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (''HUE EXECUTE'')', []) > 0, 'Should be greater than 0');
+    Assert.IsTrue(LRowsAffected > 0, 'Should be greater than 0');
     {$ELSE}
-    Fail('Implement');
+    CheckTrue(LRowsAffected > 0, 'Should be greater than 0');
     {$IFEND}
   end;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
@@ -161,7 +160,7 @@ begin
   {$IFNDEF FPC}
   Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$ELSE}
-  Fail('Implement');
+  CheckEquals(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
 end;
 
@@ -169,7 +168,7 @@ procedure TMiniRESTSQLTest.TestExecute2;
 var
   LConn1, LConn2: IMiniRESTSQLConnection;
   LQryCheck: IMiniRESTSQLQuery;
-  I: Integer;
+  LRowsAffected, I: Integer;
   LParamName: IMiniRESTSQLParam;
 begin
   LConn1 := FConnectionFactory.GetConnection;
@@ -179,10 +178,11 @@ begin
     LParamName := TMiniRESTSQLParam.Create;
     LParamName.SetParamName('NAME');
     LParamName.AsString := 'NAME ' + IntToStr(I);
+    LRowsAffected := LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (:NAME)', [LParamName]);
     {$IFNDEF FPC}
-    Assert.IsTrue(LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (:NAME)', [LParamName]) > 0, 'Should be greater than 0');
+    Assert.IsTrue(LRowsAffected > 0, 'Should be greater than 0');
     {$ELSE}
-    Fail('Not implemented');
+    CheckTrue(LRowsAffected > 0, 'Should be greater than 0');
     {$IFEND}
   end;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
@@ -190,7 +190,7 @@ begin
   {$IFNDEF FPC}
   Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$ELSE}
-  Fail('Not implemented');
+  CheckEquals(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
   {$IFEND}
   LQryCheck := LConn2.GetQuery('SELECT * FROM CUSTOMER');
   LQryCheck.Open;
@@ -198,7 +198,8 @@ begin
   Assert.IsTrue(LQryCheck.DataSet.FieldByName('ID').AsInteger > 0, 'Should be greater than 0');
   Assert.IsTrue(Trim(LQryCheck.DataSet.FieldByName('NAME').AsString) <> '', 'Should be not empty');
   {$ELSE}
-  Fail('Not implemented');
+  CheckTrue(LQryCheck.DataSet.FieldByName('ID').AsInteger > 0, 'Should be greater than 0');
+  CheckTrue(Trim(LQryCheck.DataSet.FieldByName('NAME').AsString) <> '', 'Should be not empty');
   {$IFEND}
 end;
 
@@ -328,17 +329,15 @@ var
   LThread: TThreadTesteInsert2;
 begin
   gLogHabilitado := True;
-  LCount := 20;
+  LCount := 100;
   gContatorTesteInsert2 := 0;
-  LConn := FConnectionFactory.GetConnection;
-  LConn.Execute('alter sequence gen_customer_id restart with 0', []);
+  LConn := FConnectionFactory.GetConnection;  
   for I := 1 to LCount do
   begin
     TThreadTesteInsert2.Create(I, False, FConnectionFactory, @LogMessage);
   end;
   while not (gContatorTesteInsert2 = LCount) do
-    Sleep(1000);
-  LogMessage('Finalizou');
+    Sleep(1000);  
   LQryCheck := LConn.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}

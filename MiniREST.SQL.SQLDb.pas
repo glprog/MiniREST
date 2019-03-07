@@ -3,7 +3,7 @@ unit MiniREST.SQL.SQLDb;
 interface
 
 uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
-  sqldb, IBConnection;
+  sqldb, IBConnection, fpjsondataset;
 
 type
   TLogEvent = procedure (Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
@@ -77,6 +77,7 @@ type
     function GetObject: TObject; override;
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
     procedure Log(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
+    procedure SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
     destructor Destroy; override;
@@ -277,11 +278,35 @@ begin
 end;
 
 function TMiniRESTSQLConnectionSQLDb.Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer;
+var
+  LQry: TSQLQuery;
+  LParam: TParam;
+  LMiniRESTSQLParam: IMiniRESTSQLParam;
 begin
-  Self.Connect;
-  FSQLConnection.ExecuteDirect(ACommand);
-  FSQLConnection.Transaction.Commit;
-  //raise Exception.Create('Not implemented');
+  Self.Connect;  
+  LQry := TSQLQuery.Create(nil);
+  try       
+    LQry.Options := [sqoAutoCommit];    
+    LQry.SQLConnection := FSQLConnection;    
+    LQry.SQL.Text := ACommand;    
+    try
+      for LMiniRESTSQLParam in AParams do
+      begin
+        LParam := LQry.ParamByName(LMiniRESTSQLParam.GetParamName);
+        SetMiniRESTSQLParamToSQLParam(LMiniRESTSQLParam, LParam);
+      end;
+      LQry.ExecSQL;            
+    except
+      on E: Exception do
+      begin
+        FTransaction.Rollback;
+        raise;
+      end;
+    end;    
+    Result := LQry.RowsAffected;          
+  finally
+    LQry.Free;
+  end;    
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
@@ -344,9 +369,8 @@ var
 begin    
   LConnectionInExplicitTransaction := TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).FInExplicitTransaction;
   FQry.ApplyUpdates;
-  if not LConnectionInExplicitTransaction then
-    FTransaction.Commit;
-    //FConnection.Commit;  
+  if not LConnectionInExplicitTransaction then    
+    FConnection.Commit;  
   Result := 0;
   {TODO: Tratar o retorno. Transformar em procedure?}
 end;
@@ -365,19 +389,19 @@ constructor TMiniRESTSQLQuerySQLDb.Create(AConnection: IMiniRESTSQLConnection);
 begin
   FConnection := AConnection;
   FQry := TSQLQuery.Create(nil);
-  //FQry.Options := [sqoKeepOpenOnCommit];
-  FTransaction := TSQLTransaction.Create(nil);
+  FQry.Options := [sqoKeepOpenOnCommit];
+  //FTransaction := TSQLTransaction.Create(nil);
   //FTransaction.Action := caNone;
   //FTransaction.Options := [stoUseImplicit];
-  FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
-  FQry.Transaction := FTransaction;
+  //FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
+  //FQry.Transaction := FTransaction;
   FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;  
 end;
 
 destructor TMiniRESTSQLQuerySQLDb.Destroy;
 begin
   FQry.Free;
-  FTransaction.Free;
+  //FTransaction.Free;
   inherited Destroy;
 end;
 
@@ -422,6 +446,19 @@ end;
 function TMiniRESTSQLConnectionParamsSQLDb.SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
 begin
   FLogEvent := ALogEvent;
+end;
+
+procedure TMiniRESTSQLConnectionSQLDb.SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);
+begin
+  case AMiniRESTSQLParam.GetParamType of
+    stString: ASQLParam.AsString := AMiniRESTSQLParam.AsString;
+    stFloat: ASQLParam.AsFloat := AMiniRESTSQLParam.AsFloat;
+    stInteger: ASQLParam.AsInteger := AMiniRESTSQLParam.AsInteger;
+    stDate: ASQLParam.AsDate := AMiniRESTSQLParam.AsDate;
+    stDateTime: ASQLParam.AsDateTime := AMiniRESTSQLParam.AsDateTime;
+    stBoolean: ASQLParam.AsBoolean := AMiniRESTSQLParam.AsBoolean;
+    stVariant, stUndefined: ASQLParam.Value := AMiniRESTSQLParam.GetAsVariant;
+  end;
 end;
 
 end.

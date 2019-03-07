@@ -175,8 +175,11 @@ begin
   end;
   {$IFEND}
   {$IFDEF FPC}
-  if InterlockedDecrement(FAvailableConnections) < 0 then    
+  if InterlockedDecrement(FAvailableConnections) < 0 then
+  begin
+    RTLeventResetEvent(FConnectionReleaseEvent);
     RTLeventWaitFor(FConnectionReleaseEvent);
+  end;
   RTLeventWaitFor(FConnectionGetEvent);
   try
     if (FConnectionCounter < FConnectionsCount) then
