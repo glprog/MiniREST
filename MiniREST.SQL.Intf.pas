@@ -30,7 +30,7 @@ type
     procedure Append;}
     function ApplyUpdates(const AMaxErrors: Integer = 0): Integer;
     function GetDataSet: TDataSet;
-    function ToJSON: string;
+    //function ToJSON: string;
     property SQL: string read GetSQL write SetSQL;
     property DataSet: TDataset read GetDataSet;
   end;

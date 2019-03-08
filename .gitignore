@@ -149,4 +149,6 @@ typings/
 dunitx-results.xml
 lib/
 backup/
-/unittest/SQL/heap.trc
+heap.trc
+log.txt
+MiniRESTSQLTest.xml

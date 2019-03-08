@@ -1,4 +1,6 @@
-{$mode DELPHI}
+{$IFDEF FPC}
+  {$mode DELPHI}
+{$IFEND}
 unit MiniREST.SQL.Base;
 
 interface

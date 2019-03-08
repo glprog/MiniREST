@@ -1,68 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestResults>
-<!--Generated using FPTest on 2019-03-06 21:38:02-->
-<TestListing ElapsedTime="00:00:11,322" NumberOfErrors="0" NumberOfFailures="4" NumberOfRunTests="9" NumberOfWarnings="0" NumberOfChecksCalled="6">
-    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:11,322" NumberOfErrors="0" NumberOfFailures="4" NumberOfRunTests="9" NumberOfWarnings="0">
-<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:11,322" NumberOfErrors="0" NumberOfFailures="4" NumberOfRunTests="9" NumberOfWarnings="0">
+<!--Generated using FPTest on 2019-03-08 18:44:31-->
+<TestListing ElapsedTime="00:00:36,879" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="8" NumberOfWarnings="0" NumberOfChecksCalled="109">
+    <TestSuite Name="MiniRESTSQLTest.exe" ElapsedTime="00:00:36,879" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="8" NumberOfWarnings="0">
+<TestSuite Name="TMiniRESTSQLTestSQLDbFPC" ElapsedTime="00:00:36,879" NumberOfErrors="1" NumberOfFailures="0" NumberOfRunTests="8" NumberOfWarnings="0">
 <Test Name="TestSQLDB1" Result="OK" ElapsedTime="00:00:00,000"/>
-<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:01,151"/>
-<Test Name="TestInsert2" Result="OK" ElapsedTime="00:00:05,735"/>
+<Test Name="TestInsert" Result="OK" ElapsedTime="00:00:00,132"/>
+<Test Name="TestInsert2" Result="OK" ElapsedTime="00:00:01,144"/>
 
 
 
 
-<Test Name="TestExecute" Result="Failed" ElapsedTime="00:00:00,004">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestExecute:       "Should be greater than 0"
-Expected:
-  "True"
-But was:
-  "False"</Message>
-          <ExceptionClass>ETestFailure</ExceptionClass>
-          <ExceptionMessage>      "Should be greater than 0"
-Expected:
-  "True"
-But was:
-  "False"</ExceptionMessage>
+<Test Name="TestInsert3" Result="Error" ElapsedTime="00:00:34,957">
+          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestInsert3: Parameter "NAME" not found</Message>
+          <ExceptionClass>EDatabaseError</ExceptionClass>
+          <ExceptionMessage>Parameter "NAME" not found</ExceptionMessage>
         </Test>
-
-
-
-
-<Test Name="TestExecute2" Result="Failed" ElapsedTime="00:00:00,000">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestExecute2: Not implemented</Message>
-          <ExceptionClass>ETestFailure</ExceptionClass>
-          <ExceptionMessage>Not implemented</ExceptionMessage>
-        </Test>
-<Test Name="TestTransaction" Result="OK" ElapsedTime="00:00:02,210"/>
-<Test Name="TestTransaction2" Result="OK" ElapsedTime="00:00:01,492"/>
-
-
-
-
-<Test Name="TestJSON" Result="Failed" ElapsedTime="00:00:00,002">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON: Implement</Message>
-          <ExceptionClass>ETestFailure</ExceptionClass>
-          <ExceptionMessage>Implement</ExceptionMessage>
-        </Test>
-
-
-
-
-<Test Name="TestJSON2" Result="Failed" ElapsedTime="00:00:00,003">
-          <Message>MiniRESTSQLTest.exe.TMiniRESTSQLTestSQLDbFPC.TestJSON2: Implement</Message>
-          <ExceptionClass>ETestFailure</ExceptionClass>
-          <ExceptionMessage>Implement</ExceptionMessage>
-        </Test>
+<Test Name="TestExecute" Result="OK" ElapsedTime="00:00:00,044"/>
+<Test Name="TestExecute2" Result="OK" ElapsedTime="00:00:00,052"/>
+<Test Name="TestTransaction" Result="OK" ElapsedTime="00:00:00,139"/>
+<Test Name="TestTransaction2" Result="OK" ElapsedTime="00:00:00,148"/>
 </TestSuite>
     </TestSuite>
   </TestListing>
 <Title>FPTest XML test report</Title>
-<NumberOfRunTests>9</NumberOfRunTests>
-<NumberOfErrors>0</NumberOfErrors>
-<NumberOfFailures>4</NumberOfFailures>
+<NumberOfRunTests>8</NumberOfRunTests>
+<NumberOfErrors>1</NumberOfErrors>
+<NumberOfFailures>0</NumberOfFailures>
 <NumberOfWarnings>0</NumberOfWarnings>
 <NumberOfExcludedTests>0</NumberOfExcludedTests>
-<NumberOfChecksCalled>6</NumberOfChecksCalled>
-<TotalElapsedTime>00:00:11,322</TotalElapsedTime>
-<DateTimeRan>2019-03-06 21:38:13</DateTimeRan>
+<NumberOfChecksCalled>109</NumberOfChecksCalled>
+<TotalElapsedTime>00:00:36,879</TotalElapsedTime>
+<DateTimeRan>2019-03-08 18:45:08</DateTimeRan>
 </TestResults>

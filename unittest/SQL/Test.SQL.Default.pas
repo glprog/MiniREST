@@ -2,7 +2,7 @@ unit Test.SQL.Default;
 
 interface
 uses
-  {$IFNDEF FPC}DUnitX.TestFramework {$ELSE} TestFramework{$ENDIF}, Classes,
+  {$IFNDEF FPC}Windows, DUnitX.TestFramework {$ELSE} TestFramework{$ENDIF}, Classes,
     SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Common;
 
 type
@@ -12,6 +12,7 @@ type
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
     procedure LogMessage(const AMessage: string); virtual;
+    function GetSequenceValue(const ASequenceName: string): Integer;
   public
     {$IFNDEF FPC}
     [SetupFixture]
@@ -41,6 +42,10 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
+    procedure TestInsert3;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
     procedure TestExecute;
     {$IFNDEF FPC}
     [Test]
@@ -54,14 +59,14 @@ type
     [Test]
     {$IFEND}
     procedure TestTransaction2;
-    {$IFNDEF FPC}
+(*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
     procedure TestJSON;    
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
-    procedure TestJSON2;      
+    procedure TestJSON2;     *)  
   end;
 
   TThreadTesteInsert2 = class(TThread)
@@ -203,7 +208,7 @@ begin
   {$IFEND}
 end;
 
-procedure TMiniRESTSQLTest.TestJSON;
+(* procedure TMiniRESTSQLTest.TestJSON;
 var
   LConn1: IMiniRESTSQLConnection;
   LQry: IMiniRESTSQLQuery;
@@ -216,9 +221,9 @@ begin
   {$ELSE}
   Fail('Implement');
   {$IFEND}
-end;
+end; *)
 
-procedure TMiniRESTSQLTest.TestJSON2;
+(* procedure TMiniRESTSQLTest.TestJSON2;
 var
   LConn1: IMiniRESTSQLConnection;
   LQry: IMiniRESTSQLQuery;
@@ -242,7 +247,7 @@ begin
   {$ELSE}
   Fail('Implement');
   {$IFEND}
-end;
+end; *)
 
 procedure TMiniRESTSQLTest.TestTransaction;
 var
@@ -334,7 +339,7 @@ begin
   LConn := FConnectionFactory.GetConnection;  
   for I := 1 to LCount do
   begin
-    TThreadTesteInsert2.Create(I, False, FConnectionFactory, @LogMessage);
+    TThreadTesteInsert2.Create(I, False, FConnectionFactory, {$IFDEF FPC}@LogMessage{$ELSE}nil{$IFEND});
   end;
   while not (gContatorTesteInsert2 = LCount) do
     Sleep(1000);  
@@ -396,6 +401,51 @@ procedure TThreadTesteInsert2.LogMessage(const AMessage: string);
 begin
   if Assigned(FLogMessageProc) then
     FLogMessageProc('THREAD ' + IntToStr(FID) + ' ' + AMessage);
+end;
+
+procedure TMiniRESTSQLTest.TestInsert3;
+var
+  LConn1, LConn2: IMiniRESTSQLConnection;
+  LQry, LQryCheck: IMiniRESTSQLQuery;  
+  I: Integer;
+  LParamName: IMiniRESTSQLParam;
+begin  
+  LConn1 := FConnectionFactory.GetConnection;
+  LConn2 := FConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery('SELECT * FROM CUSTOMER WHERE 1=0');    
+  LQry.Open;  
+  for I := 1 to 5 do
+  begin    
+    LQry.DataSet.Append;
+    LQry.DataSet.FieldByName('ID').AsInteger := GetSequenceValue('gen_customer_id');
+    LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
+    LQry.DataSet.Post;    
+  end;
+  LQry.ApplyUpdates(0);
+  LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER WHERE NAME = :NAME');
+  LParamName := TMiniRESTSQLParam.Create;
+  LParamName.SetParamName('NAME');
+  LParamName.AsString := 'HUE';
+  LQryCheck.AddParam(LParamName);
+  LQryCheck.Open;
+  {$IFNDEF FPC}
+  Assert.AreEqual(5, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$ELSE}
+  CheckEquals(5, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  {$IFEND}
+end;
+
+function TMiniRESTSQLTest.GetSequenceValue(const ASequenceName: string): Integer;
+var
+  LConn: IMiniRESTSQLConnection;
+  LQryID: IMiniRESTSQLQuery;
+begin
+  LConn := FConnectionFactory.GetConnection;
+  LQryID := LConn.GetQuery;
+  LQryID.Close;
+  LQryID.SQL := 'select gen_id(' + ASequenceName + ', 1) from rdb$database';
+  LQryID.Open;
+  Result := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
 end;
 
 end.

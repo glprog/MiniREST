@@ -2,7 +2,7 @@ unit MiniREST.SQL.Common;
 
 interface
 
-uses DB {$IFNDEF FPC}, Rtti{$ENDIF};
+uses SysUtils, DB {$IFNDEF FPC}, Rtti{$ENDIF};
 
 type
   TMiniRESTSQLDatabaseType = (dbtUnknown, dbtFirebird);
@@ -236,7 +236,7 @@ end;
 
 procedure TMiniRESTSQLParam.SetParamName(const AName: string);
 begin
-  FParamName := AName;
+  FParamName := UpperCase(AName);
 end;
 
 end.
