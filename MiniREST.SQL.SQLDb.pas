@@ -118,6 +118,8 @@ type
 
 implementation
 
+uses MiniREST.SQL.Firebird;
+
 type
   TMiniRESTSQLConnectionBaseCrack = class(TMiniRESTSQLConnectionBase);
 
@@ -318,7 +320,13 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
 begin
-  raise Exception.Create('Not implemented');
+  Result := nil;
+  case FConnectionParams.GetDatabaseType of
+    dbtFirebird: Result := TMiniRESTSQLDatabaseInfoFirebird.Create(Self);
+    else
+      raise Exception.Create('TMiniRESTSQLConnectionSQLDb.GetDatabaseInfo: ' +
+      'DatabaseType not implemented');
+  end;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetObject: TObject;
@@ -328,7 +336,9 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
 begin
-  raise Exception.Create('Not implemented');
+  case ADatabaseType of
+    dbtFirebird: Result := 'Firebird';
+  end;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Log(Sender: TSQLConnection;

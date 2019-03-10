@@ -426,7 +426,7 @@ begin
   LParamName := TMiniRESTSQLParam.Create;
   LParamName.SetParamName('NAME');
   LParamName.AsString := 'HUE';
-  LQryCheck.AddParam(LParamName);
+  //LQryCheck.AddParam(LParamName);
   LQryCheck.Open;
   {$IFNDEF FPC}
   Assert.AreEqual(5, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
