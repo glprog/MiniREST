@@ -353,7 +353,7 @@ procedure TMiniRESTSQLQueryFiredac.Open;
 var
   LParam: IMiniRESTSQLParam;
 begin
-  FQry.Params.Clear;
+  //FQry.Params.Clear;
   for LParam in FParams.Values do
   begin
     InternalAddParam(LParam);

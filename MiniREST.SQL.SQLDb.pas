@@ -102,7 +102,8 @@ type
     FQry: TSQLQuery;
     FTransaction: TSQLTransaction;
     FSQL: string;
-    FParams: TFPGMapInterfacedObjectData<string, IMiniRESTSQLParam>;
+    //FParams: TFPGInterfacedObjectList<string, IMiniRESTSQLParam>;
+    FParams: TFPGInterfacedObjectList<IMiniRESTSQLParam>;
   public
     constructor Create(AConnection: IMiniRESTSQLConnection);
     destructor Destroy; override;
@@ -357,7 +358,8 @@ begin
   FConnection.Connect;
   for I := 0 to FParams.Count - 1 do
   begin
-    LMiniRESTSQLParam := FParams.Data[I];
+    //LMiniRESTSQLParam := FParams.Data[I];
+    LMiniRESTSQLParam := FParams.Items[I];
     LParam := FQry.ParamByName(LMiniRESTSQLParam.GetParamName);
     TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).SetMiniRESTSQLParamToSQLParam(LMiniRESTSQLParam, LParam);
   end;  
@@ -384,20 +386,39 @@ function TMiniRESTSQLQuerySQLDb.ParamByName(const AParamName: string): IMiniREST
 var
   LParam: IMiniRESTSQLParam;
   LParamName: string;
-begin
+begin  
   LParamName := UpperCase(AParamName);
-  if not FParams.TryGetData(LParamName, LParam) then
+  (* if not FParams.TryGetData(LParamName, LParam) then
   begin
     LParam := TMiniRESTSQLParam.Create;
     LParam.SetParamName(LParamName);
     FParams.Add(LParamName, LParam);
+  end; *)
+  for LParam in FParams do
+  begin
+    if SameText(LParamName, LParam.GetParamName) then
+      Exit(LParam);
   end;
+  LParam := TMiniRESTSQLParam.Create;
+  LParam.SetParamName(LParamName);
   Result := LParam;
 end;
 
 function TMiniRESTSQLQuerySQLDb.AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
+var
+  LParam: IMiniRESTSQLParam;
+  LAchou: Boolean;
 begin
-  FParams.AddOrSetData(AParam.GetParamName, AParam);
+  //FParams.AddOrSetData(AParam.GetParamName, AParam);  
+  for LParam in FParams do
+  begin
+    if SameText(LParam.GetParamName, AParam.GetParamName) then
+    begin
+      FParams.Extract(LParam);
+      Break;
+    end;
+  end;
+  FParams.Add(AParam);
   Result := Self;
 end;
 
@@ -429,13 +450,14 @@ begin
   //FTransaction.Database := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
   //FQry.Transaction := FTransaction;
   FQry.SQLConnection := TMiniRESTSQLConnectionSQLDb(AConnection.GetObject).FSQLConnection;
-  FParams := TFPGMapInterfacedObjectData<string, IMiniRESTSQLParam>.Create();  
+  //FParams := TFPGMapInterfacedObjectData<string, IMiniRESTSQLParam>.Create();  
+  FParams := TFPGInterfacedObjectList<IMiniRESTSQLParam>.Create();
 end;
 
-destructor TMiniRESTSQLQuerySQLDb.Destroy;
+destructor TMiniRESTSQLQuerySQLDb.Destroy;  
 begin
-  FQry.Free;
-  FParams.Free;
+  FQry.Free;  
+  FParams.Free;  
   //FTransaction.Free;
   inherited Destroy;
 end;
