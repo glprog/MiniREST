@@ -147,3 +147,8 @@ typings/
 /unittest/SQL/Win32/Debug/MiniRESTSQLTest_MemoryManager_EventLog.txt
 *.jdbg
 dunitx-results.xml
+lib/
+backup/
+heap.trc
+log.txt
+MiniRESTSQLTest.xml

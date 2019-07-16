@@ -1,0 +1,17 @@
+D:\projetos\MiniREST\unittest\SQL\MiniRESTSQLTest.exe 
+Heap dump by heaptrc unit
+151588 memory blocks allocated : 15516140/15830264
+151587 memory blocks freed     : 15516004/15830128
+1 unfreed memory blocks : 136
+True heap size : 262144
+True free heap : 261696
+Should be : 261880
+Call trace for block $00000000035F0940 size 136
+  $000000010000E922
+  $000000010000BA87
+  $000000010000C63A
+  $0000000100069A68 line 85 of ../../MiniREST.SQL.Common.pas
+  $000000010006775E line 426 of Test.SQL.Default.pas
+  $000000010004F708 line 2258 of src/TestFramework.pas
+  $0000000100051BD0 line 2705 of src/TestFramework.pas
+  $0000000100051371 line 2808 of src/TestFramework.pas

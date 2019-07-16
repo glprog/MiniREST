@@ -1,3 +1,6 @@
+{$IFDEF FPC}
+  {$mode DELPHI}
+{$IFEND}
 unit MiniREST.SQL.Firebird;
 
 interface
@@ -14,11 +17,11 @@ type
     constructor Create(AConnection: IMiniRESTSQLConnection);
     function FieldExists(const ATableName: string;
       const AFieldName: string): Boolean;
-    function GetForeignKeys(const ATableName: string): System.TArray<MiniREST.SQL.Intf.IMiniRESTSQLForeignKeyInfo>;
+    function GetForeignKeys(const ATableName: string): TArray<IMiniRESTSQLForeignKeyInfo>;
     function GetPrimaryKey(const ATableName: string): IMiniRESTSQLPrimaryKeyInfo;
     function TableExists(const ATableName: string): Boolean;
     function DatabaseType: TMiniRESTSQLDatabaseType;
-    function GetColumns(const ATableName: string): System.TArray<MiniREST.SQL.Intf.IMiniRESTSQLColumnInfo>;
+    function GetColumns(const ATableName: string): TArray<IMiniRESTSQLColumnInfo>;
   end;
 
 implementation
@@ -59,7 +62,7 @@ begin
 end;
 
 function TMiniRESTSQLDatabaseInfoFirebird.GetColumns(
-  const ATableName: string): System.TArray<MiniREST.SQL.Intf.IMiniRESTSQLColumnInfo>;
+  const ATableName: string): TArray<IMiniRESTSQLColumnInfo>;
 var
   LQry: IMiniRESTSQLQuery;
   LColumnInfo: IMiniRESTSQLColumnInfo;
@@ -80,13 +83,14 @@ begin
     LColumnInfo := TMiniRESTSQLColumnInfo.Create(
       Trim(LQry.DataSet.FieldByName('RDB$FIELD_NAME').AsString)
       );
-    TMiniRESTCommonUtils.AddToArray<IMiniRESTSQLColumnInfo>(LColumnInfo, Result);
+    TMiniRESTCommonUtils{$IFDEF FPC}<IMiniRESTSQLColumnInfo>{$IFEND}
+    .AddToArray{$IFNDEF FPC}<IMiniRESTSQLColumnInfo>{$IFEND}(LColumnInfo, Result);
     LQry.DataSet.Next;
   end;
 end;
 
 function TMiniRESTSQLDatabaseInfoFirebird.GetForeignKeys(
-  const ATableName: string): System.TArray<MiniREST.SQL.Intf.IMiniRESTSQLForeignKeyInfo>;
+  const ATableName: string): TArray<IMiniRESTSQLForeignKeyInfo>;
 var
   LConnection: IMiniRESTSQLConnection;
   LQry: IMiniRESTSQLQuery;

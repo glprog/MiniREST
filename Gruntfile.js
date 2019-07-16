@@ -5,6 +5,7 @@ module.exports = function(grunt) {
     const caminhoBat = path.join(caminho, 'test.bat');
     const caminhoSQL = path.join(__dirname,'unittest', 'SQL');
     const caminhoBatSQL = path.join(caminhoSQL, 'test.bat');
+    const caminhoBatSQLFPC = path.join(caminhoSQL, 'test_fpc.bat');    
     const caminhoORM = path.join(__dirname,'unittest', 'ORM');
     const caminhoBatORM = path.join(caminhoORM, 'test.bat');
     grunt.initConfig({
@@ -32,6 +33,13 @@ module.exports = function(grunt) {
             stdio: 'inherit'
           }
         },
+        sql_fpc: {
+          cmd: `${caminhoBatSQLFPC} "${caminhoSQL}"`,
+          execOptions: caminhoSQL,
+          execOpts: {
+            stdio: 'inherit'
+          }
+        },
         orm: {
           cmd: `${caminhoBatORM} "${caminhoORM}"`,
           execOptions: caminhoORM,
@@ -49,6 +57,10 @@ module.exports = function(grunt) {
         sql: {
           files: ['**/*.pas'],
           tasks: ['bgShell:sql']
+        },
+        sql_fpc: {
+          files: ['**/*.pas'],
+          tasks: ['bgShell:sql_fpc']
         },
         orm: {
           files: ['**/*.pas'],

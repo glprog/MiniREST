@@ -1,8 +1,11 @@
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 unit MiniREST.SQL.Intf;
 
 interface
 
-uses MiniREST.SQL.Common, DB;
+uses SysUtils, MiniREST.SQL.Common, DB;
 
 type
   IMiniRESTSQLDatabaseInfo = interface;
@@ -27,7 +30,7 @@ type
     procedure Append;}
     function ApplyUpdates(const AMaxErrors: Integer = 0): Integer;
     function GetDataSet: TDataSet;
-    function ToJSON: string;
+    //function ToJSON: string;
     property SQL: string read GetSQL write SetSQL;
     property DataSet: TDataset read GetDataSet;
   end;
@@ -54,6 +57,7 @@ type
   ['{6E405916-A78D-4C75-BCE7-07378517AB2D}']
     function GetConnection : IMiniRESTSQLConnection;
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
+    function GetObject: TObject;
   end;
 
   IMiniRESTSQLConnectionExecute = interface
