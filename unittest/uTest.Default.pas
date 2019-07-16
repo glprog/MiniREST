@@ -1,8 +1,11 @@
+{$IFDEF FPC}
+  {$mode DELPHI}
+{$IFEND}
 unit uTest.Default;
 
 interface
 
-uses SysUtils, Classes, DUnitX.TestFramework, MiniREST.Intf, MiniREST.Server.Intf, IdHTTP;
+uses SysUtils, Classes, {$IFNDEF FPC}DUnitX.TestFramework, {$ELSE} TestFramework, {$IFEND} MiniREST.Intf, MiniREST.Server.Intf, IdHTTP;
 
 type
   TMiniRESTTestdefault = class

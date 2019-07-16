@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = function(grunt) {
     const caminho = path.join(__dirname, 'unittest');
     const caminhoBat = path.join(caminho, 'test.bat');
+    const caminhoBatFPC = path.join(caminho, 'test_fpc.bat');
     const caminhoSQL = path.join(__dirname,'unittest', 'SQL');
     const caminhoBatSQL = path.join(caminhoSQL, 'test.bat');
     const caminhoBatSQLFPC = path.join(caminhoSQL, 'test_fpc.bat');    
@@ -21,6 +22,13 @@ module.exports = function(grunt) {
       bgShell: {
         server: {
           cmd: `${caminhoBat} "${caminho}"`,
+          execOptions: caminho,
+          execOpts: {
+            stdio: 'inherit'
+          }
+        },
+        server_fpc: {
+          cmd: `${caminhoBatFPC} "${caminho}"`,
           execOptions: caminho,
           execOpts: {
             stdio: 'inherit'
@@ -54,12 +62,16 @@ module.exports = function(grunt) {
           files: ['**/*.pas'],
           tasks: ['bgShell:server']
         },
+        server_fpc: {
+          files: ['**/*.pas', '**/*.lpi', '**/*.lpr'],
+          tasks: ['bgShell:server_fpc']
+        },
         sql: {
           files: ['**/*.pas'],
           tasks: ['bgShell:sql']
         },
         sql_fpc: {
-          files: ['**/*.pas'],
+          files: ['**/*.pas', '**/*.lpi', '**/*.lpr'],
           tasks: ['bgShell:sql_fpc']
         },
         orm: {

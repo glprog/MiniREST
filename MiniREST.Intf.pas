@@ -1,8 +1,11 @@
+{$IFDEF FPC}
+  {$mode DELPHI}
+{$IFEND}
 unit MiniREST.Intf;
 
 interface
 
-uses Classes, SysUtils, Rtti, MiniREST.Common;
+uses Classes, SysUtils, {$IFNDEF FPC}Rtti,{$IFEND} MiniREST.Common;
 
 type
   IMiniRESTControllerFactory = interface;

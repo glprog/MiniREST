@@ -2,7 +2,7 @@ unit MiniREST.Common;
 
 interface
 
-uses IdContext, IdCustomHttpServer;
+// uses IdContext, IdCustomHttpServer;
 
 type
   TMiniRESTRequestMethod = (rmGet, rmPost, rmPut, rmDelete, rmOptions);
