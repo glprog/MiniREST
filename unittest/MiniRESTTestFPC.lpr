@@ -3,7 +3,7 @@ program MiniRESTTestFPC;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils, TextTestRunner, TestCase1, uTest.Indy.FPC;
+  Classes, SysUtils, TextTestRunner, TestCase1, uTest.FPWeb.FPC;
 
 begin
   if FileExists('heap.trc') then

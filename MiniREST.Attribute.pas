@@ -2,7 +2,7 @@ unit MiniREST.Attribute;
 
 interface
 
-uses MiniREST.Common, IdCustomHttpServer;
+uses MiniREST.Common;
 
 type
   RequestMappingAttribute = class(TCustomAttribute)

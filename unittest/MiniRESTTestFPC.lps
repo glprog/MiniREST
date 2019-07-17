@@ -8,18 +8,17 @@
       <Unit0>
         <Filename Value="MiniRESTTestFPC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="41" Y="9"/>
         <UsageCount Value="20"/>
-        <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="testcase1.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TestCase1"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="-1"/>
         <UsageCount Value="20"/>
-        <Loaded Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="uTest.Indy.FPC.pas"/>
@@ -40,6 +39,9 @@
         <UsageCount Value="20"/>
       </Unit3>
     </Units>
+    <General>
+      <ActiveWindowIndexAtStart Value="-1"/>
+    </General>
     <JumpHistory HistoryIndex="-1"/>
     <RunParams>
       <FormatVersion Value="2"/>

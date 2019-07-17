@@ -18,20 +18,24 @@ type
 
   IMiniRESTActionInfo = interface
   ['{C9E2FE39-C04D-451F-9DC8-B6203E7F9A05}']
-    function GetMapping : string;
-    function GetMethod : TRttiMethod;
-    function GetRequestMethod : TMiniRESTRequestMethod;
-    function GetClass : TClass;
-    function GetPermission : string;
-    function GetIsFactory : Boolean;
-    function GetFactory : IMiniRESTControllerFactory;
-    property IsFactory : Boolean read GetIsFactory;
-    property Mapping : string read GetMapping;
-    property Method : TRttiMethod read GetMethod;
-    property RequestMethod : TMiniRESTRequestMethod read GetRequestMethod;
-    property &Class : TClass read GetClass;
-    property Factory : IMiniRESTControllerFactory read GetFactory;
-    property Permission : string read GetPermission;
+    function GetMapping: string;
+    {$IFNDEF FPC}
+    function GetMethod: TRttiMethod;
+    {$IFEND}
+    function GetRequestMethod: TMiniRESTRequestMethod;
+    function GetClass: TClass;
+    function GetPermission: string;
+    function GetIsFactory: Boolean;
+    function GetFactory: IMiniRESTControllerFactory;
+    property IsFactory: Boolean read GetIsFactory;
+    property Mapping: string read GetMapping;
+    {$IFNDEF FPC}
+    property Method: TRttiMethod read GetMethod;
+    {$IFEND}
+    property RequestMethod: TMiniRESTRequestMethod read GetRequestMethod;
+    property &Class: TClass read GetClass;
+    property Factory: IMiniRESTControllerFactory read GetFactory;
+    property Permission: string read GetPermission;
   end;
 
   IMiniRESTControllerFactory = interface

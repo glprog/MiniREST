@@ -1,3 +1,6 @@
+{$IFDEF FPC}
+  {$mode DELPHI}
+{$IFEND}
 unit MiniREST.Controller.Base;
 
 interface
@@ -24,6 +27,7 @@ type
     procedure SetLogger(ALogger: IMiniRESTLogger);
   end;
 
+  {$IFNDEF FPC}
   TMiniRESTControllerFactoryBase = class(TInterfacedObject, IMiniRESTControllerFactory)
   private
     FClass : TClass;
@@ -35,6 +39,7 @@ type
     function GetController: TObject;
     procedure ClearFactory;
   end;
+  {$IFEND}
 
 implementation
 
@@ -111,6 +116,7 @@ begin
   FLogger := ALogger;
 end;
 
+{$IFNDEF FPC}
 { TMiniRESTControllerFactoryBase }
 
 procedure TMiniRESTControllerFactoryBase.ClearFactory;
@@ -135,5 +141,6 @@ begin
   FIntf := FFactory();
   Result := TObject(FIntf);
 end;
+{$IFEND}
 
 end.

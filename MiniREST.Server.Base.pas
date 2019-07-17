@@ -3,7 +3,7 @@ unit MiniREST.Server.Base;
 interface
 
 uses SysUtils, Rtti, Generics.Defaults, MiniREST.Intf, MiniREST.Server.Intf,
-  MiniREST.Controller.Intf, MiniREST.Controller.Base, MiniREST.Common, MiniREST.Attribute,
+  MiniREST.Controller.Intf, MiniREST.Controller.Base, MiniREST.Common, {$IFNDEF FPC} MiniREST.Attribute, {$IFEND}
   Generics.Collections, SyncObjs, MiniREST.Controller.Security.Intf;
 
 type

@@ -1,3 +1,6 @@
+{$IFDEF FPC}
+  {$mode DELPHI}
+{$IFEND}
 unit MiniREST.Server.Intf;
 
 interface
@@ -11,7 +14,9 @@ type
     procedure AddController(AController : TClass); overload;
     procedure AddController(AControllerFactory : IMiniRESTControllerFactory); overload;
     procedure SetControllerOtherwise(AController : TClass);
+    {$IFNDEF FPC}
     procedure SetSecurityController(AController : TFunc<IMiniRESTSecurityController>);
+    {$IFEND}
     function GetLogger : IMiniRESTLogger;
     procedure SetLogger(ALogger : IMiniRESTLogger);
     procedure AddMiddleware(AMiddleware : IMiniRESTMiddleware); { TODO : Mudar para class ou factory ?}

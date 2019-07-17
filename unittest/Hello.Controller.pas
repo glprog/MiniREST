@@ -2,48 +2,86 @@ unit Hello.Controller;
 
 interface
 
-uses Classes, SysUtils, MiniREST.Controller.Base, MiniREST.Attribute, MiniREST.Common;
+uses Classes, SysUtils, MiniREST.Controller.Base, {$IFNDEF FPC} MiniREST.Attribute, {$IFEND} MiniREST.Common;
 
 type
   THelloController = class(TMiniRESTControllerBase)
   public
+    {$IFNDEF FPC}
     [RequestMapping('/hello')]
+    {$IFEND}
     procedure Hello;
+    {$IFNDEF FPC}
     [RequestMapping('/hello/{name}')]
+    {$IFEND}
     procedure HelloWithName;
+    {$IFNDEF FPC}
     [RequestMapping('/helloHeader')]
+    {$IFEND}
     procedure HelloHeader;
+    {$IFNDEF FPC}
     [RequestMapping('/helloAppendHeader')] 
+    {$IFEND}
     procedure HelloAppendHeader;
+    {$IFNDEF FPC}
     [RequestMapping('/queryParam')]
+    {$IFEND}
     procedure HelloQueryParam;
+    {$IFNDEF FPC}
     [RequestMapping('/getRequestContentAsString', rmPost)]
+    {$IFEND}
     procedure HelloGetRequestContentAsString;
+    {$IFNDEF FPC}
     [RequestMapping('/helloGet', rmGet)]
+    {$IFEND}
     procedure HelloGet;
+    {$IFNDEF FPC}
     [RequestMapping('/helloPut', rmPut)]
+    {$IFEND}
     procedure HelloPut;       
+    {$IFNDEF FPC}
     [RequestMapping('/helloPost', rmPost)]
+    {$IFEND}
     procedure HelloPost;
+    {$IFNDEF FPC}
     [RequestMapping('/helloDelete', rmDelete)]
+    {$IFEND}
     procedure HelloDelete;
+    {$IFNDEF FPC}
     [RequestMapping('/helloOptions', rmOptions)]
+    {$IFEND}
     procedure HelloOptions;
+    {$IFNDEF FPC}
     [RequestMapping('/helloVerb')]
+    {$IFEND}
     procedure HelloGet2;
+    {$IFNDEF FPC}
     [RequestMapping('/helloVerb', rmPost)]
+    {$IFEND}
     procedure HelloPost2;
+    {$IFNDEF FPC}
     [RequestMapping('/helloMRestToken')]
+    {$IFEND}
     procedure HelloMRestToken;
+    {$IFNDEF FPC}
     [RequestMapping('/helloContentType')]
+    {$IFEND}
     procedure HelloContentType;
+    {$IFNDEF FPC}
     [RequestMapping('/helloContentTypeJson')]
+    {$IFEND}
     procedure HelloContentTypeJson;
+    {$IFNDEF FPC}
     [RequestMapping('/helloRedirect')]
+    {$IFEND}
     procedure HelloRedirect;
+    {$IFNDEF FPC}
     [RequestMapping('/helloSendFile')]    
+    {$IFEND}
     procedure HelloSendFile;
+    {$IFNDEF FPC}
     [RequestMapping('/helloSendStream')]
+    {$IFEND}
     procedure HelloSendStream;
   end;
 
@@ -162,7 +200,7 @@ procedure THelloController.HelloSendStream;
 var
   LStringStream: TStringStream; 
 begin
-  LStringStream := TStringStream.Create;
+  LStringStream := TStringStream.Create{$IFDEF FPC}(''){$IFEND};
   try
     LStringStream.WriteString('teste');
     LStringStream.Position := 0;
