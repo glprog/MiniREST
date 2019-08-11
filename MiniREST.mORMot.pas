@@ -12,7 +12,7 @@ type
     FPort: Integer;
     function Process(Ctxt: THttpServerRequest): cardinal;
   public
-    constructor Create;
+    constructor Create(const AUseOldLock: Boolean = True);
     function Start: Boolean; override;
     function Stop: Boolean; override;
     function GetPort: Integer; override;
@@ -74,7 +74,7 @@ begin
   Result := SockString(AString);
 end;
 
-constructor TMiniRESTServermORMot.Create;
+constructor TMiniRESTServermORMot.Create(const AUseOldLock: Boolean);
 begin
   inherited;
   FServer := THttpApiServer.Create(True);

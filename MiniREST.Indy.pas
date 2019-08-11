@@ -18,7 +18,7 @@ type
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
   AException: Exception);
   public
-    constructor Create;
+    constructor Create(const AUseOldLock: Boolean = True);
     destructor Destroy; override;
     function Start: Boolean; override;
     function Stop: Boolean; override;
@@ -75,7 +75,7 @@ uses MiniREST.Util;
 
 { TMiniRESTServerIndy }
 
-constructor TMiniRESTServerIndy.Create;
+constructor TMiniRESTServerIndy.Create(const AUseOldLock: Boolean);
 begin
   inherited;
   FHttpServer := TIdHTTPServer.Create(nil);

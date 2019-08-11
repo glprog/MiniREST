@@ -30,19 +30,20 @@ type
         function GetFactory: IMiniRESTControllerFactory;
       end;
   protected
-    FControllerOtherwise : TClass;
-    FControllers : TObjectDictionary<string,  IMiniRESTActionInfo>;
-    FMiddlewares : TList<IMiniRESTMiddleware>;
-    FRttiContext : TRttiContext;
-    FLock : TObject;
-    FSecurityController : TFunc<IMiniRESTSecurityController>;
-    FLogger : IMiniRESTLogger;
+    FControllerOtherwise: TClass;
+    FControllers: TObjectDictionary<string,  IMiniRESTActionInfo>;
+    FMiddlewares: TList<IMiniRESTMiddleware>;
+    FRttiContext: TRttiContext;
+    FLock: TObject;
+    FSecurityController: TFunc<IMiniRESTSecurityController>;
+    FLogger: IMiniRESTLogger;
+    FUseOldLock: Boolean;
     procedure Lock;
     procedure Unlock;
     procedure FindController(AContext : IMiniRESTActionContext);
     procedure InternalAddController(AClass: TClass; AControllerFactory: IMiniRESTControllerFactory);
   public
-    constructor Create;
+    constructor Create(const AUseOldLock: Boolean = True);
     destructor Destroy; override;
     procedure AddController(AController: TClass); overload;
     procedure AddController(AControllerFactory: IMiniRESTControllerFactory); overload;
@@ -90,7 +91,7 @@ begin
   FMiddlewares.Add(AMiddleware);
 end;
 
-constructor TMiniRESTServerBase.Create;
+constructor TMiniRESTServerBase.Create(const AUseOldLock: Boolean);
 begin
   FLock := TObject.Create;
   FRttiContext := TRttiContext.Create;
@@ -99,6 +100,7 @@ begin
   {$ENDIF}
   FControllers := TObjectDictionary<string, IMiniRESTActionInfo>.Create;
   FMiddlewares := TList<IMiniRESTMiddleware>.Create;
+  FUseOldLock := AUseOldLock;
 end;
 
 destructor TMiniRESTServerBase.Destroy;
@@ -113,91 +115,93 @@ begin
 end;
 
 procedure TMiniRESTServerBase.FindController(AContext: IMiniRESTActionContext);
-var LRequestInfo : IMiniRESTRequestInfo;
-    LMiniRESTActionInfo : IMiniRESTActionInfo;
-    LController : TObject;
-    LControllerIntf : IMiniRESTController;
-    LControllerOtherwise : IMiniRESTControllerOtherwise; //{ TODO : Refatorar - POG!!}
-    LActionContext : IMiniRESTActionContext;
-    LMiddleware : IMiniRESTMiddleware;
-    LObject : TObject;
-    LIntfTemp : IInterface;
-    LSecurityResponse : IMiniRESTSecurityResponse;
+var LRequestInfo: IMiniRESTRequestInfo;
+    LMiniRESTActionInfo: IMiniRESTActionInfo;
+    LController: TObject;
+    LControllerIntf: IMiniRESTController;
+    LControllerOtherwise: IMiniRESTControllerOtherwise; //{ TODO : Refatorar - POG!!}
+    LActionContext: IMiniRESTActionContext;
+    LMiddleware: IMiniRESTMiddleware;
+    LObject: TObject;
+    LIntfTemp: IInterface;
+    LSecurityResponse: IMiniRESTSecurityResponse;
+    LFoundMiniRESTActionInfo: Boolean;
 begin
   { TODO : Implementar / Remover Dependencia Indy/ ServerBase }
-  Lock;
+  LFoundMiniRESTActionInfo := False;
+  if FUseOldLock then
+    Lock;
   LController := nil;
   try
-    for LMiddleware in FMiddlewares do
-    begin
-      if not LMiddleware.Process(AContext) then
-        Exit;
-    end;
-    if Assigned(FSecurityController) and (FSecurityController <> nil) then  { TODO : Remover }
-    begin
-      //teste
-      (*if (not FSecurityController.IsExcludedPath(AContext.GetURI)) and (not FSecurityController.IsValidToken(AContext)) then
+    try
+      if not FUseOldLock then
+        Lock;
+      for LMiddleware in FMiddlewares do
       begin
-        AContext.SendRedirect('/login');
-        Exit;
-      end
-      else  *)
-      (*if (not FSecurityController.HasPermission(AContext)) then
-      begin
-        AContext.SetResponseContent('{"erro":403}');
-        Exit;
-      end;*)
+        if not LMiddleware.Process(AContext) then
+          Exit;
+      end;      
+    finally
+      if not FUseOldLock then
+        Unlock;
     end;
     LRequestInfo := TMiniRESTRequestInfo.Create(AContext.GetURI, AContext.GetCommandType);
-    for LMiniRESTActionInfo in FControllers.Values do
-    begin
-      //LController := LControllerClass.Create;
-      { TODO : Refatorar: Otimizar }
-      if LRequestInfo.IsMatch(LMiniRESTActionInfo.Mapping, LMiniRESTActionInfo.RequestMethod) then
+    try
+      if not FUseOldLock then
+        Lock;
+      for LMiniRESTActionInfo in FControllers.Values do
       begin
-        //LController.Action(AContext, ARequestInfo, AResponseInfo);
-        AContext.ActionInfo := LMiniRESTActionInfo;
-        if Assigned(FSecurityController) and (FSecurityController <> nil) {and (not FSecurityController.HasPermission(AContext))} then
+        if LRequestInfo.IsMatch(LMiniRESTActionInfo.Mapping, LMiniRESTActionInfo.RequestMethod) then
         begin
-          LSecurityResponse := FSecurityController.HasPermission(AContext);
-          if not LSecurityResponse.HasPermission then
-          begin
-            //AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}', rtApplicationJson, 403); { TODO : Mudar msg / obter de outro lugar }
-            AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}');
-            AContext.SetResponseContentType(rtApplicationJson);
-            AContext.SetResponseStatusCode(403);
-            Exit;
-          end;
+          LFoundMiniRESTActionInfo := True;
+          Break;        
         end;
-        if LMiniRESTActionInfo.IsFactory then
-          LController := LMiniRESTActionInfo.Factory.GetController
-        else
-          LController := LMiniRESTActionInfo.&Class.Create;
-        if Supports(LController, IMiniRESTController, LControllerIntf) then
+      end;      
+    finally
+      if not FUseOldLock then
+        Unlock;
+    end;
+    if LFoundMiniRESTActionInfo then
+    begin      
+      AContext.ActionInfo := LMiniRESTActionInfo;
+      if Assigned(FSecurityController) and (FSecurityController <> nil) {and (not FSecurityController.HasPermission(AContext))} then
+      begin
+        LSecurityResponse := FSecurityController.HasPermission(AContext);
+        if not LSecurityResponse.HasPermission then
         begin
-          LControllerIntf.InitController;
-          LControllerIntf.SetLogger(GetLogger);
-          LControllerIntf.SetActionContext(AContext);
-          if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
-            LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[TValue.From<IMiniRESTActionContext>(AContext)])
-          else
-            LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[]);
-          if LMiniRESTActionInfo.IsFactory then
-            LMiniRESTActionInfo.Factory.ClearFactory;
-          { TODO : Implementar }
+          AContext.SetResponseContent('{"erro":"' + TMiniRESTJson.TratarJsonString(LSecurityResponse.PermissionErrorMessage) + '"}');
+          AContext.SetResponseContentType(rtApplicationJson);
+          AContext.SetResponseStatusCode(403);
           Exit;
-        end
+        end;
+      end;
+      if LMiniRESTActionInfo.IsFactory then
+        LController := LMiniRESTActionInfo.Factory.GetController
+      else
+        LController := LMiniRESTActionInfo.&Class.Create;
+      if Supports(LController, IMiniRESTController, LControllerIntf) then
+      begin
+        LControllerIntf.InitController;
+        LControllerIntf.SetLogger(GetLogger);
+        LControllerIntf.SetActionContext(AContext);
+        if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
+          LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[TValue.From<IMiniRESTActionContext>(AContext)])
         else
-        begin
-          try
-            if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
-              LMiniRESTActionInfo.Method.Invoke(TObject(LController),[TValue.From<IMiniRESTActionContext>(AContext)])
-            else
-              raise Exception.Create('Método ' + LMiniRESTActionInfo.Method.Parent.Name + '.'+ LMiniRESTActionInfo.Method.Name + ' sem parâmetro IMiniRESTActionContext.'); { TODO : Add logger }
-            Exit;
-          finally
-            LController.Free;
-          end;
+          LMiniRESTActionInfo.Method.Invoke(TObject(LControllerIntf),[]);
+        if LMiniRESTActionInfo.IsFactory then
+          LMiniRESTActionInfo.Factory.ClearFactory;        
+        Exit;
+      end
+      else
+      begin
+        try
+          if (Length(LMiniRESTActionInfo.Method.GetParameters) = 1) and (LMiniRESTActionInfo.Method.GetParameters[0].ParamType.QualifiedName = 'MiniREST.Intf.IMiniRESTActionContext') then
+            LMiniRESTActionInfo.Method.Invoke(TObject(LController),[TValue.From<IMiniRESTActionContext>(AContext)])
+          else
+            raise Exception.Create('Método ' + LMiniRESTActionInfo.Method.Parent.Name + '.'+ LMiniRESTActionInfo.Method.Name + ' sem parâmetro IMiniRESTActionContext.'); { TODO : Add logger }
+          Exit;
+        finally
+          LController.Free;
         end;
       end;
     end;
@@ -213,7 +217,8 @@ begin
       end;
     end;
   finally
-    Unlock;
+    if FUseOldLock then
+      Unlock;
   end;
 end;
 
