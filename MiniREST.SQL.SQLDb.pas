@@ -388,12 +388,6 @@ var
   LParamName: string;
 begin  
   LParamName := UpperCase(AParamName);
-  (* if not FParams.TryGetData(LParamName, LParam) then
-  begin
-    LParam := TMiniRESTSQLParam.Create;
-    LParam.SetParamName(LParamName);
-    FParams.Add(LParamName, LParam);
-  end; *)
   for LParam in FParams do
   begin
     if SameText(LParamName, LParam.GetParamName) then
@@ -401,6 +395,7 @@ begin
   end;
   LParam := TMiniRESTSQLParam.Create;
   LParam.SetParamName(LParamName);
+  FParams.Add(LParam);
   Result := LParam;
 end;
 
