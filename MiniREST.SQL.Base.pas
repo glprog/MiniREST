@@ -50,7 +50,7 @@ type
   protected
     FName: string;
     FEstaNoPool: Boolean;
-    function _Release: Integer; stdcall;
+    function _Release: Integer; {$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
     function GetObject: TObject; virtual; abstract;
     procedure SetOwner(AOwner: Pointer);
     constructor Create(AOwner : IMiniRESTSQLConnectionFactory);    
@@ -253,7 +253,7 @@ begin
   FOwner := AOwner;
 end;
 
-function TMiniRESTSQLConnectionBase._Release: Integer; stdcall;
+function TMiniRESTSQLConnectionBase._Release: Integer; {$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
 begin
   if (FRefCount = 1) and (FOwner <> nil) and (not FEstaNoPool) then
     TMiniRESTSQLConnectionFactoryBase(FOwner).ReleaseConnection(Self);
