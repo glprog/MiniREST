@@ -199,7 +199,9 @@ end;
 constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
 begin
   FSQLConnection := TSQLConnector.Create(nil);
-  FTransaction := TSQLTransaction.Create(nil);    
+  FTransaction := TSQLTransaction.Create(nil);
+  if (AParams.GetDatabaseType = dbtFirebird) then
+    FTransaction.Params.Text := 'isc_tpb_read_committed';
   //FTransaction.Options := [stoUseImplicit];
   FSQLConnection.Transaction := FTransaction;
   FSQLConnection.OnLog := Log;
