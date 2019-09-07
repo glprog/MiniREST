@@ -50,6 +50,10 @@ type
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
+    procedure TestInsert5;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
     procedure TestExecute;
     {$IFNDEF FPC}
     [Test]
@@ -478,6 +482,33 @@ begin
   {$ELSE}
   CheckEquals(1, LQryCheck.DataSet.RecordCount);
   {$IFEND}  
+end;
+
+procedure TMiniRESTSQLTest.TestInsert5;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LQry, LQryID, LQryCheck: IMiniRESTSQLQuery;
+begin  
+  LConn1 := FConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQryID := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
+  LQry.Open;
+
+  LQry.DataSet.Append;
+  LQry.DataSet.FieldByName('ID').AsInteger := 456;
+  LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
+  LQry.DataSet.Post;    
+  LQry.ApplyUpdates(0);
+
+  LQryCheck := LConn1.GetQuery('SELECT * FROM CUSTOMER WHERE ID = :ID');
+  LQryCheck.ParamByName('ID').AsInteger := 456;
+  LQryCheck.Open;
+  {$IFNDEF FPC}
+  Assert.AreEqual(1, LQryCheck.DataSet.RecordCount);
+  {$ELSE}
+  CheckEquals(1, LQryCheck.DataSet.RecordCount);
+  {$IFEND}
 end;
 
 end.
