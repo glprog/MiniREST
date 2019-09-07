@@ -30,7 +30,7 @@ type
     [TearDown]
     {$IFEND}
     procedure TearDown; {$IFDEF FPC}override;{$IFEND}
-  published
+  //published
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -47,10 +47,7 @@ type
     [Test]
     {$IFEND}
     procedure TestInsert4;
-    {$IFNDEF FPC}
-    [Test]
-    {$IFEND}
-    procedure TestInsert5;
+    
     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -67,6 +64,11 @@ type
     [Test]
     {$IFEND}
     procedure TestTransaction2;
+  published
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestInsert5;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -487,9 +489,15 @@ end;
 procedure TMiniRESTSQLTest.TestInsert5;
 var
   LConn1: IMiniRESTSQLConnection;
+  LConn2: IMiniRESTSQLConnection;
   LQry, LQryID, LQryCheck: IMiniRESTSQLQuery;
+  LTotal: Integer;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
+  LConn2 := FConnectionFactory.GetConnection;
+  LQryCheck := LConn2.GetQuery('SELECT COUNT(*) AS TOTAL FROM CUSTOMER');
+  LQryCheck.Open;
+  LTotal := LQryCheck.DataSet.FieldByName('TOTAL').AsInteger;
   LQry := LConn1.GetQuery;
   LQryID := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
@@ -501,13 +509,12 @@ begin
   LQry.DataSet.Post;    
   LQry.ApplyUpdates(0);
 
-  LQryCheck := LConn1.GetQuery('SELECT * FROM CUSTOMER WHERE ID = :ID');
-  LQryCheck.ParamByName('ID').AsInteger := 456;
+  LQryCheck.Close;  
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(1, LQryCheck.DataSet.RecordCount);
+  Assert.AreEqual(LTotal + 1, LQryCheck.DataSet.FieldByName('TOTAL').AsInteger);
   {$ELSE}
-  CheckEquals(1, LQryCheck.DataSet.RecordCount);
+  CheckEquals(LTotal + 1, LQryCheck.DataSet.FieldByName('TOTAL').AsInteger);
   {$IFEND}
 end;
 
