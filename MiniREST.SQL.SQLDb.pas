@@ -4,7 +4,7 @@ unit MiniREST.SQL.SQLDb;
 interface
 
 uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
-  sqldb, IBConnection, fpjsondataset, fgl;
+  sqldb, IBConnection, fgl;
 
 type
   TLogEvent = procedure (Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
@@ -224,7 +224,6 @@ var
   LStringList: TStringList;
   LName: string;
   I: Integer;
-  LValue: string;
 begin
   LStringList := TStringList.Create;
   try
@@ -404,7 +403,6 @@ end;
 function TMiniRESTSQLQuerySQLDb.AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
 var
   LParam: IMiniRESTSQLParam;
-  LAchou: Boolean;
 begin
   //FParams.AddOrSetData(AParam.GetParamName, AParam);  
   for LParam in FParams do
@@ -484,7 +482,6 @@ begin
   try    
     FQueue.Add(AConnection);       
     TMiniRESTSQLConnectionBaseCrack(AConnection.GetObject).FEstaNoPool := True;
-    RemoveConnectionToNotifyFree(AConnection);
     Inc(FAvailableConnections);
   finally
     RTLeventSetEvent(FConnectionReleaseEvent);
@@ -500,6 +497,7 @@ end;
 function TMiniRESTSQLConnectionParamsSQLDb.SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
 begin
   FLogEvent := ALogEvent;
+  Result := Self;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);

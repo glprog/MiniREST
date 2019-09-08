@@ -6,7 +6,7 @@ unit MiniREST.SQL.Base;
 interface
 
 uses MiniREST.SQL.Intf, MiniREST.SQL.Common, SyncObjs, {$IFNDEF FPC}Generics.Collections, 
-{$ELSE} Contnrs, fgl,{$IFEND} SysUtils, Classes;
+{$ELSE}fgl,{$IFEND} SysUtils, Classes;
 
 type
 
@@ -35,8 +35,8 @@ type
     procedure RemoveConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
     procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection); virtual;
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
-    constructor Create(const AConnectionCount: Integer);
   public
+    constructor Create(const AConnectionCount: Integer);
     destructor Destroy; override;
     function GetConnection: IMiniRESTSQLConnection;
     function GetObject: TObject;
@@ -53,8 +53,8 @@ type
     function _Release: Integer; {$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
     function GetObject: TObject; virtual; abstract;
     procedure SetOwner(AOwner: Pointer);
-    constructor Create(AOwner : IMiniRESTSQLConnectionFactory);    
   public
+    constructor Create(AOwner : IMiniRESTSQLConnectionFactory);
     procedure StartTransaction; virtual; abstract;
     procedure Commit; virtual; abstract;
     procedure Rollback; virtual; abstract;
@@ -109,8 +109,6 @@ implementation
 { TMiniRESTSQLConnectionFactoryBase }
 
 constructor TMiniRESTSQLConnectionFactoryBase.Create(const AConnectionCount: Integer);
-var
-  I: Integer;
 begin
   FConnectionsCount := AConnectionCount;
   {$IFNDEF FPC}
@@ -173,6 +171,7 @@ begin
     TMiniRESTSQLConnectionBase(Result).FEstaNoPool := False;
     
   finally
+    FSemaphore.Release(1);
     FCriticalSection.Leave;
   end;
   {$IFEND}
@@ -257,7 +256,7 @@ function TMiniRESTSQLConnectionBase._Release: Integer; {$IFNDEF WINDOWS}cdecl{$E
 begin
   if (FRefCount = 1) and (FOwner <> nil) and (not FEstaNoPool) then
     TMiniRESTSQLConnectionFactoryBase(FOwner).ReleaseConnection(Self);
-  Result := inherited;
+  Result := inherited _Release;
 end;
 
 { TMiniRESTSQLPrimaryKeyInfo }

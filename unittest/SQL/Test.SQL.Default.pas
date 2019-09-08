@@ -339,7 +339,6 @@ var
   LConn: IMiniRESTSQLConnection;
   LQryCheck: IMiniRESTSQLQuery;  
   LCount, I: Integer;
-  LThread: TThreadTesteInsert2;
 begin
   gLogHabilitado := True;
   LCount := 100;
@@ -367,7 +366,8 @@ var
   LQry, LQryID: IMiniRESTSQLQuery;
   LId: Integer;
 begin
-  try    
+  try
+    Sleep(Random(10) * 100);
     LConn := FFactory.GetConnection;    
     LQry := LConn.GetQuery;
     LQryID := LConn.GetQuery;
@@ -459,12 +459,11 @@ end;
 procedure TMiniRESTSQLTest.TestInsert4;
 var
   LConn1, LConn2: IMiniRESTSQLConnection;
-  LQry, LQryID, LQryCheck: IMiniRESTSQLQuery;
+  LQry, LQryCheck: IMiniRESTSQLQuery;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
   LConn2 := FConnectionFactory.GetConnection;
   LQry := LConn1.GetQuery;
-  LQryID := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
   LQry.Open;
 
@@ -488,7 +487,7 @@ procedure TMiniRESTSQLTest.TestInsert5;
 var
   LConn1: IMiniRESTSQLConnection;
   LConn2: IMiniRESTSQLConnection;
-  LQry, LQryID, LQryCheck: IMiniRESTSQLQuery;
+  LQry, LQryCheck: IMiniRESTSQLQuery;
   LTotal: Integer;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
@@ -497,7 +496,6 @@ begin
   LQryCheck.Open;
   LTotal := LQryCheck.DataSet.FieldByName('TOTAL').AsInteger;
   LQry := LConn1.GetQuery;
-  LQryID := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
   LQry.Open;
 

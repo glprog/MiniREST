@@ -2,7 +2,7 @@ unit MiniREST.SQL.Common;
 
 interface
 
-uses SysUtils, DB {$IFNDEF FPC}, Rtti{$ENDIF};
+uses SysUtils, Variants{$IFNDEF FPC},DB, Rtti{$ENDIF};
 
 type
   TMiniRESTSQLDatabaseType = (dbtUnknown, dbtFirebird);
