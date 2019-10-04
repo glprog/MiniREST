@@ -70,6 +70,7 @@ type
     function GetQuery(const ASQL: string): IMiniRESTSQLQuery; override;
     function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; override;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
+    function InTransaction: Boolean; override;
   end;
 
   TMiniRESTSQLQueryFiredac = class(TInterfacedObject, IMiniRESTSQLQuery)
@@ -477,6 +478,11 @@ begin
     stVariant: LParam.Value := AParam.GetAsVariant;
     stUndefined: LParam.Value := Null;
   end;
+end;
+
+function TMiniRESTSQLConnectionFiredac.InTransaction: Boolean;
+begin
+  Result := FFDConnection.InTransaction;  
 end;
 
 end.

@@ -66,6 +66,7 @@ type
     function SetName(const AName: string): IMiniRESTSQLConnection;
     function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; virtual; abstract;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; virtual; abstract;
+    function InTransaction: Boolean; virtual; abstract;
   end;
 
   TMiniRESTSQLPrimaryKeyInfo = class(TInterfacedObject, IMiniRESTSQLPrimaryKeyInfo)

@@ -73,6 +73,7 @@ type
     function GetQuery(const ASQL: string): IMiniRESTSQLQuery; override;
     function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; override;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
+    function InTransaction: Boolean; override;
   end;
 
   TMiniRESTSQLQueryDBX = class(TInterfacedObject, IMiniRESTSQLQuery)
@@ -413,7 +414,9 @@ end;
 
 procedure TMiniRESTSQLConnectionDBX.StartTransaction;
 begin
-  FTransaction := FSQLConnection.BeginTransaction
+  if not FSQLConnection.Connected then
+    FSQLConnection.Connected := True;
+  FTransaction := FSQLConnection.BeginTransaction;
 end;
 
 { TMiniRESTSQLConnectionParamsDBX }
@@ -493,6 +496,11 @@ function TMiniRESTSQLConnectionParamsDBX.SetUserName(
 begin
   FUserName := AUserName;
   Result := Self;
+end;
+
+function TMiniRESTSQLConnectionDBX.InTransaction: Boolean;
+begin
+  Result := FSQLConnection.InTransaction;
 end;
 
 end.

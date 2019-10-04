@@ -46,6 +46,7 @@ type
     procedure StartTransaction;
     procedure Commit;
     procedure Rollback;
+    function InTransaction: Boolean;
     function GetObject: TObject;
     procedure Connect;
     function GetName: string;

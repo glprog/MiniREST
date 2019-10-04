@@ -92,6 +92,7 @@ type
     function GetQuery(const ASQL: string): IMiniRESTSQLQuery; override;
     function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; override;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
+    function InTransaction: Boolean; override;
   end;
 
   { TMiniRESTSQLQuerySQLDb }
@@ -511,6 +512,11 @@ begin
     stBoolean: ASQLParam.AsBoolean := AMiniRESTSQLParam.AsBoolean;
     stVariant, stUndefined: ASQLParam.Value := AMiniRESTSQLParam.GetAsVariant;
   end;
+end;
+
+function TMiniRESTSQLConnectionSQLDb.InTransaction: Boolean;
+begin
+  Result := FSQLConnection.Transaction.Active;
 end;
 
 end.

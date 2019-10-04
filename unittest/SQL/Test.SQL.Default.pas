@@ -67,6 +67,10 @@ type
     [Test]
     {$IFEND}
     procedure TestInsert5;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestCheckInTransaction;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -511,6 +515,32 @@ begin
   Assert.AreEqual(LTotal + 1, LQryCheck.DataSet.FieldByName('TOTAL').AsInteger);
   {$ELSE}
   CheckEquals(LTotal + 1, LQryCheck.DataSet.FieldByName('TOTAL').AsInteger);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestCheckInTransaction;
+var
+  LConn1: IMiniRESTSQLConnection;
+begin
+  LConn1 := FConnectionFactory.GetConnection;  
+  {$IFNDEF FPC}
+  Assert.IsFalse(LConn1.InTransaction, 'Está em transação');
+  {$ELSE}
+  CheckFalse(LConn1.InTransaction, 'Está em transação');
+  {$IFEND}
+  LConn1.StartTransaction;
+
+  {$IFNDEF FPC}
+  Assert.IsTrue(LConn1.InTransaction, 'Não está em transação');
+  {$ELSE}
+  CheckTrue(LConn1.InTransaction, 'Não está em transação');
+  {$IFEND}
+  LConn1.Commit;
+
+  {$IFNDEF FPC}
+  Assert.IsFalse(LConn1.InTransaction, 'Está em transação');
+  {$ELSE}
+  CheckFalse(LConn1.InTransaction, 'Está em transação');
   {$IFEND}
 end;
 
