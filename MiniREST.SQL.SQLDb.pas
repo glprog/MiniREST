@@ -380,6 +380,7 @@ end;
 
 procedure TMiniRESTSQLQuerySQLDb.SetSQL(const ASQL: string);
 begin
+  FParams.Clear;
   FSQL := ASQL;
   FQry.SQL.Text := ASQL;
 end;

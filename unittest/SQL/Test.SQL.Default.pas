@@ -71,6 +71,10 @@ type
     [Test]
     {$IFEND}
     procedure TestCheckInTransaction;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestClearParamsOnSetSQL;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -541,6 +545,30 @@ begin
   Assert.IsFalse(LConn1.InTransaction, 'Está em transação');
   {$ELSE}
   CheckFalse(LConn1.InTransaction, 'Está em transação');
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestClearParamsOnSetSQL;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LQry: IMiniRESTSQLQuery;
+  LTotal: Integer;
+begin  
+  LConn1 := FConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE NAME = :NAME';
+  LQry.ParamByName('NAME').AsString := 'HUE';
+  LQry.Open;
+
+  // O teste é assim para verificar se não vai dar erro quando não existir o parâmetro,
+  // passado anteriormente
+  LQry.Close;
+  LQry.SQL := 'SELECT * FROM CUSTOMER';
+  LQry.Open;
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.Active);
+  {$ELSE}
+  CheckTrue(LQry.DataSet.Active);
   {$IFEND}
 end;
 
