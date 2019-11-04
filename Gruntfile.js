@@ -86,5 +86,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
   
     grunt.registerTask('default', ['watch:server']);
+	grunt.registerTask('fpc', ['bgShell:server_fpc']);
   
   };
