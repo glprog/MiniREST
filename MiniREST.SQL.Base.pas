@@ -40,6 +40,8 @@ type
     destructor Destroy; override;
     function GetConnection: IMiniRESTSQLConnection;
     function GetObject: TObject;
+    function GetConnectionsCount: Integer; virtual; abstract;
+    function GetQueueCount: Integer; virtual; abstract;
   end;
 
   { TMiniRESTSQLConnectionBase }

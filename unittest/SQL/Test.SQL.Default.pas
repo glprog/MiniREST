@@ -9,6 +9,7 @@ type
   TLogMessageProc = procedure (const AMessage: string) of object;
   TMiniRESTSQLTest = class({$IFNDEF FPC}TObject{$ELSE}TTestCase{$IFEND})
   protected
+    FConnectionCount: Integer;
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
     procedure LogMessage(const AMessage: string); virtual;
@@ -75,6 +76,18 @@ type
     [Test]
     {$IFEND}
     procedure TestClearParamsOnSetSQL;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestConnectionCount;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestQueueCount;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestQueueCount2;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -106,6 +119,7 @@ var
 
 procedure TMiniRESTSQLTest.SetupFixture;
 begin
+  FConnectionCount := 3;
   FConnectionFactory := GetConnectionFactory;
 end;
 
@@ -569,6 +583,44 @@ begin
   Assert.AreTrue(LQry.DataSet.Active);
   {$ELSE}
   CheckTrue(LQry.DataSet.Active);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestConnectionCount;
+begin
+  {$IFNDEF FPC}
+  Assert.AreEqual(FConnectionCount, FConnectionFactory.ConnectionsCount);
+  {$ELSE}
+  CheckEquals(FConnectionCount, FConnectionFactory.ConnectionsCount);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestQueueCount;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LConn2: IMiniRESTSQLConnection;
+begin
+  LConn1 := FConnectionFactory.GetConnection;
+  LConn2 := FConnectionFactory.GetConnection;
+  {$IFNDEF FPC}
+  Assert.AreEqual(FConnectionCount - 2, FConnectionFactory.QueueCount);
+  {$ELSE}
+  CheckEquals(FConnectionCount - 2, FConnectionFactory.QueueCount);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestQueueCount2;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LConn2: IMiniRESTSQLConnection;
+begin
+  LConn1 := FConnectionFactory.GetConnection;
+  LConn2 := FConnectionFactory.GetConnection;
+  LConn2 := nil;
+  {$IFNDEF FPC}
+  Assert.AreEqual(FConnectionCount - 1, FConnectionFactory.QueueCount);
+  {$ELSE}
+  CheckEquals(FConnectionCount - 1, FConnectionFactory.QueueCount);
   {$IFEND}
 end;
 

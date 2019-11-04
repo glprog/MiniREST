@@ -59,6 +59,10 @@ type
     function GetConnection : IMiniRESTSQLConnection;
     procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
     function GetObject: TObject;
+    function GetConnectionsCount: Integer;
+    function GetQueueCount: Integer;
+    property ConnectionsCount: Integer read GetConnectionsCount;
+    property QueueCount: Integer read GetQueueCount;
   end;
 
   IMiniRESTSQLConnectionExecute = interface

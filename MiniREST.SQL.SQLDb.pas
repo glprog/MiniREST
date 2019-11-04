@@ -61,6 +61,8 @@ type
     function InternalGetconnection: IMiniRESTSQLConnection; override;
   public
     constructor Create(AParams: IMiniRESTSQLConnectionParamsSQLDb); overload;
+    function GetConnectionsCount: Integer; override;
+    function GetQueueCount: Integer; override;
   end;
 
   { TMiniRESTSQLConnectionSQLDb }
@@ -518,6 +520,18 @@ end;
 function TMiniRESTSQLConnectionSQLDb.InTransaction: Boolean;
 begin
   Result := FSQLConnection.Transaction.Active;
+end;
+
+function TMiniRESTSQLConnectionFactorySQLDb.GetConnectionsCount: Integer;
+begin
+  Result := FConnectionsCount;  
+end;
+
+function TMiniRESTSQLConnectionFactorySQLDb.GetQueueCount: Integer;
+begin
+  Result := FAvailableConnections;
+  if Result < 0 then
+    Result := 0;
 end;
 
 end.

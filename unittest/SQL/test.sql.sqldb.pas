@@ -70,7 +70,7 @@ begin
     LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactorySQLDb.Create(
       TMiniRESTSQLConnectionParamsSQLDb.New
-      .SetConnectionsCount(3)
+      .SetConnectionsCount(FConnectionCount)
       .SetConnectionString(LConnectionInfo.Text)
       .SetDatabseType(dbtFirebird)
       .SetDatabaseName(LDBFilePath)
