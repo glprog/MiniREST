@@ -8,6 +8,8 @@ interface
 uses SysUtils, MiniREST.SQL.Common, DB;
 
 type
+  //TLoggerMethod = procedure (const ALog: string) of object;
+
   IMiniRESTSQLDatabaseInfo = interface;
 
   IMiniRESTSQLQuery = interface
@@ -52,13 +54,19 @@ type
     function GetName: string;
     function SetName(const AName: string): IMiniRESTSQLConnection;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
+    function GetConnectionID: Integer;
   end;
 
   IMiniRESTSQLConnectionFactory = interface
   ['{6E405916-A78D-4C75-BCE7-07378517AB2D}']
-    function GetConnection : IMiniRESTSQLConnection;
-    procedure ReleaseConnection(AConnection : IMiniRESTSQLConnection);
+    function GetConnection: IMiniRESTSQLConnection; overload;
+    function GetConnection(const AIdentifier: string): IMiniRESTSQLConnection; overload;
+    procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection);
     function GetObject: TObject;
+    function GetConnectionsCount: Integer;
+    function GetQueueCount: Integer;
+    property ConnectionsCount: Integer read GetConnectionsCount;
+    property QueueCount: Integer read GetQueueCount;
   end;
 
   IMiniRESTSQLConnectionExecute = interface
@@ -106,6 +114,28 @@ type
     function GetPrimaryKey(const ATableName: string): IMiniRESTSQLPrimaryKeyInfo;
     function GetForeignKeys(const ATableName: string): TArray<IMiniRESTSQLForeignKeyInfo>;
     function GetColumns(const ATableName: string): TArray<IMiniRESTSQLColumnInfo>;
+  end;
+
+  IMiniRESTSQLConnectionParams = interface
+  ['{9038DB7F-FED8-4F77-9891-428243AF6CEA}']
+    function GetConnectionFactory: IMiniRESTSQLConnectionFactory;
+    procedure SetConnectionFactory(AConnectionFactory: IMiniRESTSQLConnectionFactory);
+    function GetConnectionID: Integer;
+    procedure SetConnectionID(const AID: Integer);
+  end;
+
+  IMiniRESTSQLConnectionFactoryEventLogger = interface
+  ['{0AA5BDBA-4294-4364-B0B9-2AF647109B93}']
+    procedure LogPoolEvent(const AMessage: string);
+  end;
+
+  IMiniRESTSQLConnectionFactoryParams = interface
+  ['{F683E0BC-0F65-4E4A-9D52-43EBE4FA5DCD}']
+    function GetConnectionFactoryEventLogger: IMiniRESTSQLConnectionFactoryEventLogger;
+    procedure SetConnectionFactoryEventLogger(ALogger: IMiniRESTSQLConnectionFactoryEventLogger);
+    function GetConnectionsCount: Integer;
+    procedure SetConnectionsCount(const ACount: Integer);
+    function GetObject: TObject;
   end;
 
 implementation

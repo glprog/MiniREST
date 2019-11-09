@@ -59,7 +59,7 @@ module.exports = function(grunt) {
           tasks: ['bgShell:sql']
         },
         sql_fpc: {
-          files: ['**/*.pas'],
+          files: ['*.pas', 'unittest/SQL/*.pas'],
           tasks: ['bgShell:sql_fpc']
         },
         orm: {
@@ -74,5 +74,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
   
     grunt.registerTask('default', ['watch:server']);
-  
+    grunt.registerTask('test_sql_fpc', ['bgShell:sql_fpc']);
   };

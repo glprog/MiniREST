@@ -29,7 +29,7 @@ begin
     LConnectionInfo.Values['Server'] := 'localhost';
     Result := TMiniRESTSQLConnectionFactoryFiredac.Create(
       TMiniRESTSQLConnectionParamsFiredac.New
-      .SetConnectionsCount(5)
+      .SetConnectionsCount(FConnectionCount)
       .SetConnectionString(LConnectionInfo.Text)
       .SetDatabseType(dbtFirebird)
       .SetUserName('SYSDBA')
