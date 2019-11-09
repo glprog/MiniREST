@@ -11,9 +11,13 @@ type
   protected
     FConnectionCount: Integer;
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
-    function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract;
+    FConnectionPoolEvents: TStringList;
+    function GetConnectionFactory: IMiniRESTSQLConnectionFactory; virtual; abstract; overload;
+    function GetConnectionFactory(AParams: IMiniRESTSQLConnectionFactoryParams): IMiniRESTSQLConnectionFactory; virtual; abstract; overload;
+    function GetConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams; virtual; abstract;
     procedure LogMessage(const AMessage: string); virtual;
     function GetSequenceValue(const ASequenceName: string): Integer;
+    procedure LogConnectionPoolEvent(const AMessage: string);
   public
     {$IFNDEF FPC}
     [SetupFixture]
@@ -88,6 +92,10 @@ type
     [Test]
     {$IFEND}
     procedure TestQueueCount2;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestConnectionPoolEventLogger;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -110,6 +118,17 @@ type
     constructor Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc);
   end;
 
+  { TConnectionFactoryEventLogger }
+
+  TConnectionFactoryEventLogger = class(TInterfacedObject, IMiniRESTSQLConnectionFactoryEventLogger)
+  private
+    FList: TStringList;
+  public
+    constructor Create(AList: TStringList);
+    destructor Destroy; override;
+    procedure LogPoolEvent(const AMessage: string);
+  end;
+
 var
   gLogHabilitado: Boolean;
 implementation
@@ -129,6 +148,7 @@ var
 begin
   LConnection := FConnectionFactory.GetConnection;  
   LConnection.Execute('DELETE FROM CUSTOMER', []);  
+  FConnectionPoolEvents.Free;
 end;
 
 procedure TMiniRESTSQLTest.TestInsert;
@@ -169,6 +189,7 @@ procedure TMiniRESTSQLTest.Setup;
 var
   LConnection: IMiniRESTSQLConnection;  
 begin
+  FConnectionPoolEvents := TStringList.Create;
   LConnection := FConnectionFactory.GetConnection;  
   LConnection.Execute('DELETE FROM CUSTOMER', []);
 end;
@@ -622,6 +643,52 @@ begin
   {$ELSE}
   CheckEquals(FConnectionCount - 1, FConnectionFactory.QueueCount);
   {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestConnectionPoolEventLogger;
+var
+  LConnectionFactory: IMiniRESTSQLConnectionFactory;
+  LParams: IMiniRESTSQLConnectionFactoryParams;
+  LConn1: IMiniRESTSQLConnection;
+  LConn2: IMiniRESTSQLConnection;
+  LLogger: IMiniRESTSQLConnectionFactoryEventLogger;
+begin
+  LParams := GetConnectionFactoryParams;
+  LLogger := TConnectionFactoryEventLogger.Create(FConnectionPoolEvents);
+  LParams.SetConnectionFactoryEventLogger(LLogger);
+  LConnectionFactory := GetConnectionFactory(LParams);
+  LConn1 := LConnectionFactory.GetConnection;
+  LConn2 := LConnectionFactory.GetConnection;
+  LConn1 := nil;
+  LConn2 := nil;
+  {$IFNDEF FPC}
+  Assert.AreEqual(4, FConnectionPoolEvents.Count);
+  {$ELSE}
+  CheckEquals(4, FConnectionPoolEvents.Count);
+  {$IFEND}
+  LConn1 := LConnectionFactory.GetConnection;
+end;
+
+procedure TMiniRESTSQLTest.LogConnectionPoolEvent(const AMessage: string);
+begin
+  FConnectionPoolEvents.Add(AMessage);  
+end;
+
+procedure TConnectionFactoryEventLogger.LogPoolEvent(const AMessage: string);
+begin
+  FList.Add(AMessage);
+end;
+
+constructor TConnectionFactoryEventLogger.Create(AList: TStringList);
+begin
+  inherited Create;
+  FList := AList;  
+end;
+
+destructor TConnectionFactoryEventLogger.Destroy;
+begin
+  FList := nil;
+  inherited Destroy;
 end;
 
 end.

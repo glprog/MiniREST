@@ -8,27 +8,24 @@ uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Commo
 
 type
   TLogEvent = procedure (Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
-  IMiniRESTSQLConnectionParamsSQLDb = interface
-  ['{F2FB358A-6369-4FCE-AA9B-75FFECA18E88}']
-    function GetConnectionsCount: Integer;
-    function SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsSQLDb;
+  IMiniRESTSQLConnectionFactoryParamsSQLDb = interface(IMiniRESTSQLConnectionFactoryParams)
+  ['{F2FB358A-6369-4FCE-AA9B-75FFECA18E88}']    
     function GetConnectionString: string;
-    function SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetConnectionString(const AConnectionString: string);
     function GetUserName: string;
-    function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetUserName(const AUserName: string);
     function GetPassword: string;
-    function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetPassword(const APassword: string);
     function GetDatabaseType: TMiniRESTSQLDatabaseType;
-    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
     function GetDatabaseName: string;
-    function SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetDatabaseName(const ADatabaseName: string);
     function GetLogEvent: TLogEvent;
-    function SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetLogEvent(const ALogEvent: TLogEvent);
   end;
 
-  TMiniRESTSQLConnectionParamsSQLDb = class(TInterfacedObject, IMiniRESTSQLConnectionParamsSQLDb)
+  TMiniRESTSQLConnectionParamsSQLDb = class(TMiniRESTSQLConnectionFactoryParams, IMiniRESTSQLConnectionFactoryParamsSQLDb)
   private
-    FConnectionsCount: Integer;
     FConnectionString: string;
     FUserName: string;
     FPassword: string;
@@ -36,31 +33,28 @@ type
     FDatabaseName: string;
     FLogEvent: TLogEvent;
   public
-    class function New: IMiniRESTSQLConnectionParamsSQLDb; 
-    function GetConnectionsCount: Integer;
-    function SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsSQLDb;
     function GetConnectionString: string;
-    function SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetConnectionString(const AConnectionString: string);
     function GetUserName: string;
-    function SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetUserName(const AUserName: string);
     function GetPassword: string;
-    function SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetPassword(const APassword: string);
     function GetDatabaseType: TMiniRESTSQLDatabaseType;
-    function SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
     function GetDatabaseName: string;
-    function SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetDatabaseName(const ADatabaseName: string);
     function GetLogEvent: TLogEvent;
-    function SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
+    procedure SetLogEvent(const ALogEvent: TLogEvent);
   end;
 
   TMiniRESTSQLConnectionFactorySQLDb = class(TMiniRESTSQLConnectionFactoryBase)
   protected
     FConnectionString: string;
-    FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
+    FConnectionParams: IMiniRESTSQLConnectionFactoryParamsSQLDb;
     procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection); override;
     function InternalGetconnection: IMiniRESTSQLConnection; override;
   public
-    constructor Create(AParams: IMiniRESTSQLConnectionParamsSQLDb); overload;
+    constructor Create(AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb); reintroduce;
     function GetConnectionsCount: Integer; override;
     function GetQueueCount: Integer; override;
   end;
@@ -73,7 +67,7 @@ type
   protected
     FSQLConnection: TSQLConnector;
     //FTransaction: TDBXTransaction;
-    FConnectionParams: IMiniRESTSQLConnectionParamsSQLDb;
+    FConnectionParams: IMiniRESTSQLConnectionFactoryParamsSQLDb;
     FTransaction: TSQLTransaction;
     FInExplicitTransaction: Boolean;
     FLogEvent: TLogEvent;
@@ -82,7 +76,7 @@ type
     procedure Log(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
     procedure SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);
   public
-    constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
+    constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb);
     destructor Destroy; override;
     procedure Connect; override;
     procedure StartTransaction; override;
@@ -127,30 +121,13 @@ uses MiniREST.SQL.Firebird;
 type
   TMiniRESTSQLConnectionBaseCrack = class(TMiniRESTSQLConnectionBase);
 
-class function TMiniRESTSQLConnectionParamsSQLDb.New: IMiniRESTSQLConnectionParamsSQLDb;
-begin
-  Result := Create;
-end;
-
-function TMiniRESTSQLConnectionParamsSQLDb.GetConnectionsCount: Integer;
-begin
-  Result := FConnectionsCount;
-end;
-
-function TMiniRESTSQLConnectionParamsSQLDb.SetConnectionsCount(const AConnectionsCount: Integer): IMiniRESTSQLConnectionParamsSQLDb;
-begin
-  Result := Self;
-  FConnectionsCount := AConnectionsCount;
-end;
-
 function TMiniRESTSQLConnectionParamsSQLDb.GetConnectionString: string;
 begin
   Result := FConnectionString;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.SetConnectionString(const AConnectionString: string): IMiniRESTSQLConnectionParamsSQLDb;
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetConnectionString(const AConnectionString: string);
 begin
-  Result := Self;
   FConnectionString := AConnectionString;
 end;
 
@@ -159,9 +136,8 @@ begin
   Result := FUserName;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.SetUserName(const AUserName: string): IMiniRESTSQLConnectionParamsSQLDb;
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetUserName(const AUserName: string);
 begin
-  Result := Self;
   FUserName := AUserName;
 end;
 
@@ -170,9 +146,8 @@ begin
   Result := FPassword;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.SetPassword(const APassword: string): IMiniRESTSQLConnectionParamsSQLDb;
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetPassword(const APassword: string);
 begin
-  Result := Self;
   FPassword := APassword;
 end;
 
@@ -181,9 +156,8 @@ begin
   Result := FDatabaseType;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType): IMiniRESTSQLConnectionParamsSQLDb;
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
 begin
-  Result := Self;
   FDatabaseType := ADatabaseType;
 end;
 
@@ -192,15 +166,17 @@ begin
   Result := TMiniRESTSQLConnectionSQLDb.Create(Self, FConnectionParams);
 end;
 
-constructor TMiniRESTSQLConnectionFactorySQLDb.Create(AParams: IMiniRESTSQLConnectionParamsSQLDb);
+constructor TMiniRESTSQLConnectionFactorySQLDb.Create(AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb);
 begin
-  inherited Create(AParams.GetConnectionsCount);
+  inherited Create(AParams);
   FConnectionParams := AParams;
   FConnectionsCount := AParams.GetConnectionsCount;  
 end;
 
-constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionParamsSQLDb);
+constructor TMiniRESTSQLConnectionSQLDb.Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb);
 begin
+  if AParams = nil then
+    raise Exception.Create('Não foram passados os parâmetros');
   FSQLConnection := TSQLConnector.Create(nil);
   FTransaction := TSQLTransaction.Create(nil);
   if (AParams.GetDatabaseType = dbtFirebird) then
@@ -474,9 +450,8 @@ begin
   Result := FDatabaseName;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.SetDatabaseName(const ADatabaseName: string): IMiniRESTSQLConnectionParamsSQLDb;
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetDatabaseName(const ADatabaseName: string);
 begin
-  Result := Self;
   FDatabaseName := ADatabaseName;
 end;
 
@@ -487,6 +462,8 @@ begin
     FQueue.Add(AConnection);       
     TMiniRESTSQLConnectionBaseCrack(AConnection.GetObject).FEstaNoPool := True;
     Inc(FAvailableConnections);
+    LogConnectionPoolEvent(Format('RELEASE CONNECTION %d - %s', [AConnection.GetConnectionID,
+      AConnection.GetName]));
   finally
     RTLeventSetEvent(FConnectionReleaseEvent);
     RTLeventSetEvent(FConnectionGetEvent);
@@ -498,10 +475,9 @@ begin
   Result := FLogEvent;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.SetLogEvent(const ALogEvent: TLogEvent): IMiniRESTSQLConnectionParamsSQLDb;
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetLogEvent(const ALogEvent: TLogEvent);
 begin
   FLogEvent := ALogEvent;
-  Result := Self;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);
