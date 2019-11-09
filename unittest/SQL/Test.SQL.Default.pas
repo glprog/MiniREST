@@ -657,8 +657,8 @@ begin
   LLogger := TConnectionFactoryEventLogger.Create(FConnectionPoolEvents);
   LParams.SetConnectionFactoryEventLogger(LLogger);
   LConnectionFactory := GetConnectionFactory(LParams);
-  LConn1 := LConnectionFactory.GetConnection;
-  LConn2 := LConnectionFactory.GetConnection;
+  LConn1 := LConnectionFactory.GetConnection('teste1');
+  LConn2 := LConnectionFactory.GetConnection('teste2');
   LConn1 := nil;
   LConn2 := nil;
   {$IFNDEF FPC}
@@ -666,7 +666,7 @@ begin
   {$ELSE}
   CheckEquals(4, FConnectionPoolEvents.Count);
   {$IFEND}
-  LConn1 := LConnectionFactory.GetConnection;
+  FConnectionPoolEvents.SaveToFile(ExtractFilePath(ParamStr(0)) + 'logPool.txt');
 end;
 
 procedure TMiniRESTSQLTest.LogConnectionPoolEvent(const AMessage: string);

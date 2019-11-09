@@ -152,3 +152,4 @@ backup/
 heap.trc
 log.txt
 MiniRESTSQLTest.xml
+/unittest/SQL/logPool.txt
