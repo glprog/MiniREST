@@ -101,6 +101,7 @@ type
     FSQL: string;
     //FParams: TFPGInterfacedObjectList<string, IMiniRESTSQLParam>;
     FParams: TFPGInterfacedObjectList<IMiniRESTSQLParam>;
+    procedure BeforeOpenMiniRESTDataSet(DataSet: TDataSet);
   public
     constructor Create(AConnection: IMiniRESTSQLConnection);
     destructor Destroy; override;
@@ -120,6 +121,25 @@ uses MiniREST.SQL.Firebird;
 
 type
   TMiniRESTSQLConnectionBaseCrack = class(TMiniRESTSQLConnectionBase);
+
+  { TSQLQuery }
+
+  TSQLQueryMiniREST = class(TSQLQuery)
+  private
+    FInternalMiniRESTSQLBeforeOpenDataSet: TDataSetNotifyEvent;
+  protected
+    procedure DoBeforeOpen; override;
+  end;
+
+{ TSQLQueryMiniREST }
+
+procedure TSQLQueryMiniREST.DoBeforeOpen;
+begin
+  inherited DoBeforeOpen;
+  if Assigned(FInternalMiniRESTSQLBeforeOpenDataSet) then
+    FInternalMiniRESTSQLBeforeOpenDataSet(Self);
+end;
+
 
 function TMiniRESTSQLConnectionParamsSQLDb.GetConnectionString: string;
 begin
@@ -330,19 +350,7 @@ begin
 end;
 
 procedure TMiniRESTSQLQuerySQLDb.Open;
-var
-  LMiniRESTSQLParam: IMiniRESTSQLParam;  
-  LParam: TParam;
-  I: Integer;
 begin
-  FConnection.Connect;
-  for I := 0 to FParams.Count - 1 do
-  begin
-    //LMiniRESTSQLParam := FParams.Data[I];
-    LMiniRESTSQLParam := FParams.Items[I];
-    LParam := FQry.ParamByName(LMiniRESTSQLParam.GetParamName);
-    TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).SetMiniRESTSQLParamToSQLParam(LMiniRESTSQLParam, LParam);
-  end;  
   FQry.Open;
 end;
 
@@ -414,11 +422,31 @@ begin
   Result := FQry;
 end;
 
+procedure TMiniRESTSQLQuerySQLDb.BeforeOpenMiniRESTDataSet(DataSet: TDataSet);
+var
+  LMiniRESTSQLParam: IMiniRESTSQLParam;
+  LParam: TParam;
+  I: Integer;
+begin
+  Assert(Assigned(FConnection), 'Não está definida a conexão');
+  if not Assigned(FConnection) then
+    raise Exception.Create('Não está definida a conexão');
+  FConnection.Connect;
+  for I := 0 to FParams.Count - 1 do
+  begin
+    //LMiniRESTSQLParam := FParams.Data[I];
+    LMiniRESTSQLParam := FParams.Items[I];
+    LParam := FQry.ParamByName(LMiniRESTSQLParam.GetParamName);
+    TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).SetMiniRESTSQLParamToSQLParam(LMiniRESTSQLParam, LParam);
+  end;
+end;
+
 constructor TMiniRESTSQLQuerySQLDb.Create(AConnection: IMiniRESTSQLConnection);
 begin
   FConnection := AConnection;
-  FQry := TSQLQuery.Create(nil);
+  FQry := TSQLQueryMiniREST.Create(nil);
   FQry.Options := [sqoKeepOpenOnCommit];
+  TSQLQueryMiniREST(FQry).FInternalMiniRESTSQLBeforeOpenDataSet := BeforeOpenMiniRESTDataSet;
   //FTransaction := TSQLTransaction.Create(nil);
   //FTransaction.Action := caNone;
   //FTransaction.Options := [stoUseImplicit];
