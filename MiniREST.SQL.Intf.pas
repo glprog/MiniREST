@@ -55,6 +55,8 @@ type
     function SetName(const AName: string): IMiniRESTSQLConnection;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
     function GetConnectionID: Integer;
+    function IsValid: Boolean;
+    procedure Invalidate;
   end;
 
   IMiniRESTSQLConnectionFactory = interface
@@ -66,6 +68,7 @@ type
     function GetObject: TObject;
     function GetConnectionsCount: Integer;
     function GetQueueCount: Integer;
+    procedure InvalidateConnections;
     property ConnectionsCount: Integer read GetConnectionsCount;
     property QueueCount: Integer read GetQueueCount;
   end;
