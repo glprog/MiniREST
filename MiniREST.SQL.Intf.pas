@@ -59,6 +59,7 @@ type
 
   IMiniRESTSQLConnectionFactory = interface
   ['{6E405916-A78D-4C75-BCE7-07378517AB2D}']
+    function GetSingletonConnection: IMiniRESTSQLConnection;
     function GetConnection: IMiniRESTSQLConnection; overload;
     function GetConnection(const AIdentifier: string): IMiniRESTSQLConnection; overload;
     procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection);
