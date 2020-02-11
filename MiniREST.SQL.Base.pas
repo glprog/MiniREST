@@ -32,6 +32,7 @@ type
     FCriticalSection: TCriticalSection;
     FConnectionCounter: Integer;
     FConnectionsCount: Integer;
+    FSingletonConnection: IMiniRESTSQLConnection;
     procedure AddConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
     procedure RemoveConnectionToNotifyFree(AConnection: IMiniRESTSQLConnection);
     procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection); virtual;
@@ -46,6 +47,7 @@ type
     function GetConnectionsCount: Integer; virtual; abstract;
     function GetQueueCount: Integer; virtual; abstract;
     function GetConnection(const AIdentifier: string): IMiniRESTSQLConnection; overload;
+    function GetSingletonConnection: IMiniRESTSQLConnection;
   end;
 
   { TMiniRESTSQLConnectionBase }
@@ -473,6 +475,13 @@ end;
 procedure TMiniRESTSQLConnectionFactoryParams.SetConnectionFactoryEventLogger(ALogger: IMiniRESTSQLConnectionFactoryEventLogger);
 begin
   FConnectionFactoryEventLogger := ALogger;
+end;
+
+function TMiniRESTSQLConnectionFactoryBase.GetSingletonConnection: IMiniRESTSQLConnection;
+begin
+  if not Assigned(FSingletonConnection) then
+    FSingletonConnection := GetConnection('Singleton Connetion');
+  Result := FSingletonConnection;
 end;
 
 initialization

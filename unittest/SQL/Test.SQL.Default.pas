@@ -96,6 +96,10 @@ type
     [Test]
     {$IFEND}
     procedure TestConnectionPoolEventLogger;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestGetSingletonConnection;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -689,6 +693,24 @@ destructor TConnectionFactoryEventLogger.Destroy;
 begin
   FList := nil;
   inherited Destroy;
+end;
+
+procedure TMiniRESTSQLTest.TestGetSingletonConnection;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LConn2: IMiniRESTSQLConnection;
+begin
+  LConn1 := FConnectionFactory.GetSingletonConnection;
+  LConn2 := FConnectionFactory.GetSingletonConnection;
+  {$IFNDEF FPC}
+  Assert.IsTrue(LConn1 <> nil, 'LCon1 está nil');
+  Assert.IsTrue(LConn2 <> nil, 'LCon2 está nil');
+  Assert.IsTrue(LConn1 = LConn2, 'LCon1 está diferente de LCon2');
+  {$ELSE}
+  CheckTrue(LConn1 <> nil, 'LCon1 está nil');
+  CheckTrue(LConn2 <> nil, 'LCon2 está nil');
+  CheckTrue(LConn1 = LConn2, 'LCon1 está diferente de LCon2');
+  {$IFEND}
 end;
 
 end.
