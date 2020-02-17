@@ -385,6 +385,7 @@ begin
       LConnection := InternalGetconnection.SetName('Connection' + IntToStr(FConnectionCounter) + ' ' + AIdentifier);
       Inc(FConnectionCounter);
       Result := LConnection;
+      TMiniRESTSQLConnectionBase(Result.GetObject).SetValid(True);
     end
     else
     begin      
@@ -491,8 +492,17 @@ begin
 end;
 
 procedure TMiniRESTSQLConnectionFactoryBase.InvalidateConnections;
+var
+  I: Integer;
+  LConnectionObj: TMiniRESTSQLConnectionBase;
+  LConnection: IMiniRESTSQLConnection;
 begin
-  
+  for I := 0 to (FConnectionsToNotifyFree.Count - 1) do
+  begin    
+    LConnectionObj := FConnectionsToNotifyFree.Items[I];
+    if LConnectionObj.GetInterface(IMiniRESTSQLConnection, LConnection) then
+      LConnection.Invalidate;
+  end;  
 end;
 
 function TMiniRESTSQLConnectionBase.IsValid: Boolean;
