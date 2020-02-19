@@ -48,6 +48,7 @@ type
     function GetQueueCount: Integer; virtual; abstract;
     function GetConnection(const AIdentifier: string): IMiniRESTSQLConnection; overload;
     function GetSingletonConnection: IMiniRESTSQLConnection;
+    procedure InvalidateConnections;
   end;
 
   { TMiniRESTSQLConnectionBase }
@@ -56,9 +57,11 @@ type
   strict private
     FOwner: TObject;
     FConnectionID: Integer;
+    FValid: Boolean;
   protected
     FName: string;
     FEstaNoPool: Boolean;
+    procedure SetValid(const AValid: Boolean);
     function _Release: Integer; {$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
     function GetObject: TObject; virtual; abstract;
     procedure SetOwner(AOwner: Pointer);
@@ -78,6 +81,8 @@ type
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; virtual; abstract;
     function InTransaction: Boolean; virtual; abstract;
     function GetConnectionID: Integer;
+    function IsValid: Boolean;
+    procedure Invalidate; virtual; abstract;
   end;
 
   TMiniRESTSQLPrimaryKeyInfo = class(TInterfacedObject, IMiniRESTSQLPrimaryKeyInfo)
@@ -354,6 +359,7 @@ begin
       LConnection := InternalGetconnection.SetName('Connection' + IntToStr(FConnectionCounter));
       Inc(FConnectionCounter);
       Result := LConnection;
+      TMiniRESTSQLConnectionBase(Result).SetValid(True);
     end
     else
     begin
@@ -379,6 +385,7 @@ begin
       LConnection := InternalGetconnection.SetName('Connection' + IntToStr(FConnectionCounter) + ' ' + AIdentifier);
       Inc(FConnectionCounter);
       Result := LConnection;
+      TMiniRESTSQLConnectionBase(Result.GetObject).SetValid(True);
     end
     else
     begin      
@@ -482,6 +489,30 @@ begin
   if not Assigned(FSingletonConnection) then
     FSingletonConnection := GetConnection('Singleton Connetion');
   Result := FSingletonConnection;
+end;
+
+procedure TMiniRESTSQLConnectionFactoryBase.InvalidateConnections;
+var
+  I: Integer;
+  LConnectionObj: TMiniRESTSQLConnectionBase;
+  LConnection: IMiniRESTSQLConnection;
+begin
+  for I := 0 to (FConnectionsToNotifyFree.Count - 1) do
+  begin    
+    LConnectionObj := FConnectionsToNotifyFree.Items[I];
+    if LConnectionObj.GetInterface(IMiniRESTSQLConnection, LConnection) then
+      LConnection.Invalidate;
+  end;  
+end;
+
+function TMiniRESTSQLConnectionBase.IsValid: Boolean;
+begin
+  Result := FValid;
+end;
+
+procedure TMiniRESTSQLConnectionBase.SetValid(const AValid: Boolean);
+begin
+  FValid := AValid;  
 end;
 
 initialization

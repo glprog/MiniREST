@@ -75,6 +75,7 @@ type
     function GetDriverName(const ADatabaseType: TMiniRESTSQLDatabaseType): string;
     procedure Log(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
     procedure SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);
+    procedure CheckConnectionIsValid;
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb);
     destructor Destroy; override;
@@ -89,6 +90,7 @@ type
     function Execute(const ACommand: string; AParams: array of IMiniRESTSQLParam): Integer; override;
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo; override;
     function InTransaction: Boolean; override;
+    procedure Invalidate; override;
   end;
 
   { TMiniRESTSQLQuerySQLDb }
@@ -224,6 +226,7 @@ var
   LName: string;
   I: Integer;
 begin
+  CheckConnectionIsValid;
   LStringList := TStringList.Create;
   try
     if FSQLConnection.Connected then
@@ -247,6 +250,7 @@ end;
 
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
 begin
+  CheckConnectionIsValid;
   if FTransaction.Active then
     FTransaction.Rollback;  
   FTransaction.StartTransaction;
@@ -255,18 +259,21 @@ end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Commit;
 begin  
+  CheckConnectionIsValid;
   FTransaction.Commit;
   FInExplicitTransaction := False;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Rollback;
 begin
+  CheckConnectionIsValid;
   FTransaction.Rollback;
   FInExplicitTransaction := False;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery: IMiniRESTSQLQuery;
 begin
+  CheckConnectionIsValid;
   Result := TMiniRESTSQLQuerySQLDb.Create(Self);
 end;
 
@@ -293,6 +300,7 @@ var
   LParam: TParam;
   LMiniRESTSQLParam: IMiniRESTSQLParam;
 begin
+  CheckConnectionIsValid;
   Self.Connect;  
   LQry := TSQLQuery.Create(nil);
   try       
@@ -321,6 +329,7 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
 begin
+  CheckConnectionIsValid;
   Result := nil;
   case FConnectionParams.GetDatabaseType of
     dbtFirebird: Result := TMiniRESTSQLDatabaseInfoFirebird.Create(Self);
@@ -523,6 +532,7 @@ end;
 
 function TMiniRESTSQLConnectionSQLDb.InTransaction: Boolean;
 begin
+  CheckConnectionIsValid;
   Result := FSQLConnection.Transaction.Active;
 end;
 
@@ -536,6 +546,19 @@ begin
   Result := FAvailableConnections;
   if Result < 0 then
     Result := 0;
+end;
+
+procedure TMiniRESTSQLConnectionSQLDb.Invalidate;
+begin
+  SetValid(False);
+  FreeAndNil(FSQLConnection);
+  FreeAndNil(FTransaction);  
+end;
+
+procedure TMiniRESTSQLConnectionSQLDb.CheckConnectionIsValid;
+begin
+  if not IsValid then
+    raise Exception.Create('A conexão foi invalidada.');  
 end;
 
 end.

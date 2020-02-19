@@ -100,6 +100,14 @@ type
     [Test]
     {$IFEND}
     procedure TestGetSingletonConnection;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestConnectionIsValid;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestConnectionIsNotValid;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -150,8 +158,9 @@ procedure TMiniRESTSQLTest.TearDown;
 var
   LConnection: IMiniRESTSQLConnection;  
 begin
-  LConnection := FConnectionFactory.GetConnection;  
+(*   LConnection := FConnectionFactory.GetConnection;  
   LConnection.Execute('DELETE FROM CUSTOMER', []);  
+  *)
   FConnectionPoolEvents.Free;
 end;
 
@@ -710,6 +719,36 @@ begin
   CheckTrue(LConn1 <> nil, 'LCon1 está nil');
   CheckTrue(LConn2 <> nil, 'LCon2 está nil');
   CheckTrue(LConn1 = LConn2, 'LCon1 está diferente de LCon2');
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestConnectionIsValid;
+var
+  LConn1: IMiniRESTSQLConnection;
+begin
+  LConn1 := FConnectionFactory.GetConnection;
+  {$IFNDEF FPC}
+  Assert.IsTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  {$ELSE}
+  CheckTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestConnectionIsNotValid;
+var
+  LConn1: IMiniRESTSQLConnection;
+begin
+  LConn1 := FConnectionFactory.GetConnection;
+  {$IFNDEF FPC}
+  Assert.IsTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  {$ELSE}
+  CheckTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  {$IFEND}
+  FConnectionFactory.InvalidateConnections;
+  {$IFNDEF FPC}
+  Assert.IsFalse(LConn1.IsValid, 'LCon1 está válida.');
+  {$ELSE}
+  CheckFalse(LConn1.IsValid, 'LCon1 está válida.');
   {$IFEND}
 end;
 
