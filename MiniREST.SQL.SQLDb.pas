@@ -22,6 +22,8 @@ type
     procedure SetDatabaseName(const ADatabaseName: string);
     function GetLogEvent: TLogEvent;
     procedure SetLogEvent(const ALogEvent: TLogEvent);
+    function GetServerHostName: string;
+    procedure SetServerHostName(const AServerHostName: string);
   end;
 
   TMiniRESTSQLConnectionParamsSQLDb = class(TMiniRESTSQLConnectionFactoryParams, IMiniRESTSQLConnectionFactoryParamsSQLDb)
@@ -32,6 +34,7 @@ type
     FDatabaseType: TMiniRESTSQLDatabaseType;
     FDatabaseName: string;
     FLogEvent: TLogEvent;
+    FServerHostName: string;
   public
     function GetConnectionString: string;
     procedure SetConnectionString(const AConnectionString: string);
@@ -45,6 +48,8 @@ type
     procedure SetDatabaseName(const ADatabaseName: string);
     function GetLogEvent: TLogEvent;
     procedure SetLogEvent(const ALogEvent: TLogEvent);
+    function GetServerHostName: string;
+    procedure SetServerHostName(const AServerHostName: string);
   end;
 
   TMiniRESTSQLConnectionFactorySQLDb = class(TMiniRESTSQLConnectionFactoryBase)
@@ -64,6 +69,7 @@ type
   TMiniRESTSQLConnectionSQLDb = class(TMiniRESTSQLConnectionBase)
   private
     function GetConnectorType(const ADatabaseType: TMiniRESTSQLDatabaseType): String;
+    procedure OnBeforeConnect(Sender: TObject);
   protected
     FSQLConnection: TSQLConnector;
     //FTransaction: TDBXTransaction;
@@ -76,6 +82,7 @@ type
     procedure Log(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
     procedure SetMiniRESTSQLParamToSQLParam(AMiniRESTSQLParam: IMiniRESTSQLParam; ASQLParam: TParam);
     procedure CheckConnectionIsValid;
+    procedure SetConnectionParams;
   public
     constructor Create(AOwner: IMiniRESTSQLConnectionFactory; AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb);
     destructor Destroy; override;
@@ -209,7 +216,8 @@ begin
   FTransaction.Action := caCommit;
   FConnectionParams := AParams;
   FInExplicitTransaction := False;
-  FLogEvent := AParams.GetLogEvent;  
+  FLogEvent := AParams.GetLogEvent;
+  FSQLConnection.BeforeConnect := OnBeforeConnect;
   inherited Create(AOwner);
 end;
 
@@ -221,31 +229,11 @@ begin
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.Connect;
-var
-  LStringList: TStringList;
-  LName: string;
-  I: Integer;
 begin
   CheckConnectionIsValid;
-  LStringList := TStringList.Create;
-  try
-    if FSQLConnection.Connected then
-      Exit;  
-    FSQLConnection.ConnectorType := GetConnectorType(FConnectionParams.GetDatabaseType);
-    FSQLConnection.LoginPrompt := False;
-    FSQLConnection.UserName := FConnectionParams.GetUserName;
-    FSQLConnection.Password := FConnectionParams.GetPassword;
-    FSQLConnection.DatabaseName := FConnectionParams.GetDatabaseName;  
-    LStringList.Text := FConnectionParams.GetConnectionString;
-    for I := 0 to LStringList.Count - 1 do      
-    begin
-      LName := LStringList.Names[I];      
-      FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
-    end;
-    FSQLConnection.Connected := True;
-  finally
-    LStringList.Free;
-  end;
+  if FSQLConnection.Connected then
+    Exit;
+  FSQLConnection.Connected := True;
 end;
 
 procedure TMiniRESTSQLConnectionSQLDb.StartTransaction;
@@ -482,6 +470,11 @@ begin
   end;  
 end;
 
+procedure TMiniRESTSQLConnectionSQLDb.OnBeforeConnect(Sender: TObject);
+begin
+  SetConnectionParams;
+end;
+
 function TMiniRESTSQLConnectionParamsSQLDb.GetDatabaseName: string;
 begin
   Result := FDatabaseName;
@@ -558,7 +551,42 @@ end;
 procedure TMiniRESTSQLConnectionSQLDb.CheckConnectionIsValid;
 begin
   if not IsValid then
-    raise Exception.Create('A conex„o foi invalidada.');  
+    raise Exception.Create('A conex√£o foi invalidada.');  
+end;
+
+procedure TMiniRESTSQLConnectionSQLDb.SetConnectionParams;
+var
+  LStringList: TStringList;
+  LName: string;
+  I: Integer;
+begin
+  LStringList := TStringList.Create;
+  try
+    FSQLConnection.ConnectorType := GetConnectorType(FConnectionParams.GetDatabaseType);
+    FSQLConnection.LoginPrompt := False;
+    FSQLConnection.UserName := FConnectionParams.GetUserName;
+    FSQLConnection.Password := FConnectionParams.GetPassword;
+    FSQLConnection.DatabaseName := FConnectionParams.GetDatabaseName;
+    FSQLConnection.HostName := FConnectionParams.GetServerHostName;
+    LStringList.Text := FConnectionParams.GetConnectionString;
+    for I := 0 to LStringList.Count - 1 do
+    begin
+      LName := LStringList.Names[I];
+      FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
+    end;
+  finally
+    LStringList.Free;
+  end;
+end;
+
+function TMiniRESTSQLConnectionParamsSQLDb.GetServerHostName: string;
+begin
+  Result := FServerHostName;  
+end;
+
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetServerHostName(const AServerHostName: string);
+begin
+  FServerHostName := AServerHostName;
 end;
 
 end.
