@@ -8,6 +8,9 @@ uses
 type
   TLogMessageProc = procedure (const AMessage: string) of object;
   TMiniRESTSQLTest = class({$IFNDEF FPC}TObject{$ELSE}TTestCase{$IFEND})
+  private
+    FServerHostName: string;
+    procedure MethodThatRaiseException;
   protected
     FConnectionCount: Integer;
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
@@ -18,6 +21,7 @@ type
     procedure LogMessage(const AMessage: string); virtual;
     function GetSequenceValue(const ASequenceName: string): Integer;
     procedure LogConnectionPoolEvent(const AMessage: string);
+    function GetServerHostName: string;
   public
     {$IFNDEF FPC}
     [SetupFixture]
@@ -108,6 +112,10 @@ type
     [Test]
     {$IFEND}
     procedure TestConnectionIsNotValid;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestFailWithInvalidServerHostName;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -202,6 +210,9 @@ procedure TMiniRESTSQLTest.Setup;
 var
   LConnection: IMiniRESTSQLConnection;  
 begin
+  {$IFDEF FPC}
+  FConnectionFactory := GetConnectionFactory;
+  {$IFEND}
   FConnectionPoolEvents := TStringList.Create;
   LConnection := FConnectionFactory.GetConnection;  
   LConnection.Execute('DELETE FROM CUSTOMER', []);
@@ -750,6 +761,28 @@ begin
   {$ELSE}
   CheckFalse(LConn1.IsValid, 'LCon1 está válida.');
   {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestFailWithInvalidServerHostName;
+begin
+  FServerHostName := 'HUE90';
+  FConnectionFactory := GetConnectionFactory(GetConnectionFactoryParams);
+  CheckException(@MethodThatRaiseException, Exception)
+end;
+
+function TMiniRESTSQLTest.GetServerHostName: string;
+begin
+  Result := FServerHostName;  
+end;
+
+procedure TMiniRESTSQLTest.MethodThatRaiseException;
+var
+  LConn: IMiniRESTSQLConnection;
+  LQry: IMiniRESTSQLQuery;
+begin
+  LConn := FConnectionFactory.GetConnection;
+  LQry := LConn.GetQuery('SELECT COUNT(*) AS TOTAL FROM CUSTOMER');
+  LQry.Open;  
 end;
 
 end.

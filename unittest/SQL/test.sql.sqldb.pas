@@ -103,7 +103,7 @@ begin
     LPathAux := ExtractFilePath(ParamStr(0)) + '..\TEST.FDB';
     LDBFilePath := ExpandFileName(LPathAux);
     LConnectionInfo.Values['DatabaseName'] := LDBFilePath;
-    LConnectionInfo.Values['Server'] := 'localhost';
+    LConnectionInfo.Values['Server'] := GetServerHostName;
     Result := TMiniRESTSQLConnectionParamsSQLDb.Create;
     Result.SetConnectionsCount(FConnectionCount);
     Result.SetConnectionString(LConnectionInfo.Text);
@@ -112,6 +112,7 @@ begin
     Result.SetUserName('SYSDBA');
     Result.SetPassword('masterkey');
     Result.SetLogEvent(@LogEvent);
+    Result.SetServerHostName(GetServerHostName);
   finally
     LConnectionInfo.Free;
   end;
