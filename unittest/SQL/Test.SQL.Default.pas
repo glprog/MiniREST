@@ -10,6 +10,7 @@ type
   TMiniRESTSQLTest = class({$IFNDEF FPC}TObject{$ELSE}TTestCase{$IFEND})
   private
     FServerHostName: string;
+    FServerPort: Integer;
     procedure MethodThatRaiseException;
   protected
     FConnectionCount: Integer;
@@ -22,6 +23,7 @@ type
     function GetSequenceValue(const ASequenceName: string): Integer;
     procedure LogConnectionPoolEvent(const AMessage: string);
     function GetServerHostName: string;
+    function GetServerPort: Integer;
   public
     {$IFNDEF FPC}
     [SetupFixture]
@@ -116,6 +118,14 @@ type
     [Test]
     {$IFEND}
     procedure TestFailWithInvalidServerHostName;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestFailWithInvalidServerPort;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestSuccessWithDefaultServerPort;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -210,6 +220,8 @@ procedure TMiniRESTSQLTest.Setup;
 var
   LConnection: IMiniRESTSQLConnection;  
 begin
+  FServerHostName := 'LOCALHOST';
+  FServerPort := 3050;
   {$IFDEF FPC}
   FConnectionFactory := GetConnectionFactory;
   {$IFEND}
@@ -783,6 +795,39 @@ begin
   LConn := FConnectionFactory.GetConnection;
   LQry := LConn.GetQuery('SELECT COUNT(*) AS TOTAL FROM CUSTOMER');
   LQry.Open;  
+end;
+
+procedure TMiniRESTSQLTest.TestFailWithInvalidServerPort;
+begin
+  FServerPort := 3099;
+  FConnectionFactory := GetConnectionFactory(GetConnectionFactoryParams);
+  CheckException(@MethodThatRaiseException, Exception);
+end;
+
+function TMiniRESTSQLTest.GetServerPort: Integer;
+begin
+  Result := FServerPort;  
+end;
+
+procedure TMiniRESTSQLTest.TestSuccessWithDefaultServerPort;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LQry: IMiniRESTSQLQuery;
+  LTotal: Integer;
+begin
+  FServerPort := 0;
+  FConnectionFactory := GetConnectionFactory(GetConnectionFactoryParams);
+  LConn1 := FConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE NAME = :NAME';
+  LQry.ParamByName('NAME').AsString := 'HUE';
+  LQry.Open;
+
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.Active);
+  {$ELSE}
+  CheckTrue(LQry.DataSet.Active);
+  {$IFEND}
 end;
 
 end.
