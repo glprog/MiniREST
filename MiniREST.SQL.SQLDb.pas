@@ -24,6 +24,8 @@ type
     procedure SetLogEvent(const ALogEvent: TLogEvent);
     function GetServerHostName: string;
     procedure SetServerHostName(const AServerHostName: string);
+    function GetServerPort: Integer;
+    procedure SetServerPort(const AServerPort: Integer);
   end;
 
   TMiniRESTSQLConnectionParamsSQLDb = class(TMiniRESTSQLConnectionFactoryParams, IMiniRESTSQLConnectionFactoryParamsSQLDb)
@@ -35,6 +37,7 @@ type
     FDatabaseName: string;
     FLogEvent: TLogEvent;
     FServerHostName: string;
+    FPort: Integer;
   public
     function GetConnectionString: string;
     procedure SetConnectionString(const AConnectionString: string);
@@ -50,6 +53,8 @@ type
     procedure SetLogEvent(const ALogEvent: TLogEvent);
     function GetServerHostName: string;
     procedure SetServerHostName(const AServerHostName: string);
+    function GetServerPort: Integer;
+    procedure SetServerPort(const AServerPort: Integer);
   end;
 
   TMiniRESTSQLConnectionFactorySQLDb = class(TMiniRESTSQLConnectionFactoryBase)
@@ -568,6 +573,12 @@ begin
     FSQLConnection.Password := FConnectionParams.GetPassword;
     FSQLConnection.DatabaseName := FConnectionParams.GetDatabaseName;
     FSQLConnection.HostName := FConnectionParams.GetServerHostName;
+    if (FConnectionParams.GetServerPort > 0) and (FConnectionParams.GetDatabaseType = dbtFirebird) then
+    begin
+      FSQLConnection.HostName := '';
+      FSQLConnection.DatabaseName := FConnectionParams.GetServerHostName + '/' + IntToStr(FConnectionParams.GetServerPort) + ':' +
+        FConnectionParams.GetDatabaseName;
+    end;
     LStringList.Text := FConnectionParams.GetConnectionString;
     for I := 0 to LStringList.Count - 1 do
     begin
@@ -587,6 +598,16 @@ end;
 procedure TMiniRESTSQLConnectionParamsSQLDb.SetServerHostName(const AServerHostName: string);
 begin
   FServerHostName := AServerHostName;
+end;
+
+function TMiniRESTSQLConnectionParamsSQLDb.GetServerPort: Integer;
+begin
+  Result := FPort;  
+end;
+
+procedure TMiniRESTSQLConnectionParamsSQLDb.SetServerPort(const AServerPort: Integer);
+begin
+  FPort := AServerPort;
 end;
 
 end.

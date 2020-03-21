@@ -113,6 +113,7 @@ begin
     Result.SetPassword('masterkey');
     Result.SetLogEvent(@LogEvent);
     Result.SetServerHostName(GetServerHostName);
+    Result.SetServerPort(GetServerPort);
   finally
     LConnectionInfo.Free;
   end;
