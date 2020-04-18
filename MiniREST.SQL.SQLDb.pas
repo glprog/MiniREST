@@ -531,7 +531,7 @@ end;
 function TMiniRESTSQLConnectionSQLDb.InTransaction: Boolean;
 begin
   CheckConnectionIsValid;
-  Result := FSQLConnection.Transaction.Active;
+  Result := FInExplicitTransaction and FSQLConnection.Transaction.Active;
 end;
 
 function TMiniRESTSQLConnectionFactorySQLDb.GetConnectionsCount: Integer;
