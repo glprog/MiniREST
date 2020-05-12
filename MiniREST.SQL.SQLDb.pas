@@ -126,7 +126,8 @@ type
     function ParamByName(const AParamName: string): IMiniRESTSQLParam;
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
     function ApplyUpdates(const AMaxErrors: Integer): Integer;
-    function GetDataSet: TDataSet;    
+    function GetDataSet: TDataSet;
+    function GetParams: TArray<IMiniRESTSQLParam>;
   end;
 
 implementation
@@ -424,6 +425,15 @@ begin
   Result := FQry;
 end;
 
+function TMiniRESTSQLQuerySQLDb.GetParams: TArray<IMiniRESTSQLParam>;
+var
+  I: Integer;
+begin
+  SetLength(Result, FParams.Count);
+  for I := 0 to FParams.Count -1 do
+    Result[I] := FParams.Items[I];
+end;
+
 procedure TMiniRESTSQLQuerySQLDb.BeforeOpenMiniRESTDataSet(DataSet: TDataSet);
 var
   LMiniRESTSQLParam: IMiniRESTSQLParam;
@@ -439,6 +449,8 @@ begin
     //LMiniRESTSQLParam := FParams.Data[I];
     LMiniRESTSQLParam := FParams.Items[I];
     LParam := FQry.ParamByName(LMiniRESTSQLParam.GetParamName);
+    if LMiniRESTSQLParam.GetParamSize > 0 then
+      LParam.Size := LMiniRESTSQLParam.GetParamSize;
     TMiniRESTSQLConnectionSQLDb(FConnection.GetObject).SetMiniRESTSQLParamToSQLParam(LMiniRESTSQLParam, LParam);
   end;
 end;
@@ -526,6 +538,8 @@ begin
     stBoolean: ASQLParam.AsBoolean := AMiniRESTSQLParam.AsBoolean;
     stVariant, stUndefined: ASQLParam.Value := AMiniRESTSQLParam.GetAsVariant;
   end;
+  if (AMiniRESTSQLParam.GetParamType = stString) and (AMiniRESTSQLParam.GetParamSize > 0) then
+    ASQLParam.AsString := Copy(ASQLParam.AsString, 1, AMiniRESTSQLParam.GetParamSize);
 end;
 
 function TMiniRESTSQLConnectionSQLDb.InTransaction: Boolean;
@@ -568,6 +582,8 @@ begin
   LStringList := TStringList.Create;
   try
     FSQLConnection.ConnectorType := GetConnectorType(FConnectionParams.GetDatabaseType);
+    if FConnectionParams.GetCharSet <> '' then
+      FSQLConnection.CharSet := FConnectionParams.GetCharSet;
     FSQLConnection.LoginPrompt := False;
     FSQLConnection.UserName := FConnectionParams.GetUserName;
     FSQLConnection.Password := FConnectionParams.GetPassword;

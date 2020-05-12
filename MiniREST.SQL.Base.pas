@@ -137,12 +137,15 @@ type
   private
     FConnectionCount: Integer;
     FConnectionFactoryEventLogger: IMiniRESTSQLConnectionFactoryEventLogger;
+    FCharSet: string;
   public
     function GetConnectionsCount: Integer;
     procedure SetConnectionsCount(const ACount: Integer);
     function GetObject: TObject;
     function GetConnectionFactoryEventLogger: IMiniRESTSQLConnectionFactoryEventLogger;
     procedure SetConnectionFactoryEventLogger(ALogger: IMiniRESTSQLConnectionFactoryEventLogger);
+    function GetCharSet: string;
+    procedure SetCharSet(const ACharSet: string);
   end;
 
 implementation
@@ -513,6 +516,16 @@ end;
 procedure TMiniRESTSQLConnectionBase.SetValid(const AValid: Boolean);
 begin
   FValid := AValid;  
+end;
+
+function TMiniRESTSQLConnectionFactoryParams.GetCharSet: string;
+begin
+  Result := FCharSet;
+end;
+
+procedure TMiniRESTSQLConnectionFactoryParams.SetCharSet(const ACharSet: string);
+begin
+  FCharSet := ACharSet;
 end;
 
 initialization
