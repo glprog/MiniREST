@@ -126,6 +126,14 @@ type
     [Test]
     {$IFEND}
     procedure TestSuccessWithDefaultServerPort;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestParamSize;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestCharSet;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -827,6 +835,89 @@ begin
   Assert.AreTrue(LQry.DataSet.Active);
   {$ELSE}
   CheckTrue(LQry.DataSet.Active);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestParamSize;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LQry, LQryID: IMiniRESTSQLQuery;
+  LId: Integer;
+  I: Integer;
+begin
+  {
+    LENGTH OF PHONE IS 15, THEN THE PARAM SIZE SHOULD BE 15,
+    IF THE VALUE SIZE OF PARAM ARE BIGGER THAN SIZE,
+    THE VALUE WILL TRUNCATED
+  }  
+  LConn1 := FConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQryID := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
+  LQry.Open;
+  for I := 0 to 5 do
+  begin
+    LQryID.Close;
+    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+    LQryID.Open;
+    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
+    LQry.DataSet.Append;
+    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
+    LQry.DataSet.FieldByName('PHONE').AsString := '999999999999999';
+    LQry.DataSet.Post;    
+  end;
+  LQry.ApplyUpdates(0);
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM CUSTOMER WHERE PHONE = :PHONE';
+  LQry.ParamByName('PHONE').SetParamSize(15);
+  LQry.ParamByName('PHONE').AsString := 'BIG BIG BIG BIG 999999999999999 BIG BIG';
+  LQry.Open;
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.Active);
+  {$ELSE}
+  CheckTrue(LQry.DataSet.Active);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestCharSet;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LQry: IMiniRESTSQLQuery;  
+  LConnectionFactory: IMiniRESTSQLConnectionFactory;
+  LConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams;
+  LExpectedFilePath: string;
+begin
+  LConnectionFactoryParams := GetConnectionFactoryParams;  
+  LConnectionFactoryParams.SetCharSet('UTF8');
+  LConnectionFactory := GetConnectionFactory(LConnectionFactoryParams);
+  LExpectedFilePath := ParamStr(0);
+  LConn1 := LConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM MON$ATTACHMENTS WHERE MON$CHARACTER_SET_ID = :CHARSET_ID ' +
+  ' AND MON$REMOTE_PROCESS = :REMOTE_PROCESS';
+  LQry.ParamByName('CHARSET_ID').AsInteger := 4; // UTF8 FIREBIRD 2.5;
+  LQry.ParamByName('REMOTE_PROCESS').AsString := LExpectedFilePath;  
+  LQry.Open;    
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.RecordCount = 1);
+  {$ELSE}
+  CheckTrue(LQry.DataSet.RecordCount = 1);
+  {$IFEND}
+
+  LConnectionFactoryParams.SetCharSet('WIN1252');
+  LConnectionFactory := GetConnectionFactory(LConnectionFactoryParams);  
+  LConn1 := LConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SELECT * FROM MON$ATTACHMENTS WHERE MON$CHARACTER_SET_ID = :CHARSET_ID ' +
+  ' AND MON$REMOTE_PROCESS = :REMOTE_PROCESS';
+  LQry.ParamByName('CHARSET_ID').AsInteger := 53; // WIN1252 FIREBIRD 2.5;
+  LQry.ParamByName('REMOTE_PROCESS').AsString := LExpectedFilePath;  
+  LQry.Open;    
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.RecordCount = 1);
+  {$ELSE}
+  CheckTrue(LQry.DataSet.RecordCount = 1);
   {$IFEND}
 end;
 

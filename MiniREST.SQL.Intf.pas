@@ -20,6 +20,7 @@ type
     procedure SetSQL(const ASQL: string);
     function ParamByName(const AParamName: string): IMiniRESTSQLParam;
     function AddParam(AParam: IMiniRESTSQLParam): IMiniRESTSQLQuery;
+    function GetParams: TArray<IMiniRESTSQLParam>;
     {function GetValue(AField: string) : Variant; overload;
     function GetValue(AField: string; ADefault: Variant): Variant; overload;
     function FieldByName(const AFieldName: string): TField;
@@ -139,6 +140,8 @@ type
     procedure SetConnectionFactoryEventLogger(ALogger: IMiniRESTSQLConnectionFactoryEventLogger);
     function GetConnectionsCount: Integer;
     procedure SetConnectionsCount(const ACount: Integer);
+    function GetCharSet: string;
+    procedure SetCharSet(const ACharSet: string);    
     function GetObject: TObject;
   end;
 

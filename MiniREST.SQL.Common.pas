@@ -32,6 +32,8 @@ type
     function GetAsVariant: Variant;
     procedure SetAsVariant(const AValue: Variant);
     function GetParamType: TMiniRESTSQLParamType;
+    function GetParamSize: Integer;
+    function SetParamSize(const AParamSize: Integer): IMiniRESTSQLParam;
     property AsString: string read GetAsString write SetAsString;
     property AsFloat: Double read GetAsFloat write SetAsFloat;
     property AsInteger: Integer read GetAsInteger write SetAsInteger;
@@ -44,6 +46,7 @@ type
   private
     FParamName: string;
     FParamType: TMiniRESTSQLParamType;
+    FParamSize: Integer;
     {$IFNDEF FPC}
     FValue: TValue;
     {$ELSE}
@@ -75,6 +78,8 @@ type
     function GetAsVariant: Variant;
     procedure SetAsVariant(const AValue: Variant);
     function GetParamType: TMiniRESTSQLParamType;
+    function GetParamSize: Integer;
+    function SetParamSize(const AParamSize: Integer): IMiniRESTSQLParam;
   end;
 
 implementation
@@ -237,6 +242,17 @@ end;
 procedure TMiniRESTSQLParam.SetParamName(const AName: string);
 begin
   FParamName := UpperCase(AName);
+end;
+
+function TMiniRESTSQLParam.GetParamSize: Integer;
+begin
+  Result := FParamSize;
+end;
+
+function TMiniRESTSQLParam.SetParamSize(const AParamSize: Integer): IMiniRESTSQLParam;
+begin
+  FParamSize := AParamSize;
+  Result := Self;
 end;
 
 end.
