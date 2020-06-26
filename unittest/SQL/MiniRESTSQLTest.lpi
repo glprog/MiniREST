@@ -33,40 +33,47 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="10">
       <Unit0>
         <Filename Value="MiniRESTSQLTest.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="test.sql.sqldb.pas"/>
+        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Test.SQL.SQLDb"/>
       </Unit1>
       <Unit2>
-        <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
+        <Filename Value="..\..\MiniREST.SQL.Common.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="..\..\MiniREST.SQL.Common.pas"/>
+        <Filename Value="..\..\MiniREST.SQL.Firebird.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="..\..\MiniREST.SQL.Firebird.pas"/>
+        <Filename Value="..\..\MiniREST.SQL.Intf.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="..\..\MiniREST.SQL.Intf.pas"/>
+        <Filename Value="Test.SQL.Default.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit5>
       <Unit6>
-        <Filename Value="Test.SQL.Default.pas"/>
+        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="..\..\MiniREST.SQL.SQLDb.pas"/>
+        <Filename Value="Test.SQL.SQLDb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="Test.SQL.Firebird.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Test.SQL.PostgreSQL.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

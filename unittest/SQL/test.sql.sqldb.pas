@@ -12,17 +12,17 @@ type
   { TMiniRESTSQLTestSQLDbFPC }
 
   TMiniRESTSQLTestSQLDbFPC= class(TMiniRESTSQLTest)
-  private
-    function InternalGetConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParamsSQLDb;
   protected
     procedure SetUpOnce; override;
     function GetConnectionFactory: IMiniRESTSQLConnectionFactory; override; overload;
     function GetConnectionFactory(AParams: IMiniRESTSQLConnectionFactoryParams): IMiniRESTSQLConnectionFactory; override; overload;
-    function GetConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams; override;
     procedure LogMessage(const AMessage: string); override;
   published
     procedure TestSQLDB1;
   end;
+
+  procedure LogEvent(Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String); overload;
+  procedure LogEvent(Const Msg : String); overload;
 
 implementation
 
@@ -82,45 +82,11 @@ var
   LParams: IMiniRESTSQLConnectionFactoryParamsSQLDb;
 begin
   if not AParams.GetObject.GetInterface(IMiniRESTSQLConnectionFactoryParamsSQLDb, LParams) then
-    raise Exception.Create('AParams n„o implementa a interface IMiniRESTSQLConnectionFactoryParamsSQLDb');
+    raise Exception.Create('AParams n√£o implementa a interface IMiniRESTSQLConnectionFactoryParamsSQLDb');
   Result := TMiniRESTSQLConnectionFactorySQLDb.Create(LParams);
 end;
 
-function TMiniRESTSQLTestSQLDbFPC.GetConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams;
-begin
-  Result := InternalGetConnectionFactoryParams;
-end;
-
-function TMiniRESTSQLTestSQLDbFPC.InternalGetConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParamsSQLDb;
-var
-  LConnectionInfo: TStringList;
-  LDBFilePath: string;
-  LPathAux: string;
-begin
-  LConnectionInfo := TStringList.Create;
-  try
-    //LConnectionInfo.LoadFromFile('..\..\dbxcon.txt');
-    LPathAux := ExtractFilePath(ParamStr(0)) + '..\TEST.FDB';
-    LDBFilePath := ExpandFileName(LPathAux);
-    LConnectionInfo.Values['DatabaseName'] := LDBFilePath;
-    LConnectionInfo.Values['Server'] := GetServerHostName;
-    Result := TMiniRESTSQLConnectionParamsSQLDb.Create;
-    Result.SetConnectionsCount(FConnectionCount);
-    Result.SetConnectionString(LConnectionInfo.Text);
-    Result.SetDatabseType(dbtFirebird);
-    Result.SetDatabaseName(LDBFilePath);
-    Result.SetUserName('SYSDBA');
-    Result.SetPassword('masterkey');
-    Result.SetLogEvent(@LogEvent);
-    Result.SetServerHostName(GetServerHostName);
-    Result.SetServerPort(GetServerPort);
-  finally
-    LConnectionInfo.Free;
-  end;
-end;
-
-initialization
-  RegisterTest(TMiniRESTSQLTestSQLDbFPC.Suite);
+initialization  
   if FileExists('log.txt') then
     DeleteFile('log.txt');
   gLog := TStringList.Create;

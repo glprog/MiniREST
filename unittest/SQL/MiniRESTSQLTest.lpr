@@ -3,7 +3,7 @@ program MiniRESTSQLTest;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, TextTestRunner, Test.SQL.SQLDb, SysUtils;
+  Classes, TextTestRunner, Test.SQL.Firebird, Test.SQL.PostgreSQL, SysUtils;
 
 begin
   {$DEFINE XMLLISTENER}

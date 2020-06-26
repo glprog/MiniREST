@@ -24,6 +24,9 @@ type
     procedure LogConnectionPoolEvent(const AMessage: string);
     function GetServerHostName: string;
     function GetServerPort: Integer;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType; virtual; abstract;
+    procedure TestCharSetFirebird;
+    procedure TestCharSetPostgreSQL;
   public
     {$IFNDEF FPC}
     [SetupFixture]
@@ -149,11 +152,13 @@ type
     FID: Integer;
     FFactory: IMiniRESTSQLConnectionFactory;
     FLogMessageProc: TLogMessageProc;
+    FTestCase: TMiniRESTSQLTest;
     procedure LogMessage(const AMessage: string);
   protected
     procedure Execute; override;
   public
-    constructor Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc);
+    constructor Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc;
+      ATestCase: TMiniRESTSQLTest);
   end;
 
   { TConnectionFactoryEventLogger }
@@ -187,6 +192,7 @@ begin
 (*   LConnection := FConnectionFactory.GetConnection;  
   LConnection.Execute('DELETE FROM CUSTOMER', []);  
   *)
+  FConnectionFactory := nil;
   FConnectionPoolEvents.Free;
 end;
 
@@ -200,17 +206,21 @@ begin
   LConn1 := FConnectionFactory.GetConnection;
   LConn2 := FConnectionFactory.GetConnection;
   LQry := LConn1.GetQuery;
-  LQryID := LConn1.GetQuery;
+  if GetDatabaseType = dbtFirebird then
+    LQryID := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
   LQry.Open;
   for I := 0 to 99 do
   begin
-    LQryID.Close;
-    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
-    LQryID.Open;
-    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
     LQry.DataSet.Append;
-    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    if GetDatabaseType = dbtFirebird then
+    begin
+      LQryID.Close;
+      LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+      LQryID.Open;
+      LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;            
+      LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    end;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
@@ -229,7 +239,11 @@ var
   LConnection: IMiniRESTSQLConnection;  
 begin
   FServerHostName := 'LOCALHOST';
-  FServerPort := 3050;
+  if GetDatabaseType = dbtFirebird then
+    FServerPort := 3050
+  else
+  if GetDatabaseType = dbtPostgreSQL then
+    FServerPort := 5432;
   {$IFDEF FPC}
   FConnectionFactory := GetConnectionFactory;
   {$IFEND}
@@ -359,12 +373,15 @@ begin
   LQry.Open;  
   for I := 0 to 99 do
   begin
-    LQryID.Close;
-    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
-    LQryID.Open;
-    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
     LQry.DataSet.Append;
-    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    if GetDatabaseType = dbtFirebird then
+    begin
+      LQryID.Close;
+      LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+      LQryID.Open;
+      LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
+      LQry.DataSet.FieldByName('ID').AsInteger := LId;      
+    end;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
@@ -395,12 +412,15 @@ begin
   LQry.Open;  
   for I := 0 to 99 do
   begin
-    LQryID.Close;
-    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
-    LQryID.Open;
-    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
     LQry.DataSet.Append;
-    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    if GetDatabaseType = dbtFirebird then
+    begin
+      LQryID.Close;
+      LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+      LQryID.Open;
+      LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
+      LQry.DataSet.FieldByName('ID').AsInteger := LId;      
+    end;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
@@ -433,7 +453,7 @@ begin
   LConn := FConnectionFactory.GetConnection;  
   for I := 1 to LCount do
   begin
-    TThreadTesteInsert2.Create(I, False, FConnectionFactory, {$IFDEF FPC}@LogMessage{$ELSE}nil{$IFEND});
+    TThreadTesteInsert2.Create(I, False, FConnectionFactory, {$IFDEF FPC}@LogMessage{$ELSE}nil{$IFEND}, Self);
   end;
   while not (gContatorTesteInsert2 = LCount) do
     Sleep(1000);  
@@ -457,18 +477,21 @@ begin
     Sleep(Random(10) * 100);
     LConn := FFactory.GetConnection;    
     LQry := LConn.GetQuery;
-    LQryID := LConn.GetQuery;
-    
-    LQryID.Close;
-    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
-    LQryID.Open;    
-    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
-    LogMessage('CUSTOMER ID: ' + IntToStr(LId));
-    LQryID.Close;
+    if FTestCase.GetDatabaseType = dbtFirebird then
+    begin
+      LQryID := LConn.GetQuery;    
+      LQryID.Close;
+      LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+      LQryID.Open;    
+      LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;
+      LogMessage('CUSTOMER ID: ' + IntToStr(LId));
+      LQryID.Close;      
+    end;
     LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
     LQry.Open;          
     LQry.DataSet.Insert;
-    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    if FTestCase.GetDatabaseType = dbtFirebird then
+      LQry.DataSet.FieldByName('ID').AsInteger := LId;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
         
@@ -478,13 +501,15 @@ begin
   end;    
 end;
 
-constructor TThreadTesteInsert2.Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc);
+constructor TThreadTesteInsert2.Create(const AID: Integer; ACreateSuspended: Boolean; AFactory: IMiniRESTSQLConnectionFactory; ALogMessageProc: TLogMessageProc;
+  ATestCase: TMiniRESTSQLTest);
 begin
   inherited Create(ACreateSuspended);
   FFactory := AFactory;
   FreeOnTerminate := True;
   FLogMessageProc := ALogMessageProc;
-  FID := AID;  
+  FID := AID;
+  FTestCase := ATestCase;
 end;
 
 procedure TMiniRESTSQLTest.LogMessage(const AMessage: string);
@@ -512,7 +537,8 @@ begin
   for I := 1 to 5 do
   begin    
     LQry.DataSet.Append;
-    LQry.DataSet.FieldByName('ID').AsInteger := GetSequenceValue('gen_customer_id');
+    if GetDatabaseType = dbtFirebird then
+      LQry.DataSet.FieldByName('ID').AsInteger := GetSequenceValue('gen_customer_id');
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.Post;    
   end;
@@ -607,23 +633,23 @@ var
 begin
   LConn1 := FConnectionFactory.GetConnection;  
   {$IFNDEF FPC}
-  Assert.IsFalse(LConn1.InTransaction, 'Está em transação');
+  Assert.IsFalse(LConn1.InTransaction, 'Estï¿½ em transaï¿½ï¿½o');
   {$ELSE}
-  CheckFalse(LConn1.InTransaction, 'Está em transação');
+  CheckFalse(LConn1.InTransaction, 'Estï¿½ em transaï¿½ï¿½o');
   {$IFEND}
   LConn1.StartTransaction;
 
   {$IFNDEF FPC}
-  Assert.IsTrue(LConn1.InTransaction, 'Não está em transação');
+  Assert.IsTrue(LConn1.InTransaction, 'Nï¿½o estï¿½ em transaï¿½ï¿½o');
   {$ELSE}
-  CheckTrue(LConn1.InTransaction, 'Não está em transação');
+  CheckTrue(LConn1.InTransaction, 'Nï¿½o estï¿½ em transaï¿½ï¿½o');
   {$IFEND}
   LConn1.Commit;
 
   {$IFNDEF FPC}
-  Assert.IsFalse(LConn1.InTransaction, 'Está em transação');
+  Assert.IsFalse(LConn1.InTransaction, 'Estï¿½ em transaï¿½ï¿½o');
   {$ELSE}
-  CheckFalse(LConn1.InTransaction, 'Está em transação');
+  CheckFalse(LConn1.InTransaction, 'Estï¿½ em transaï¿½ï¿½o');
   {$IFEND}
 end;
 
@@ -639,7 +665,7 @@ begin
   LQry.ParamByName('NAME').AsString := 'HUE';
   LQry.Open;
 
-  // O teste é assim para verificar se não vai dar erro quando não existir o parâmetro,
+  // O teste ï¿½ assim para verificar se nï¿½o vai dar erro quando nï¿½o existir o parï¿½metro,
   // passado anteriormente
   LQry.Close;
   LQry.SQL := 'SELECT * FROM CUSTOMER';
@@ -743,13 +769,13 @@ begin
   LConn1 := FConnectionFactory.GetSingletonConnection;
   LConn2 := FConnectionFactory.GetSingletonConnection;
   {$IFNDEF FPC}
-  Assert.IsTrue(LConn1 <> nil, 'LCon1 está nil');
-  Assert.IsTrue(LConn2 <> nil, 'LCon2 está nil');
-  Assert.IsTrue(LConn1 = LConn2, 'LCon1 está diferente de LCon2');
+  Assert.IsTrue(LConn1 <> nil, 'LCon1 estï¿½ nil');
+  Assert.IsTrue(LConn2 <> nil, 'LCon2 estï¿½ nil');
+  Assert.IsTrue(LConn1 = LConn2, 'LCon1 estï¿½ diferente de LCon2');
   {$ELSE}
-  CheckTrue(LConn1 <> nil, 'LCon1 está nil');
-  CheckTrue(LConn2 <> nil, 'LCon2 está nil');
-  CheckTrue(LConn1 = LConn2, 'LCon1 está diferente de LCon2');
+  CheckTrue(LConn1 <> nil, 'LCon1 estï¿½ nil');
+  CheckTrue(LConn2 <> nil, 'LCon2 estï¿½ nil');
+  CheckTrue(LConn1 = LConn2, 'LCon1 estï¿½ diferente de LCon2');
   {$IFEND}
 end;
 
@@ -759,9 +785,9 @@ var
 begin
   LConn1 := FConnectionFactory.GetConnection;
   {$IFNDEF FPC}
-  Assert.IsTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  Assert.IsTrue(LConn1.IsValid, 'LCon1 nï¿½o estï¿½ vï¿½lida.');
   {$ELSE}
-  CheckTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  CheckTrue(LConn1.IsValid, 'LCon1 nï¿½o estï¿½ vï¿½lida.');
   {$IFEND}
 end;
 
@@ -771,15 +797,15 @@ var
 begin
   LConn1 := FConnectionFactory.GetConnection;
   {$IFNDEF FPC}
-  Assert.IsTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  Assert.IsTrue(LConn1.IsValid, 'LCon1 nï¿½o estï¿½ vï¿½lida.');
   {$ELSE}
-  CheckTrue(LConn1.IsValid, 'LCon1 não está válida.');
+  CheckTrue(LConn1.IsValid, 'LCon1 nï¿½o estï¿½ vï¿½lida.');
   {$IFEND}
   FConnectionFactory.InvalidateConnections;
   {$IFNDEF FPC}
-  Assert.IsFalse(LConn1.IsValid, 'LCon1 está válida.');
+  Assert.IsFalse(LConn1.IsValid, 'LCon1 estï¿½ vï¿½lida.');
   {$ELSE}
-  CheckFalse(LConn1.IsValid, 'LCon1 está válida.');
+  CheckFalse(LConn1.IsValid, 'LCon1 estï¿½ vï¿½lida.');
   {$IFEND}
 end;
 
@@ -857,12 +883,15 @@ begin
   LQry.Open;
   for I := 0 to 5 do
   begin
-    LQryID.Close;
-    LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
-    LQryID.Open;
-    LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
     LQry.DataSet.Append;
-    LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    if GetDatabaseType = dbtFirebird then
+    begin
+      LQryID.Close;
+      LQryID.SQL := 'select gen_id(gen_customer_id, 1) from rdb$database';
+      LQryID.Open;
+      LId := LQryID.DataSet.FieldByName('GEN_ID').AsInteger;      
+      LQry.DataSet.FieldByName('ID').AsInteger := LId;
+    end;
     LQry.DataSet.FieldByName('NAME').AsString := 'HUE';
     LQry.DataSet.FieldByName('PHONE').AsString := '999999999999999';
     LQry.DataSet.Post;    
@@ -880,7 +909,7 @@ begin
   {$IFEND}
 end;
 
-procedure TMiniRESTSQLTest.TestCharSet;
+procedure TMiniRESTSQLTest.TestCharSetFirebird;
 var
   LConn1: IMiniRESTSQLConnection;
   LQry: IMiniRESTSQLQuery;  
@@ -918,6 +947,51 @@ begin
   Assert.AreTrue(LQry.DataSet.RecordCount = 1);
   {$ELSE}
   CheckTrue(LQry.DataSet.RecordCount = 1);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestCharSet;
+begin
+  if GetDatabaseType = dbtFirebird then
+    TestCharSetFirebird
+  else
+  if GetDatabaseType = dbtPostgreSQL then
+    CheckTrue(True); {TODO: Verificar charset postgresql}
+    //TestCharSetPostgreSQL;
+end;
+
+procedure TMiniRESTSQLTest.TestCharSetPostgreSQL;
+var
+  LConn1: IMiniRESTSQLConnection;
+  LQry: IMiniRESTSQLQuery;  
+  LConnectionFactory: IMiniRESTSQLConnectionFactory;
+  LConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams;
+  LExpectedFilePath: string;
+begin
+  LConnectionFactoryParams := GetConnectionFactoryParams;  
+  LConnectionFactoryParams.SetCharSet('UTF8');
+  LConnectionFactory := GetConnectionFactory(LConnectionFactoryParams);
+  LExpectedFilePath := ParamStr(0);
+  LConn1 := LConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SHOW CLIENT_ENCODING';  
+  LQry.Open;    
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.FieldByName('CLIENT_ENCODING').AsString = 'UTF8');
+  {$ELSE}
+  CheckTrue(LQry.DataSet.FieldByName('CLIENT_ENCODING').AsString = 'UTF8');
+  {$IFEND}
+
+  LConnectionFactoryParams.SetCharSet('WIN1252');
+  LConnectionFactory := GetConnectionFactory(LConnectionFactoryParams);  
+  LConn1 := LConnectionFactory.GetConnection;
+  LQry := LConn1.GetQuery;
+  LQry.SQL := 'SHOW CLIENT_ENCODING';
+  LQry.Open;    
+  {$IFNDEF FPC}
+  Assert.AreTrue(LQry.DataSet.FieldByName('CLIENT_ENCODING').AsString = 'WIN1252');
+  {$ELSE}
+  CheckEquals('WIN1252', LQry.DataSet.FieldByName('CLIENT_ENCODING').AsString);
   {$IFEND}
 end;
 
