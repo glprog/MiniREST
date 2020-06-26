@@ -4,7 +4,7 @@ unit MiniREST.SQL.SQLDb;
 interface
 
 uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
-  sqldb, IBConnection, fgl;
+  sqldb, IBConnection, pqconnection, fgl;
 
 type
   TLogEvent = procedure (Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
@@ -342,6 +342,7 @@ function TMiniRESTSQLConnectionSQLDb.GetDriverName(const ADatabaseType: TMiniRES
 begin
   case ADatabaseType of
     dbtFirebird: Result := 'Firebird';
+    dbtPostgreSQL: Result := 'PostgreSQL';
   end;
 end;
 
@@ -484,6 +485,7 @@ begin
   case ADatabaseType of
     dbtUnknown: raise Exception.Create('Database Type not supported');
     dbtFirebird: Result := 'Firebird';
+    dbtPostgreSQL: Result := 'PostgreSQL';
   end;  
 end;
 
@@ -588,7 +590,7 @@ begin
     FSQLConnection.UserName := FConnectionParams.GetUserName;
     FSQLConnection.Password := FConnectionParams.GetPassword;
     FSQLConnection.DatabaseName := FConnectionParams.GetDatabaseName;
-    FSQLConnection.HostName := FConnectionParams.GetServerHostName;
+    FSQLConnection.HostName := FConnectionParams.GetServerHostName;     
     if (FConnectionParams.GetServerPort > 0) and (FConnectionParams.GetDatabaseType = dbtFirebird) then
     begin
       FSQLConnection.HostName := '';
@@ -601,6 +603,8 @@ begin
       LName := LStringList.Names[I];
       FSQLConnection.Params.Values[LName] := LStringList.Values[LName];
     end;
+    if (FConnectionParams.GetServerPort > 0) and (FConnectionParams.GetDatabaseType = dbtPostgreSQL) then
+      FSQLConnection.Params.Values['port'] := IntToStr(FConnectionParams.GetServerPort);
   finally
     LStringList.Free;
   end;

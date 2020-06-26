@@ -5,7 +5,7 @@ interface
 uses SysUtils, Variants{$IFNDEF FPC},DB, Rtti{$ENDIF};
 
 type
-  TMiniRESTSQLDatabaseType = (dbtUnknown, dbtFirebird);
+  TMiniRESTSQLDatabaseType = (dbtUnknown, dbtFirebird, dbtPostgreSQL);
 
   TMiniRESTSQLParamType = (stString, stFloat, stInteger, stDate, stDateTime,
   stBoolean, stVariant, stUndefined);
