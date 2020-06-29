@@ -12,6 +12,9 @@ type
     FServerHostName: string;
     FServerPort: Integer;
     procedure MethodThatRaiseException;
+    procedure MethodThatRaiseExceptionOnOpenQuery;
+    procedure OnOpenQueryExceptionRaiseException(AConnection: IMiniRESTSQLConnection; AQuery: IMiniRESTSQLQuery; AException: Exception; var ARaiseException: Boolean);
+    procedure OnOpenQueryExceptionNoRaiseException(AConnection: IMiniRESTSQLConnection; AQuery: IMiniRESTSQLQuery; AException: Exception; var ARaiseException: Boolean);
   protected
     FConnectionCount: Integer;
     FConnectionFactory: IMiniRESTSQLConnectionFactory;
@@ -137,6 +140,22 @@ type
     [Test]
     {$IFEND}
     procedure TestCharSet;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestGetDatabaseTypeFromConnection;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestGetDatabaseTypeFromConnectionFactory;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestOnOpenQueryException1;
+    {$IFNDEF FPC}
+    [Test]
+    {$IFEND}
+    procedure TestOnOpenQueryException2;
 (*     {$IFNDEF FPC}
     [Test]
     {$IFEND}
@@ -993,6 +1012,84 @@ begin
   {$ELSE}
   CheckEquals('WIN1252', LQry.DataSet.FieldByName('CLIENT_ENCODING').AsString);
   {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestGetDatabaseTypeFromConnection;
+var
+  LConn: IMiniRESTSQLConnection;
+begin
+  LConn := FConnectionFactory.GetConnection;
+  {$IFNDEF FPC}
+  Assert.AreTrue(LConn.GetDatabaseType = GetDatabaseType);
+  {$ELSE}
+  CheckTrue(LConn.GetDatabaseType = GetDatabaseType);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestGetDatabaseTypeFromConnectionFactory;
+begin
+  {$IFNDEF FPC}
+  Assert.AreTrue(FConnectionFactory.GetDatabaseType = GetDatabaseType);
+  {$ELSE}
+  CheckTrue(FConnectionFactory.GetDatabaseType = GetDatabaseType);
+  {$IFEND}
+end;
+
+procedure TMiniRESTSQLTest.TestOnOpenQueryException1;
+begin
+  // Deve lançar exceção
+  CheckException(@MethodThatRaiseExceptionOnOpenQuery, Exception);
+end;
+
+procedure TMiniRESTSQLTest.TestOnOpenQueryException2;
+var
+  LConnectionFactory: IMiniRESTSQLConnectionFactory;
+  LConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams;
+  LQry: IMiniRESTSQLQuery;
+  LConn: IMiniRESTSQLConnection;
+begin
+  // Não deve lançar exceção
+  LConnectionFactoryParams := GetConnectionFactoryParams;
+  LConnectionFactoryParams.SetOnOpenQueryException(@OnOpenQueryExceptionNoRaiseException);
+  LConnectionFactory := GetConnectionFactory(LConnectionFactoryParams);
+  LConn := LConnectionFactory.GetConnection;
+  LQry := LConn.GetQuery('HUE');
+  LQry.Open;
+  CheckTrue(True); // é assim mesmo, só pra ver se chegou aqui
+end;
+
+procedure TMiniRESTSQLTest.OnOpenQueryExceptionRaiseException(AConnection: IMiniRESTSQLConnection;
+  AQuery: IMiniRESTSQLQuery; AException: Exception; var ARaiseException: Boolean);
+begin
+  CheckTrue(ARaiseException);
+  CheckTrue(AConnection <> nil);
+  CheckTrue(AQuery <> nil);
+  CheckTrue(AException <> nil);
+  ARaiseException := True;
+end;
+
+procedure TMiniRESTSQLTest.OnOpenQueryExceptionNoRaiseException(AConnection: IMiniRESTSQLConnection; AQuery: IMiniRESTSQLQuery; AException: Exception; var ARaiseException: Boolean);
+begin
+  CheckTrue(ARaiseException);
+  CheckTrue(AConnection <> nil);
+  CheckTrue(AQuery <> nil);
+  CheckTrue(AException <> nil);
+  ARaiseException := False;
+end;
+
+procedure TMiniRESTSQLTest.MethodThatRaiseExceptionOnOpenQuery;
+var
+  LConnectionFactory: IMiniRESTSQLConnectionFactory;
+  LConnectionFactoryParams: IMiniRESTSQLConnectionFactoryParams;
+  LQry: IMiniRESTSQLQuery;
+  LConn: IMiniRESTSQLConnection;
+begin
+  LConnectionFactoryParams := GetConnectionFactoryParams;
+  LConnectionFactoryParams.SetOnOpenQueryException(@OnOpenQueryExceptionRaiseException);
+  LConnectionFactory := GetConnectionFactory(LConnectionFactoryParams);
+  LConn := LConnectionFactory.GetConnection;
+  LQry := LConn.GetQuery('HUE');
+  LQry.Open;
 end;
 
 end.

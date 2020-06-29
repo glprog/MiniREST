@@ -15,9 +15,7 @@ type
     function GetUserName: string;
     procedure SetUserName(const AUserName: string);
     function GetPassword: string;
-    procedure SetPassword(const APassword: string);
-    function GetDatabaseType: TMiniRESTSQLDatabaseType;
-    procedure SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
+    procedure SetPassword(const APassword: string);    
     function GetDatabaseName: string;
     procedure SetDatabaseName(const ADatabaseName: string);
     function GetLogEvent: TLogEvent;
@@ -45,8 +43,6 @@ type
     procedure SetUserName(const AUserName: string);
     function GetPassword: string;
     procedure SetPassword(const APassword: string);
-    function GetDatabaseType: TMiniRESTSQLDatabaseType;
-    procedure SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
     function GetDatabaseName: string;
     procedure SetDatabaseName(const ADatabaseName: string);
     function GetLogEvent: TLogEvent;
@@ -73,6 +69,7 @@ type
 
   TMiniRESTSQLConnectionSQLDb = class(TMiniRESTSQLConnectionBase)
   private
+    FOnOpenQueryException: TMiniRESTOnOpenQueryException;
     function GetConnectorType(const ADatabaseType: TMiniRESTSQLDatabaseType): String;
     procedure OnBeforeConnect(Sender: TObject);
   protected
@@ -115,6 +112,7 @@ type
     FSQL: string;
     //FParams: TFPGInterfacedObjectList<string, IMiniRESTSQLParam>;
     FParams: TFPGInterfacedObjectList<IMiniRESTSQLParam>;
+    FOnOpenQueryException: TMiniRESTOnOpenQueryException;
     procedure BeforeOpenMiniRESTDataSet(DataSet: TDataSet);
   public
     constructor Create(AConnection: IMiniRESTSQLConnection);
@@ -186,19 +184,13 @@ begin
   FPassword := APassword;
 end;
 
-function TMiniRESTSQLConnectionParamsSQLDb.GetDatabaseType: TMiniRESTSQLDatabaseType;
-begin
-  Result := FDatabaseType;
-end;
-
-procedure TMiniRESTSQLConnectionParamsSQLDb.SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
-begin
-  FDatabaseType := ADatabaseType;
-end;
-
 function TMiniRESTSQLConnectionFactorySQLDb.InternalGetconnection: IMiniRESTSQLConnection;
-begin
-  Result := TMiniRESTSQLConnectionSQLDb.Create(Self, FConnectionParams);
+var
+  LConn: TMiniRESTSQLConnectionSQLDb;
+begin  
+  LConn := TMiniRESTSQLConnectionSQLDb.Create(Self, FConnectionParams);
+  LConn.FOnOpenQueryException := GetOnOpenQueryException;
+  Result := LConn;
 end;
 
 constructor TMiniRESTSQLConnectionFactorySQLDb.Create(AParams: IMiniRESTSQLConnectionFactoryParamsSQLDb);
@@ -266,9 +258,13 @@ begin
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery: IMiniRESTSQLQuery;
+var
+  LQry: TMiniRESTSQLQuerySQLDb;
 begin
   CheckConnectionIsValid;
-  Result := TMiniRESTSQLQuerySQLDb.Create(Self);
+  LQry := TMiniRESTSQLQuerySQLDb.Create(Self);
+  LQry.FOnOpenQueryException := FOnOpenQueryException;
+  Result := LQry;
 end;
 
 function TMiniRESTSQLConnectionSQLDb.GetQuery(const ASQL: string; AParams: array of IMiniRESTSQLParam): IMiniRESTSQLQuery;
@@ -354,8 +350,22 @@ begin
 end;
 
 procedure TMiniRESTSQLQuerySQLDb.Open;
+var
+  LRaiseException: Boolean;
 begin
-  FQry.Open;
+  LRaiseException := True;
+  try
+    FQry.Open;
+  except
+    on E: Exception do
+    begin
+      if not Assigned(FOnOpenQueryException) then
+        raise;
+      FOnOpenQueryException(FConnection, Self, E, LRaiseException);
+      if LRaiseException then
+        raise;
+    end;
+  end;
 end;
 
 procedure TMiniRESTSQLQuerySQLDb.Close;

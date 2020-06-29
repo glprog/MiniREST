@@ -9,6 +9,9 @@ uses SysUtils, MiniREST.SQL.Common, DB;
 
 type
   //TLoggerMethod = procedure (const ALog: string) of object;
+  IMiniRESTSQLQuery = interface;
+  IMiniRESTSQLConnection = interface;
+  TMiniRESTOnOpenQueryException = procedure (AConnection: IMiniRESTSQLConnection; AQuery: IMiniRESTSQLQuery; AException: Exception; var ARaiseException: Boolean) of object;
 
   IMiniRESTSQLDatabaseInfo = interface;
 
@@ -57,6 +60,7 @@ type
     function GetDatabaseInfo: IMiniRESTSQLDatabaseInfo;
     function GetConnectionID: Integer;
     function IsValid: Boolean;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
     procedure Invalidate;
   end;
 
@@ -70,6 +74,7 @@ type
     function GetConnectionsCount: Integer;
     function GetQueueCount: Integer;
     procedure InvalidateConnections;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;    
     property ConnectionsCount: Integer read GetConnectionsCount;
     property QueueCount: Integer read GetQueueCount;
   end;
@@ -141,7 +146,11 @@ type
     function GetConnectionsCount: Integer;
     procedure SetConnectionsCount(const ACount: Integer);
     function GetCharSet: string;
-    procedure SetCharSet(const ACharSet: string);    
+    procedure SetCharSet(const ACharSet: string);
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    procedure SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
+    function GetOnOpenQueryException: TMiniRESTOnOpenQueryException;
+    procedure SetOnOpenQueryException(AValue: TMiniRESTOnOpenQueryException);
     function GetObject: TObject;
   end;
 
