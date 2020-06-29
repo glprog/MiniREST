@@ -17,6 +17,9 @@ type
   TMiniRESTSQLConnectionFactoryBase = class abstract(TInterfacedObject, IMiniRESTSQLConnectionFactory)
   strict private
     FConnectionsToNotifyFree: TList;
+  private
+    FDatabaseType: TMiniRESTSQLDatabaseType;
+    FOnOpenQueryException: TMiniRESTOnOpenQueryException;
   protected
     FConnectionFactoryEventLogger: IMiniRESTSQLConnectionFactoryEventLogger;
     {$IFNDEF FPC}
@@ -38,6 +41,7 @@ type
     procedure ReleaseConnection(AConnection: IMiniRESTSQLConnection); virtual;
     function InternalGetconnection: IMiniRESTSQLConnection; virtual; abstract;
     procedure LogConnectionPoolEvent(const AMessage: string);
+    function GetOnOpenQueryException: TMiniRESTOnOpenQueryException;
   public
     constructor Create(const AConnectionCount: Integer); overload;
     constructor Create(AParams: IMiniRESTSQLConnectionFactoryParams); overload;
@@ -49,6 +53,7 @@ type
     function GetConnection(const AIdentifier: string): IMiniRESTSQLConnection; overload;
     function GetSingletonConnection: IMiniRESTSQLConnection;
     procedure InvalidateConnections;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;    
   end;
 
   { TMiniRESTSQLConnectionBase }
@@ -58,6 +63,7 @@ type
     FOwner: TObject;
     FConnectionID: Integer;
     FValid: Boolean;
+    FDatabaseType: TMiniRESTSQLDatabaseType;
   protected
     FName: string;
     FEstaNoPool: Boolean;
@@ -83,6 +89,7 @@ type
     function GetConnectionID: Integer;
     function IsValid: Boolean;
     procedure Invalidate; virtual; abstract;
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
   end;
 
   TMiniRESTSQLPrimaryKeyInfo = class(TInterfacedObject, IMiniRESTSQLPrimaryKeyInfo)
@@ -138,6 +145,8 @@ type
     FConnectionCount: Integer;
     FConnectionFactoryEventLogger: IMiniRESTSQLConnectionFactoryEventLogger;
     FCharSet: string;
+    FDatabaseType: TMiniRESTSQLDatabaseType;
+    FOnOpenQueryException: TMiniRESTOnOpenQueryException;
   public
     function GetConnectionsCount: Integer;
     procedure SetConnectionsCount(const ACount: Integer);
@@ -146,6 +155,10 @@ type
     procedure SetConnectionFactoryEventLogger(ALogger: IMiniRESTSQLConnectionFactoryEventLogger);
     function GetCharSet: string;
     procedure SetCharSet(const ACharSet: string);
+    function GetDatabaseType: TMiniRESTSQLDatabaseType;
+    procedure SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
+    function GetOnOpenQueryException: TMiniRESTOnOpenQueryException;
+    procedure SetOnOpenQueryException(AValue: TMiniRESTOnOpenQueryException);
   end;
 
 implementation
@@ -434,7 +447,7 @@ begin
   FOwner := nil;
   FOwner := AParams.GetConnectionFactory.GetObject;
   FConnectionID := AParams.GetConnectionID;
-  
+  FDatabaseType := AParams.GetConnectionFactory.GetDatabaseType;
   TMiniRESTSQLConnectionFactoryBase(FOwner).AddConnectionToNotifyFree(Self);  
 end;
 
@@ -470,6 +483,8 @@ begin
   FCriticalSection := TCriticalSection.Create;  
   FConnectionsToNotifyFree := TList.Create;
   FConnectionFactoryEventLogger := AParams.GetConnectionFactoryEventLogger;
+  FDatabaseType := AParams.GetDatabaseType;
+  FOnOpenQueryException := AParams.GetOnOpenQueryException;
 end;
 
 function TMiniRESTSQLConnectionFactoryParams.GetObject: TObject;
@@ -526,6 +541,41 @@ end;
 procedure TMiniRESTSQLConnectionFactoryParams.SetCharSet(const ACharSet: string);
 begin
   FCharSet := ACharSet;
+end;
+
+function TMiniRESTSQLConnectionBase.GetDatabaseType: TMiniRESTSQLDatabaseType;
+begin
+  Result := FDatabaseType;
+end;
+
+function TMiniRESTSQLConnectionFactoryBase.GetDatabaseType: TMiniRESTSQLDatabaseType;
+begin
+  Result := FDatabaseType;
+end;
+
+function TMiniRESTSQLConnectionFactoryParams.GetDatabaseType: TMiniRESTSQLDatabaseType;
+begin
+  Result := FDatabaseType;
+end;
+
+procedure TMiniRESTSQLConnectionFactoryParams.SetDatabseType(const ADatabaseType: TMiniRESTSQLDatabaseType);
+begin
+  FDatabaseType := ADatabaseType;
+end;
+
+function TMiniRESTSQLConnectionFactoryParams.GetOnOpenQueryException: TMiniRESTOnOpenQueryException;
+begin
+  Result := FOnOpenQueryException;  
+end;
+
+procedure TMiniRESTSQLConnectionFactoryParams.SetOnOpenQueryException(AValue: TMiniRESTOnOpenQueryException);
+begin
+  FOnOpenQueryException := AValue;
+end;
+
+function TMiniRESTSQLConnectionFactoryBase.GetOnOpenQueryException: TMiniRESTOnOpenQueryException;
+begin
+  Result := FOnOpenQueryException;
 end;
 
 initialization
