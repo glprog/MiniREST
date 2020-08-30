@@ -4,19 +4,19 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="27">
+    <Units Count="29">
       <Unit0>
         <Filename Value="MiniRESTSQLTest.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="4"/>
-        <CursorPos X="48" Y="6"/>
+        <CursorPos Y="7"/>
         <UsageCount Value="222"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="..\..\MiniREST.SQL.Base.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <TopLine Value="335"/>
         <CursorPos X="41" Y="347"/>
         <UsageCount Value="222"/>
@@ -25,7 +25,7 @@
       <Unit2>
         <Filename Value="..\..\MiniREST.SQL.Common.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <CursorPos X="24" Y="5"/>
         <UsageCount Value="222"/>
         <Loaded Value="True"/>
@@ -50,7 +50,7 @@
       <Unit5>
         <Filename Value="Test.SQL.Default.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="583"/>
         <CursorPos Y="594"/>
         <UsageCount Value="222"/>
@@ -65,155 +65,170 @@
         <Loaded Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="Test.SQL.SQLDb.pas"/>
+        <Filename Value="test.sql.sqldb.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Test.SQL.SQLDb"/>
         <EditorIndex Value="3"/>
         <CursorPos X="23" Y="17"/>
         <UsageCount Value="222"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
+        <Filename Value="Test.SQL.Firebird.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Test.SQL.PostgreSQL.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="28" Y="9"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\classes\lists.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="800"/>
         <CursorPos X="3" Y="803"/>
         <UsageCount Value="147"/>
-      </Unit8>
-      <Unit9>
+      </Unit10>
+      <Unit11>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\objpas.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="949"/>
         <CursorPos Y="955"/>
         <UsageCount Value="156"/>
-      </Unit9>
-      <Unit10>
+      </Unit11>
+      <Unit12>
         <Filename Value="C:\lazarus\components\lazutils\lazcollections.pas"/>
         <UnitName Value="lazCollections"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="164"/>
         <CursorPos X="3" Y="166"/>
         <UsageCount Value="130"/>
-      </Unit10>
-      <Unit11>
+      </Unit12>
+      <Unit13>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-base\src\syncobjs.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="96"/>
         <CursorPos Y="110"/>
         <UsageCount Value="2"/>
-      </Unit11>
-      <Unit12>
+      </Unit13>
+      <Unit14>
         <Filename Value="..\..\..\fptest\src\TestFramework.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="2784"/>
-        <CursorPos Y="2793"/>
+        <CursorPos X="22" Y="2794"/>
         <UsageCount Value="101"/>
         <Loaded Value="True"/>
-      </Unit12>
-      <Unit13>
+      </Unit14>
+      <Unit15>
         <Filename Value="..\..\..\fptest\src\TestFrameworkProxy.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="424"/>
         <CursorPos Y="434"/>
         <UsageCount Value="93"/>
-      </Unit13>
-      <Unit14>
+      </Unit15>
+      <Unit16>
         <Filename Value="..\..\..\fptest\src\TextTestRunner.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="397"/>
         <CursorPos X="68" Y="404"/>
         <UsageCount Value="92"/>
-      </Unit14>
-      <Unit15>
+      </Unit16>
+      <Unit17>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="185"/>
         <CursorPos X="23" Y="194"/>
         <UsageCount Value="136"/>
-      </Unit15>
-      <Unit16>
+      </Unit17>
+      <Unit18>
         <Filename Value="..\..\..\fptest\src\TestFrameworkIfaces.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="425"/>
         <CursorPos X="15" Y="433"/>
         <UsageCount Value="88"/>
-      </Unit16>
-      <Unit17>
+      </Unit18>
+      <Unit19>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="334"/>
         <CursorPos X="14" Y="341"/>
         <UsageCount Value="159"/>
-      </Unit17>
-      <Unit18>
+      </Unit19>
+      <Unit20>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="202"/>
         <CursorPos X="34" Y="213"/>
         <UsageCount Value="159"/>
-      </Unit18>
-      <Unit19>
+      </Unit20>
+      <Unit21>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-db\src\sqldb\sqldb.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="639"/>
         <CursorPos X="14" Y="663"/>
         <UsageCount Value="92"/>
-      </Unit19>
-      <Unit20>
+      </Unit21>
+      <Unit22>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\threadh.inc"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="22"/>
         <CursorPos X="22" Y="177"/>
         <UsageCount Value="74"/>
         <Loaded Value="True"/>
-      </Unit20>
-      <Unit21>
+      </Unit22>
+      <Unit23>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\thread.inc"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="14"/>
         <TopLine Value="78"/>
         <CursorPos X="8" Y="325"/>
         <UsageCount Value="74"/>
         <Loaded Value="True"/>
-      </Unit21>
-      <Unit22>
+      </Unit23>
+      <Unit24>
         <Filename Value="C:\fpcupdeluxe\laz2.0.6\fpcsrc\packages\fcl-db\src\base\db.pas"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <TopLine Value="2212"/>
         <CursorPos Y="2220"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
-      </Unit22>
-      <Unit23>
+      </Unit24>
+      <Unit25>
         <Filename Value="C:\fpcupdeluxe\laz2.0.6\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
         <EditorIndex Value="1"/>
         <TopLine Value="2185"/>
         <CursorPos Y="2192"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
-      </Unit23>
-      <Unit24>
+      </Unit25>
+      <Unit26>
         <Filename Value="C:\fpcupdeluxe\laz2.0.6\fpcsrc\packages\fcl-db\src\base\database.inc"/>
         <EditorIndex Value="2"/>
         <TopLine Value="28"/>
         <CursorPos Y="37"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
-      </Unit24>
-      <Unit25>
-        <Filename Value="Test.SQL.Firebird.pas"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="Test.SQL.Sqlite"/>
+        <UnitName Value="Unit1"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="56" Y="6"/>
+        <UsageCount Value="20"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="Test.SQL.Sqlite.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="20"/>
         <Loaded Value="True"/>
-      </Unit25>
-      <Unit26>
-        <Filename Value="Test.SQL.PostgreSQL.pas"/>
-        <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="6"/>
-        <CursorPos X="28" Y="9"/>
-        <UsageCount Value="21"/>
-        <Loaded Value="True"/>
-      </Unit26>
+      </Unit28>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>

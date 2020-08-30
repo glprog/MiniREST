@@ -223,7 +223,8 @@ var
   I: Integer;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection;
   LQry := LConn1.GetQuery;
   if GetDatabaseType = dbtFirebird then
     LQryID := LConn1.GetQuery;
@@ -244,12 +245,15 @@ begin
     LQry.DataSet.Post;    
   end;
   LQry.ApplyUpdates(0);
-  LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
+  if GetDatabaseType <> dbtSqlite then
+    LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER')
+  else
+    LQryCheck := LConn1.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(100, LQryCheck.DataSet.Fields[0].AsInteger);
   {$ELSE}
-  CheckEquals(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(100, LQryCheck.DataSet.Fields[0].AsInteger);
   {$IFEND}
 end;
 
@@ -278,7 +282,10 @@ var
   LRowsAffected, I: Integer;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection
+  else
+    LConn2 := LConn1;
   for I := 0 to 49 do
   begin
     LRowsAffected := LConn1.Execute('INSERT INTO CUSTOMER (NAME) VALUES (''HUE EXECUTE'')', []);
@@ -287,13 +294,13 @@ begin
     {$ELSE}
     CheckTrue(LRowsAffected > 0, 'Should be greater than 0');
     {$IFEND}
-  end;
+  end;  
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(50, LQryCheck.DataSet.Fields[0].AsInteger);
   {$ELSE}
-  CheckEquals(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(50, LQryCheck.DataSet.Fields[0].AsInteger);
   {$IFEND}
 end;
 
@@ -305,7 +312,10 @@ var
   LParamName: IMiniRESTSQLParam;
 begin
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection
+  else
+    LConn2 := LConn1;
   for I := 0 to 49 do
   begin
     LParamName := TMiniRESTSQLParam.Create;
@@ -321,9 +331,9 @@ begin
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(50, LQryCheck.DataSet.Fields[0].AsInteger);
   {$ELSE}
-  CheckEquals(50, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(50, LQryCheck.DataSet.Fields[0].AsInteger);
   {$IFEND}
   LQryCheck := LConn2.GetQuery('SELECT * FROM CUSTOMER');
   LQryCheck.Open;
@@ -385,7 +395,10 @@ var
   I: Integer;
 begin
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection
+  else
+    LConn2 := LConn1;
   LQry := LConn1.GetQuery;
   LQryID := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
@@ -410,9 +423,9 @@ begin
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(100, LQryCheck.DataSet.Fields[0].AsInteger);
   {$ELSE}
-  CheckEquals(100, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(100, LQryCheck.DataSet.Fields[0].AsInteger);
   {$IFEND}
 end;
 
@@ -424,7 +437,10 @@ var
   I: Integer;
 begin
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then  
+    LConn2 := FConnectionFactory.GetConnection
+  else
+    LConn2 := LConn1;
   LQry := LConn1.GetQuery;
   LQryID := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
@@ -449,9 +465,9 @@ begin
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER');
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(0, LQryCheck.DataSet.Fields[0].AsInteger);
   {$ELSE}
-  CheckEquals(0, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(0, LQryCheck.DataSet.Fields[0].AsInteger);
   {$IFEND}
 end;
 
@@ -466,6 +482,15 @@ var
   LQryCheck: IMiniRESTSQLQuery;  
   LCount, I: Integer;
 begin
+  if GetDatabaseType = dbtSqlite then
+  begin
+    {$IFNDEF FPC}
+    Assert.IsTrue(True);
+    {$ELSE}
+    CheckTrue(True);
+    {$IFEND}
+    Exit;
+  end;
   gLogHabilitado := True;
   LCount := 100;
   gContatorTesteInsert2 := 0;
@@ -550,7 +575,8 @@ var
   LParamName: IMiniRESTSQLParam;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection;
   LQry := LConn1.GetQuery('SELECT * FROM CUSTOMER WHERE 1=0');    
   LQry.Open;  
   for I := 1 to 5 do
@@ -562,16 +588,19 @@ begin
     LQry.DataSet.Post;    
   end;
   LQry.ApplyUpdates(0);
-  LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER WHERE NAME = :NAME');
+  if GetDatabaseType <> dbtSqlite then
+    LQryCheck := LConn2.GetQuery('SELECT COUNT(*) FROM CUSTOMER WHERE NAME = :NAME')
+  else
+    LQryCheck := LConn1.GetQuery('SELECT COUNT(*) FROM CUSTOMER WHERE NAME = :NAME');
   LParamName := TMiniRESTSQLParam.Create;
   LParamName.SetParamName('NAME');
   LParamName.AsString := 'HUE';
   LQryCheck.AddParam(LParamName);
   LQryCheck.Open;
   {$IFNDEF FPC}
-  Assert.AreEqual(5, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  Assert.AreEqual(5, LQryCheck.DataSet.Fields[0].AsInteger);
   {$ELSE}
-  CheckEquals(5, LQryCheck.DataSet.FieldByName('COUNT').AsInteger);
+  CheckEquals(5, LQryCheck.DataSet.Fields[0].AsInteger);
   {$IFEND}
 end;
 
@@ -594,7 +623,10 @@ var
   LQry, LQryCheck: IMiniRESTSQLQuery;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection
+  else
+    LConn2 := LConn1;
   LQry := LConn1.GetQuery;
   LQry.SQL := 'SELECT * FROM CUSTOMER WHERE 1=0';
   LQry.Open;
@@ -623,7 +655,10 @@ var
   LTotal: Integer;
 begin  
   LConn1 := FConnectionFactory.GetConnection;
-  LConn2 := FConnectionFactory.GetConnection;
+  if GetDatabaseType <> dbtSqlite then
+    LConn2 := FConnectionFactory.GetConnection
+  else
+    LConn2 := LConn1;
   LQryCheck := LConn2.GetQuery('SELECT COUNT(*) AS TOTAL FROM CUSTOMER');
   LQryCheck.Open;
   LTotal := LQryCheck.DataSet.FieldByName('TOTAL').AsInteger;
@@ -830,6 +865,15 @@ end;
 
 procedure TMiniRESTSQLTest.TestFailWithInvalidServerHostName;
 begin
+  if GetDatabaseType = dbtSqlite then
+  begin
+    {$IFNDEF FPC}
+    Assert.IsTrue(True);
+    {$ELSE}
+    CheckTrue(True);
+    {$IFEND}
+    Exit;
+  end;
   FServerHostName := 'HUE90';
   FConnectionFactory := GetConnectionFactory(GetConnectionFactoryParams);
   CheckException(@MethodThatRaiseException, Exception)
@@ -852,6 +896,15 @@ end;
 
 procedure TMiniRESTSQLTest.TestFailWithInvalidServerPort;
 begin
+  if GetDatabaseType = dbtSqlite then
+  begin
+    {$IFNDEF FPC}
+    Assert.IsTrue(True);
+    {$ELSE}
+    CheckTrue(True);
+    {$IFEND}
+    Exit;
+  end;
   FServerPort := 3099;
   FConnectionFactory := GetConnectionFactory(GetConnectionFactoryParams);
   CheckException(@MethodThatRaiseException, Exception);
@@ -971,6 +1024,15 @@ end;
 
 procedure TMiniRESTSQLTest.TestCharSet;
 begin
+  if GetDatabaseType = dbtSqlite then
+  begin
+    {$IFNDEF FPC}
+    Assert.IsTrue(True);
+    {$ELSE}
+    CheckTrue(True);
+    {$IFEND}
+    Exit;
+  end;
   if GetDatabaseType = dbtFirebird then
     TestCharSetFirebird
   else

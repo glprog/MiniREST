@@ -4,7 +4,7 @@ unit MiniREST.SQL.SQLDb;
 interface
 
 uses Classes, SysUtils, MiniREST.SQL.Intf, MiniREST.SQL.Base, MiniREST.SQL.Common, DB,
-  sqldb, IBConnection, pqconnection, fgl;
+  sqldb, IBConnection, pqconnection, sqlite3conn, fgl;
 
 type
   TLogEvent = procedure (Sender : TSQLConnection; EventType : TDBEventType; Const Msg : String);
@@ -339,6 +339,7 @@ begin
   case ADatabaseType of
     dbtFirebird: Result := 'Firebird';
     dbtPostgreSQL: Result := 'PostgreSQL';
+    dbtSqlite: Result := 'SQLite3';
   end;
 end;
 
@@ -496,6 +497,7 @@ begin
     dbtUnknown: raise Exception.Create('Database Type not supported');
     dbtFirebird: Result := 'Firebird';
     dbtPostgreSQL: Result := 'PostgreSQL';
+    dbtSqlite: Result := 'SQLite3';
   end;  
 end;
 

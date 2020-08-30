@@ -33,7 +33,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="10">
+    <Units Count="11">
       <Unit0>
         <Filename Value="MiniRESTSQLTest.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -63,8 +63,9 @@
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="Test.SQL.SQLDb.pas"/>
+        <Filename Value="test.sql.sqldb.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Test.SQL.SQLDb"/>
       </Unit7>
       <Unit8>
         <Filename Value="Test.SQL.Firebird.pas"/>
@@ -74,6 +75,10 @@
         <Filename Value="Test.SQL.PostgreSQL.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="Test.SQL.Sqlite.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit10>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
